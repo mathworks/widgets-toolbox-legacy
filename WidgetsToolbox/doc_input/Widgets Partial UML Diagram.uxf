@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>9</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>648</x>
+      <y>369</y>
+      <w>207</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>/*HasLabel*/
+Package::uiw.mixin
+style=wordwrap
+(manages the optional label)
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>909</x>
+      <y>171</y>
+      <w>216</w>
+      <h>252</h>
+    </coordinates>
+    <panel_attributes>*WidgetContainer*
+Package::uiw.abstract
+--
+-InnerSize_: double
+--
++WidgetContainer()
+#onContainerBeingDestroyed(obj)
+#onStyleChanged(obj,~)
+#onVisibleChanged(obj,evt)
+#onEnableChanged(obj,~)
+#onResized(obj)
+#redraw(obj)
+#onContainerResized(obj)
+#getInnerPixelSize(obj)
+#getWidgetPropertyGroup(obj)
+#getPropertyGroups(obj)
+bg=yellow
+style=wordwrap
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>648</x>
+      <y>279</y>
+      <w>207</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>/*HasPanel*/
+Package::uiw.abstract
+(Manages the inner panel - widget contents minus the label)
+style=wordwrap
+
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>648</x>
+      <y>171</y>
+      <w>207</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>/*BaseContainer*/
+Package::uiw.abstract
+(Manages the outer uicontainer of the widget, to place the label and base uipanel for contents.)
+
+style=wordwrap
+
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>846</x>
+      <y>207</y>
+      <w>81</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>846</x>
+      <y>306</y>
+      <w>81</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>846</x>
+      <y>387</y>
+      <w>81</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1395</x>
+      <y>279</y>
+      <w>180</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>*DateTimeSelector*
+Package::uiw.widget
+--
++Format
++TimeZone
+--
++DateTimeSelector(varargin)
+#redraw(obj)
+#onValueChanged(obj)
+#onButtonClick(obj)
+style=wordwrap
+
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1116</x>
+      <y>405</y>
+      <w>63</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>50.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1161</x>
+      <y>396</y>
+      <w>198</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>*EditableTextWithButton*
+Package::uiw.abstract
+--
++Value
+--
+
+(Implements a widget with an edit field and button on the right)
+style=wordwrap
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1350</x>
+      <y>405</y>
+      <w>63</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>50.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1350</x>
+      <y>468</y>
+      <w>63</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>50.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1395</x>
+      <y>432</y>
+      <w>180</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>*FolderSelector*
+Package::uiw.widget
+--
++RootDirectory
++FullPath
+--
++FolderSelector(varargin)
+#checkPathExists(obj,RelPath)
+#onButtonClick(obj)
+#checkValue(obj,value)
+
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1323</x>
+      <y>108</y>
+      <w>252</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>*ToolStrip*
+Package::uiw.widget
+--
+
+--
++ToolStrip(varargin)
++ToolStrip(varargin)
++addButton(obj,Icon,Tag,varargin)
++addToggleButton(obj,Icon,Tag,varargin)
++addSection(obj,Title)
++addToggleSection(obj,Title)
+-onPanelButtonPressed(obj,evt)
+style=wordwrap
+
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1116</x>
+      <y>180</y>
+      <w>225</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>230.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>

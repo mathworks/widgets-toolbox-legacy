@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- © 2018 The MathWorks, Inc.-->
+<project name="MathWorksConsultingWidgets" default="default" basedir=".">
+    <description>Builds, tests, and runs the project MathWorksConsultingWidgets.</description>
+    <import file="nbproject/build-impl.xml"/>
+</project>

@@ -1,0 +1,1578 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>7</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3507</x>
+      <y>539</y>
+      <w>182</w>
+      <h>336</h>
+    </coordinates>
+    <panel_attributes>*MultiPlatformTable*
+Package::uiw.widget
+--
++ColumnName
++ColumnFormat
++ColumnEditable
++Data
++SelectedRows
++TableContextMenu
++UseButtons: logical
++ButtonPosition: char
++ButtonCallback: double
++CellEditCallback: double
++CellSelectionCallback: double
++LabelHeight: double
++SelectedRowsOverride
++UseJTable: logical
++HTable: double
+#ButtonVis: logical
+--
++setCellColor(obj,rowIdx,colIdx,Color)
++MultiPlatformTable(varargin)
++onRemoveButtonPressed(obj,~,~)
++onAddButtonPressed(obj,~,~)
++onCellSelection(obj,~,evt)
++onCellEdit(obj,~,evt)
+#onEnableChanged(obj,~,~)
+#onResized(obj,~,~)
+#redraw(obj)
+
+fg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1883</x>
+      <y>1050</y>
+      <w>168</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;220.0;10.0;10.0;220.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3416</x>
+      <y>413</y>
+      <w>21</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3458</x>
+      <y>448</y>
+      <w>98</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>120.0;130.0;120.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2030</x>
+      <y>1050</y>
+      <w>182</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>240.0;40.0;240.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2030</x>
+      <y>1050</y>
+      <w>21</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;220.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1344</x>
+      <y>1211</y>
+      <w>21</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1162</x>
+      <y>1197</y>
+      <w>21</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2191</x>
+      <y>1211</y>
+      <w>21</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1820</x>
+      <y>1204</y>
+      <w>140</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>*ColorSelector*
+Package::uiw.widget
+--
+
+--
++ColorSelector(varargin)
+#onButtonClick(obj)
+#interpretValueAsString(~,value)
+#interpretStringAsValue(~,str)
+#checkValue(~,value)
+#onResized(obj)
+#redraw(obj)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>455</x>
+      <y>1148</y>
+      <w>154</w>
+      <h>196</h>
+    </coordinates>
+    <panel_attributes>*Calendar*
+Package::uiw.widget
+--
++Value: double
++Interaction: char
++ValidDates: double
++ExcludeWeekends: char
++TitleColor: double
++SelectedColor: double
++HighlightColor: double
+-HGAxes: double
+--
++Calendar(varargin)
+#onEnableChanged(obj,~,~)
+#onResized(obj,~,~)
+#redraw(obj)
+#onCalendarChanged(obj,~,evt)
+
+style=wordwrap</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1974</x>
+      <y>1204</y>
+      <w>140</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>*DateTimeSelector*
+Package::uiw.widget
+--
++Style: char
++ValidDates: double
++DateFormat: char
+--
++DateTimeSelector(varargin)
+#onButtonClick(obj,~,~)
+#interpretValueAsString(obj,value)
+#interpretStringAsValue(obj,str)
+#checkValue(obj,value)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2128</x>
+      <y>1239</y>
+      <w>154</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>*FileSelector*
+Package::uiw.widget
+--
++Pattern: cell
++Mode: char
+--
++FileSelector(varargin)
+#onButtonClick(obj,~,~)
+#checkPathExists(obj,RelPath)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2128</x>
+      <y>1078</y>
+      <w>154</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>*FolderSelector*
+Package::uiw.widget
+--
++RootDirectory: char
++RequireSubdirOfRoot: logical
++FullPath
+--
++FolderSelector(varargin)
+#checkPathExists(obj,RelPath)
+#onButtonClick(obj)
+#checkValue(obj,value)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3318</x>
+      <y>504</y>
+      <w>175</w>
+      <h>581</h>
+    </coordinates>
+    <panel_attributes>*ImageSelector*
+Package::uiw.widget
+--
++Value: double
++ImageFiles: cell
++Captions: cell
++Orientation: char
++SliderWidth: double
++DefSize: double
++TimerPeriod: double
++ImagesPerBatch: double
++UseParallel: logical
++BackgroundColor
++ForegroundColor
++HighlightColor
++FontAngle
++FontName
++FontSize
++FontUnits
++FontWeight
+-IsLoaded: logical
+-IsQueued: logical
+-WrappedCaptions: cell
+-HGAxes: double
+-HGSlider: double
+-HGImages: double
+-HGTexts: double
+-HGHighlight: double
+-HGDummyText: double
+-ThumbCacheFile: char
+-ThumbCacheMap: struct
+-ThumbTimer
+-ThumbFutures
+-GridSize: double
+-GridSizeFit: double
+-GridPixels: double
+-NeedSlider: logical
+-PngReadPath: char
+--
++ImageSelector(varargin)
++scrollToValue(obj,value)
+#getThumbnails(obj,thisTimer,~)
+#onClicked(obj,src,evt)
+#onEnableChanged(obj,~,~)
+#onResized(obj,~,~)
+#redraw(obj)
+#create(obj)
+#initiateThumbCache(obj)
+-wrapCaptions(obj,newcappos)
+-clearImages(obj,filenames)
+-addImage(obj,filename,caption)
+-pRemoveWidgets(obj,toremove)
+
+fg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1267</x>
+      <y>1246</y>
+      <w>182</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>*ListBuilderWithRunVisualize*
+Package::uiw.widget
+--
++AllowRunVisMulti: logical
+--
++ListBuilderWithRunVisualize(varargin)
+#onEnableChanged(obj,~,~)
+#onRunVisButtonPressed(obj,ButtonId)
+
+style=wordwrap</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>931</x>
+      <y>1113</y>
+      <w>140</w>
+      <h>231</h>
+    </coordinates>
+    <panel_attributes>*ListWithButtons*
+Package::uiw.widget
+--
++Items: cell
++SelectedItems
++SelectedIndex
++AllowMultiSelect: logical
++AllowMove: logical
++AllowCopy: logical
++AllowEdit: logical
++AllowPlot: logical
++AllowRun: logical
++ButtonPosition: char
+#ButtonInfo: cell
+--
++ListWithButtons(varargin)
++onUserAction(obj,Interaction)
+#onEnableChanged(obj,~,~)
+#onResized(obj,~,~)
+#redraw(obj)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1085</x>
+      <y>882</y>
+      <w>168</w>
+      <h>322</h>
+    </coordinates>
+    <panel_attributes>*ListSelector*
+Package::uiw.widget
+--
++AllItems: cell
++AddedIndex: double
++AddedItems
++AllowDuplicates: logical
++AllowOrdering: logical
++SelectedIndex
++SelectedSrcIndex
++SelectedItems
++SelectedSrcItems
+-ButtonVis: logical
+--
++ListSelector(varargin)
+#onEnableChanged(obj,~,~)
+#onResized(obj,~,~)
+#redraw(obj)
+#onUpButtonPressed(obj,~,~)
+#onRemoveButtonPressed(obj,~,~)
+#onListSelection(obj,~,~)
+#onListSrcSelection(obj,~,~)
+#onDownButtonPressed(obj,~,~)
+#onCopyButtonPressed(obj,~,~)
+#onAddButtonPressed(obj,~,~)
+#insertIndices(obj,idxNew)
+#shiftSelection(obj,Shift)
+#updateSelectionForNewItems(obj,NewItems,OldItems)
+
+style=wordwrap</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1085</x>
+      <y>1232</y>
+      <w>168</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>*ListSelectorWithInvalids*
+Package::uiw.widget
+--
++InvalidIndex: double
+--
++ListSelectorWithInvalids(varargin)
+#updateSelectionForNewItems(obj,NewItems,OldItems)
+#onEnableChanged(obj,~,~)
+#redraw(obj)
+style=wordwrap
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>273</x>
+      <y>1085</y>
+      <w>140</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>*Summary*
+Package::uiw.widget
+--
++AllItems: cell
+--
++Summary(varargin)
+#create(obj)
+#onEnableChanged(obj,evt)
+#redraw(obj)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>623</x>
+      <y>1169</y>
+      <w>140</w>
+      <h>175</h>
+    </coordinates>
+    <panel_attributes>*Clock*
+Package::uiw.widget
+--
++Value: double
++Interaction: char
++FaceColor: double
++BezelColor: double
++MarkerColor: double
++HandColor: double
+-HGAxes: double
+--
++Clock(varargin)
+#onClockChanged(obj,~,evt)
+#onResized(obj,~,~)
+#redraw(obj)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1295</x>
+      <y>287</y>
+      <w>140</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>/*AssignPVPairs*/
+Package::uiw.mixin
+--
+--
++AssignPVPairs()
+#assignPVPairs(obj,varargin)
+bg=light_gray
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1561</x>
+      <y>616</y>
+      <w>140</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>/*HasCallback*/
+Package::uiw.mixin
+--
++Callback: function_handle
+--
++HasCallback()
+#callCallback(obj,eventdata)
+bg=light_gray
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1169</x>
+      <y>350</y>
+      <w>196</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;180.0;10.0;70.0;260.0;70.0;260.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>931</x>
+      <y>336</y>
+      <w>182</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>240.0;200.0;240.0;10.0;10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1155</x>
+      <y>294</y>
+      <w>126</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>/*SetGet*/
+Package::matlab.mixin
+--
+--
++get(obj,prop)
++set(obj,prop,value)
+bg=light_gray
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1155</x>
+      <y>350</y>
+      <w>77</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;180.0;10.0;50.0;90.0;50.0;90.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1351</x>
+      <y>819</y>
+      <w>21</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1267</x>
+      <y>861</y>
+      <w>182</w>
+      <h>357</h>
+    </coordinates>
+    <panel_attributes>*ListBuilder*
+Package::uiw.widget
+--
++AllItems: cell
++AddedIndex: double
++AddedItems
++AllowCopy: logical
++AllowDuplicates: logical
++AllowOrdering: logical
++AllowEdit: logical
++ButtonPosition: char
++CustomButtonsMode: logical
++SelectedListIndex
++SelectedAllIndex
++SelectedItems
+#ButtonVis: logical
+--
++ListBuilder(varargin)
+#onEnableChanged(obj,~,~)
+#onResized(obj,~,~)
+#redraw(obj)
+#onUpButtonPressed(obj,~,~)
+#onRemoveButtonPressed(obj,~,~)
+#onListSelection(obj,~,~)
+#onEditButtonPressed(obj,~,~)
+#onDownButtonPressed(obj,~,~)
+#onCopyButtonPressed(obj,~,~)
+#onAddButtonPressed(obj,~,~)
+#insertIndices(obj,idxNew)
+#shiftSelection(obj,Shift)
+#updateSelectionForNewItems(obj,NewItems,OldItems)
+
+style=wordwrap</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2044</x>
+      <y>672</y>
+      <w>21</w>
+      <h>196</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;260.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>707</x>
+      <y>392</y>
+      <w>140</w>
+      <h>231</h>
+    </coordinates>
+    <panel_attributes>/*HasLabel*/
+Package::uiw.mixin
+--
++Label
++LabelFontAngle
++LabelFontName
++LabelFontSize
++LabelFontUnits
++LabelFontWeight
++LabelForegroundColor
++LabelHorizontalAlignment
++LabelVisible
++LabelLocation: char
++LabelHeight: double
++LabelWidth: double
++LabelSpacing: double
+-LabelVisible_
+#hLabel
+--
++Label(parent)
+-makeLabelVisible
+/#onContainerResized(obj)/
+style=wordwrap
+
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3360</x>
+      <y>350</y>
+      <w>140</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>/*Widget*/
+Package::uiw.abstract
+--
++Title
+--
++Widget(varargin)
+bg=yellow
+style=wordwrap
+
+fg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1050</x>
+      <y>476</y>
+      <w>168</w>
+      <h>259</h>
+    </coordinates>
+    <panel_attributes>*WidgetContainer*
+Package::uiw.abstract
+--
+-InnerSize_: double
+--
++WidgetContainer()
+#onContainerBeingDestroyed(obj)
+#onStyleChanged(obj,~)
+#onVisibleChanged(obj,evt)
+#onEnableChanged(obj,~)
+#onResized(obj)
+#redraw(obj)
+#onContainerResized(obj)
+#getInnerPixelSize(obj)
+#getWidgetPropertyGroup(obj)
+#getPropertyGroups(obj)
+bg=yellow
+style=wordwrap
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>868</x>
+      <y>392</y>
+      <w>140</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>/*HasPanel*/
+Package::uiw.abstract
+--
++FontAngle
++FontName
++FontSize
++FontUnits
++FontWeight
++ForegroundColor
+#hBasePanel
+--
++HasPanel
+/#onStyleChanged(obj,evt)/
+style=wordwrap
+
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>357</x>
+      <y>392</y>
+      <w>161</w>
+      <h>259</h>
+    </coordinates>
+    <panel_attributes>/*BaseContainer*/
+Package::uiw.abstract
+(Manages the outer uicontainer of the widget, to place the label and base uipanel for contents.)
+--
+#hBaseContainer
+-DestroyedListener
+-FigureObserver
+-FigureListener
+-VisibleChangedListener
+-SizeChangedListener
+-StyleChangedListener
+--
++BaseContainer()
+_+loadobj(rhs1,rhs2)_
+/#onStyleChanged(obj,evt)/
+/#onContainerResized(obj)/
+#getPixelSize(obj)
+#getPixelPosition(obj,recursive)
+#onContainerBeingDestroyed(obj)
+#onFigureChanged(obj)
+#onVisibleChanged(obj)
+bg=yellow
+style=wordwrap
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1974</x>
+      <y>854</y>
+      <w>140</w>
+      <h>182</h>
+    </coordinates>
+    <panel_attributes>/*EditableTextWithButton*/
+Package::uiw.abstract
+--
++TextVisible
++ButtonVisible
+#hButton: double
+#hEditBox: double
+--
++EditableTextWithButton()
+/#onButtonClick(obj)/
+#onTextEdited(obj)
+#onValueChanged(obj,evt)
+#onStyleChanged(obj,~)
+#onEnableChanged(obj,~)
+#onResized(obj)
+bg=yellow
+style=wordwrap
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>238</x>
+      <y>392</y>
+      <w>91</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>/*Container*/
+Package::uix
+--
+
+--
+bg=yellow
+style=wordwrap
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>322</x>
+      <y>385</y>
+      <w>49</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>50.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1967</x>
+      <y>448</y>
+      <w>182</w>
+      <h>231</h>
+    </coordinates>
+    <panel_attributes>*HasEditableText*
+Package::uiw.mixin
+--
++TextEditable: char
++TextBackgroundColor: double
++TextForegroundColor: double
++TextInvalidBackgroundColor: double
++TextInvalidForegroundColor: double
++TextIsValid: logical
++TextHorizontalAlignment: char
++Value: double
+#hTextFields: matlab.graphics.GraphicsPlaceholder
+--
++HasEditableText()
+#interpretValueAsString(obj,value)
+#interpretStringAsValue(obj,str)
+#checkValue(obj,value)
+#onValueChanged(obj,evt)
+#onStyleChanged(obj,~)
+#onEnableChanged(obj,~)
+bg=light_gray
+style=wordwrap
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>777</x>
+      <y>1148</y>
+      <w>140</w>
+      <h>196</h>
+    </coordinates>
+    <panel_attributes>*EditableText*
+Package::uiw.widget
+--
++FieldType: char
++Validator: function_handle
++ShowDialogOnError: logical
+#hEditBox: double
+--
++EditableText(varargin)
+#interpretValueAsString(obj,value)
+#interpretStringAsValue(obj,str)
+#checkValue(obj,value)
+#onTextEdited(obj)
+#onValueChanged(obj,evt)
+#onStyleChanged(obj,~)
+#onEnableChanged(obj,~)
+style=wordwrap
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1617</x>
+      <y>994</y>
+      <w>161</w>
+      <h>350</h>
+    </coordinates>
+    <panel_attributes>*ToolStrip*
+Package::uiw.widget
+--
++NewButtonSize: double
++NewPanelHeight: double
+-hGroupPanel
+-hGroupLabel
+-hMinPanelButton
+-hAllButton
+-Items: cell
+-NumItems: double
+-PWidth: double
+-PMinWidth: double
+-FocusChangedListener
+--
++ToolStrip(varargin)
++addButton(obj,Icon,Tag,varargin)
++addToggleButton(obj,Icon,Tag,varargin)
++addSection(obj,Title)
++addToggleSection(obj,Title)
+#onStyleChanged(obj,~)
+#onVisibleChanged(obj)
+#onEnableChanged(obj,~)
+#onResized(obj)
+-closePanel(obj,hPanel)
+-onButtonPressed(obj,h,evt)
+-onFocusChanged(obj,hPanel)
+-onPanelButtonPressed(obj,h,~)
+-createButton(obj,Style,Icon,Tag)
+-createSection(obj,Title,Type)
+style=wordwrap
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1463</x>
+      <y>1218</y>
+      <w>140</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>*Popup*
+Package::uiw.widget
+--
++String
++SelectedIndex
++Value: char
+#hPopup: double
+--
++Popup(varargin)
+#onSelectionChanged(obj,e)
+style=wordwrap
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>525</x>
+      <y>819</y>
+      <w>196</w>
+      <h>343</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;470.0;10.0;10.0;260.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>686</x>
+      <y>819</y>
+      <w>175</w>
+      <h>364</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;500.0;10.0;10.0;230.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>833</x>
+      <y>819</y>
+      <w>196</w>
+      <h>343</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;470.0;10.0;10.0;260.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>994</x>
+      <y>819</y>
+      <w>196</w>
+      <h>308</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;420.0;10.0;10.0;260.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1162</x>
+      <y>819</y>
+      <w>196</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0;260.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1330</x>
+      <y>819</y>
+      <w>217</w>
+      <h>413</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>290.0;570.0;290.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>336</x>
+      <y>728</y>
+      <w>805</w>
+      <h>371</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;510.0;10.0;70.0;1130.0;70.0;1130.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1498</x>
+      <y>819</y>
+      <w>210</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>280.0;250.0;280.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2030</x>
+      <y>1029</y>
+      <w>21</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1687</x>
+      <y>819</y>
+      <w>343</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>470.0;50.0;470.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1379</x>
+      <y>686</y>
+      <w>259</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;200.0;10.0;50.0;350.0;50.0;350.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1120</x>
+      <y>770</y>
+      <w>217</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>290.0;80.0;290.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3318</x>
+      <y>1120</y>
+      <w>140</w>
+      <h>196</h>
+    </coordinates>
+    <panel_attributes>*CheckboxTree*
+Package::uiw.widget
+--
++CheckboxClickedCallback
++ClickInCheckBoxOnly
++DigIn
++CheckedNodes
+#jCBoxSelModel
+--
++CheckboxTree(varargin)
++getJavaObjects(tObj)
+#onCheckboxClicked(tObj,e)
+#createTreeCustomizations(tObj)
+#createTree(tObj)
+setChecked(tObj,nObj,value)
+isNodePartiallyChecked(tObj,nObj)
+isNodeChecked(tObj,nObj)
+
+fg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3087</x>
+      <y>546</y>
+      <w>189</w>
+      <h>812</h>
+    </coordinates>
+    <panel_attributes>*Tree*
+Package::uiw.widget
+--
++BackgroundColor
++DndEnabled
++Enable
++Editable
++FontAngle
++FontName
++FontSize
++FontWeight
++Parent
++Position
++RootVisible
++SelectedNodes
++SelectionType
++Tag
++Units
++UserData
++Visible
++ButtonUpFcn
++ButtonDownFcn
++KeyPressedCallback
++MouseClickedCallback
++MouseMotionFcn
++NodeDraggedCallback
++NodeDroppedCallback
++NodeExpandedCallback
++NodeCollapsedCallback
++NodeEditedCallback
++SelectionChangeFcn
++UIContextMenu
++Root
+#hPanel
+#jModel
+#jSelModel
+#jScrollPane
+#jDropTarget
+#jTransferHandler
+#jCellRenderer
+#hJContainer
+#IsConstructed: logical
+#IsBeingDeleted: logical
+#CBEnabled: logical
+jTree
+--
++Tree(varargin)
++getJavaObjects(tObj)
++expandNode(tObj,nObj)
++collapseNode(tObj,nObj)
++removeNode(tObj,nObj,~)
++insertNode(tObj,nObj,pObj,idx)
++nodeChanged(tObj,nObj)
++reload(tObj,nObj)
++refresh(tObj,nObj)
+#onNodeDND(tObj,e)
+#onNodeEdit(tObj,e)
+#onNodeSelection(tObj,e)
+#onMouseMotion(tObj,e)
+#onKeyPressed(tObj,e)
+#onButtonUp(tObj,e)
+#onButtonDown(tObj,e)
+#onMouseClick(tObj,e)
+#onCollapse(tObj,e)
+#onExpand(tObj,e)
+#getNodeFromMouseEvent(tObj,e)
+#callbacksEnabled(tObj)
+#createTreeCustomizations(tObj)
+#createTreeContainer(tObj,hParent)
+#createTree(tObj)
+
+fg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2324</x>
+      <y>1029</y>
+      <w>140</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>*Slider*
+Package::uiw.widget
+--
++Orientation
++Min: double
++Max: double
++FlipText: logical
++TextHeight: double
++TextWidth: double
++ShowTicks: logical
+#Multiplier: double
+#hEditBox: double
+--
++Slider(varargin)
+#onSliderChanged(obj)
+#onSliderMotion(obj)
+#interpretValueAsString(~,value)
+#interpretStringAsValue(obj,str)
+#checkValue(~,value)
+#onStyleChanged(obj,~)
+#onEnableChanged(obj,evt)
+#onResized(obj,~,~)
+#redraw(obj)
+#onValueChanged(obj,~)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2646</x>
+      <y>1204</y>
+      <w>140</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>*PasswordEdit*
+Package::uiw.widget
+--
+
+--
++PasswordEdit(varargin)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2492</x>
+      <y>1183</y>
+      <w>140</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>*EditablePopup*
+Package::uiw.widget
+--
++String: cell
++SelectedIndex
+--
++EditablePopup(varargin)
+#setValue(obj,value)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2814</x>
+      <y>777</y>
+      <w>175</w>
+      <h>588</h>
+    </coordinates>
+    <panel_attributes>*Table*
+Package::uiw.widget
+--
++ButtonDownFcn: char
++CellEditCallback: char
++CellSelectionCallback: char
++ColumnEditable
++ColumnFormat: cell
++ColumnFormatData: cell
++ColumnName
++ColumnResizable
++ColumnResizePolicy
++ColumnWidth
++ColumnMaxWidth
++ColumnMinWidth
++ColumnPreferredWidth
++Data
++Editable
++MouseClickedCallback: char
++MouseDraggedCallback: char
++MouseMotionFcn: char
++RowHeight
++SelectedRows
++SelectionMode
++TableBackgroundColor: double
+#JTableModel
+#JSelectionModel
+#DataM
+#JColumnModel
+#CellEditor
+#CellRenderer
+#DEFAULTCOLUMNWIDTH: double
+#ValidResizeModes: cell
+#ValidSelectionModes: cell
+--
++Table(varargin)
++onTableModelChanged(obj,~,e)
++onSelectionChanged(obj,~,e)
++onMouseEvent(obj,h,e)
++callbacksEnabled(obj)
++sizeColumnsToData(obj)
++setCell(obj,rIdx,cIdx,value)
++getCell(obj,rIdx,cIdx)
++setCellColor(obj,rIdx,cIdx,color)
+#onStyleChanged(obj,~)
+#redraw(obj)
+#create(obj)
+-validateIndex(obj,rIdx,cIdx)
+-applyColumnFormats(obj,format,formatData)
+-evalOnColumns(obj,fcnName,inArg)
+-updateNumberOfColumns(obj,NumCol,FlagRemove)
+style=wordwrap</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2576</x>
+      <y>910</y>
+      <w>140</w>
+      <h>161</h>
+    </coordinates>
+    <panel_attributes>/*JavaEditableText*/
+Package::uiw.abstract
+--
+
+--
++JavaEditableText()
+#onTextEdited(obj,~,~)
+#setValue(obj,value)
+#getValue(obj)
+#onValueChanged(obj,~)
+#onStyleChanged(obj,~)
+#onEnableChanged(obj,~,~)
+#onResized(obj,~,~)
+#redraw(obj)
+
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2555</x>
+      <y>462</y>
+      <w>189</w>
+      <h>196</h>
+    </coordinates>
+    <panel_attributes>/*JavaControl*/
+Package::uiw.abstract
+--
+#JControl: double
+#JScrollPane: double
+#JEditor: double
+#HGJContainer: double
+#CallbacksEnabled: logical
+--
+_+constructJObj(JavaClass,varargin)_
++JavaControl()
+#onStyleChanged(obj,~)
+#onEnableChanged(obj,~)
+#getJFont(obj)
+#createJControl(obj,JavaClassName,varargin)
+#createScrollPaneJControl(obj,JavaClassName,varargin)
+
+bg=orange
+style=wordwrap</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2338</x>
+      <y>777</y>
+      <w>301</w>
+      <h>147</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>410.0;190.0;410.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2639</x>
+      <y>651</y>
+      <w>21</w>
+      <h>273</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;370.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2639</x>
+      <y>742</y>
+      <w>273</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>370.0;50.0;370.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2387</x>
+      <y>742</y>
+      <w>273</w>
+      <h>301</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;410.0;10.0;10.0;370.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2044</x>
+      <y>777</y>
+      <w>315</w>
+      <h>266</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>430.0;360.0;430.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2632</x>
+      <y>1085</y>
+      <w>91</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>110.0;170.0;110.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2555</x>
+      <y>1064</y>
+      <w>98</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;170.0;10.0;40.0;120.0;40.0;120.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3269</x>
+      <y>1211</y>
+      <w>63</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Text</id>
+    <coordinates>
+      <x>3087</x>
+      <y>525</y>
+      <w>189</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>To be updated to new base classes:
+fg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>770</x>
+      <y>322</y>
+      <w>357</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>490.0;220.0;490.0;10.0;10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>602</x>
+      <y>308</y>
+      <w>539</w>
+      <h>182</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>750.0;240.0;750.0;10.0;10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1617</x>
+      <y>714</y>
+      <w>1001</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>1410.0;280.0;1410.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1316</x>
+      <y>420</y>
+      <w>1344</w>
+      <h>371</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>1900.0;60.0;1900.0;10.0;70.0;10.0;70.0;510.0;10.0;510.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3178</x>
+      <y>448</y>
+      <w>301</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;140.0;10.0;10.0;410.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>539</x>
+      <y>392</y>
+      <w>140</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>/*HasContainer*/
+Package::uiw.mixin
+--
++Enable: char
++Padding: double
++Spacing: double
+#h: struct
+#hLayout: struct
+#IsConstructed: logical
+--
++HasPanel
+/#onStyleChanged(obj,~)/
+/#onVisibleChanged(obj,evt)/
+/#onEnableChanged(obj,~)/
+/#onResized(obj)/
+/#redraw(obj)/
+/#onContainerResized(obj)/
+style=wordwrap
+
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>448</x>
+      <y>294</y>
+      <w>707</w>
+      <h>196</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>990.0;260.0;990.0;10.0;10.0;10.0;10.0;140.0</additional_attributes>
+  </element>
+</diagram>

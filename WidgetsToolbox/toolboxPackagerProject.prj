@@ -1,0 +1,313 @@
+<deployment-project plugin="plugin.toolbox" plugin-version="1.0">
+  <configuration build-checksum="979823513" file="C:\Work\Widgets\toolboxPackagerProject.prj" location="C:\Work\Widgets" name="toolboxPackagerProject" target="target.toolbox" target-name="Package Toolbox">
+    <param.appname>Widgets Toolbox</param.appname>
+    <param.authnamewatermark>Robyn Jackey</param.authnamewatermark>
+    <param.email>robyn.jackey@mathworks.com</param.email>
+    <param.company>MathWorks</param.company>
+    <param.summary>Modular components and controls to efficiently develop advanced user interfaces in MATLAB.</param.summary>
+    <param.description>Widgets Toolbox helps you efficiently develop advanced user interfaces in MATLAB. The toolbox provides additional UI controls and higher-level modules that implement common building blocks needed in MATLAB apps. Widgets combine existing control functionalities together into a larger, reusable, common functionality to accelerate development of graphical user interfaces. Existing users of GUI Layout Toolbox will find Widgets Toolbox pairs nicely with GUI Layout Toolbox. 
+
+Example components are:
+- A file selection control, consisting of a label, edit field, and browse button
+- A listbox control combined with a label and a set of buttons for managing the list composition and ordering
+- A tree control providing advanced functionalities like drag and drop, and checkbox nodes
+
+Widgets Toolbox also provides
+- Superclasses for a whole application, to provide and manage saving and loading session state to and from a MAT-file
+- Dialog windows for several typical kinds of user selection (and more to come in future development)
+- A logger, especially useful for complex or deployed apps, that will store application events/data (of a configurable severity level) to a log file and display them in the command window
+- Framework for efficiently building your own widgets
+
+Widgets Toolbox is most applicable to users who are writing hand code to develop complex, modular applications with hand code using object-oriented programming in MATLAB. This toolbox currently only supports traditional MATLAB figure windows (Java-based) and does not support web graphics used in uifigure containers or App Designer. Widgets may be added programmatically to a GUIDE-generated app, but they will not show up in the graphical GUIDE editor. 
+
+It is recommended you install this as a toolbox to automatically set up the proper MATLAB and Java paths. If you install this manually, please review the installation directions in the Getting Started guide.
+
+Planning a complex or business-critical app? MathWorks Consulting can advise you on design and architecture: https://www.mathworks.com/services/consulting/proven-solutions/software-development-with-matlab.html</param.description>
+    <param.screenshot>${PROJECT_ROOT}\toolboxLogo.png</param.screenshot>
+    <param.version>1.3.330</param.version>
+    <param.output>${PROJECT_ROOT}\Widgets Toolbox.mltbx</param.output>
+    <param.products.name>
+      <item>MATLAB</item>
+    </param.products.name>
+    <param.products.id>
+      <item>1</item>
+    </param.products.id>
+    <param.products.version>
+      <item>9.6</item>
+    </param.products.version>
+    <param.platforms />
+    <param.guid>b0bebf59-856a-4068-9d9c-0ed8968ac9e6</param.guid>
+    <param.exclude.filters />
+    <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
+    <param.examples>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;examples&gt;
+   &lt;exampleCategory name="demo"&gt;
+      &lt;example name="demoAboutDialog" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoAboutDialog.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoAboutDialog.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoApp" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoApp.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoApp.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoCheckboxTree" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoCheckboxTree.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoCheckboxTree.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoColorOrderSelector" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoColorOrderSelector.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoColorOrderSelector.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoColorSelector" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoColorSelector.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoColorSelector.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoEditablePopup" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoEditablePopup.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoEditablePopup.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoEditablePopupWithButton" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoEditablePopupWithButton.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoEditablePopupWithButton.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoEditableText" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoEditableText.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoEditableText.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoEditableTextWithHistory" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoEditableTextWithHistory.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoEditableTextWithHistory.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoFileSelector" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoFileSelector.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoFileSelector.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoFolderSelector" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoFolderSelector.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoFolderSelector.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoImageSelector" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoImageSelector.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoImageSelector.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoList" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoList.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoList.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoListSelector" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoListSelector.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoListSelector.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoListWithButtons" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoListWithButtons.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoListWithButtons.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoLogger" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoLogger.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoLogger.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoPassword" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoPassword.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoPassword.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoPopup" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoPopup.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoPopup.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoProgressBar" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoProgressBar.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoProgressBar.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoSearchListDialog" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoSearchListDialog.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoSearchListDialog.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoSlider" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoSlider.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoSlider.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoTable" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoTable.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoTable.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoTableSelectionDialog" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoTableSelectionDialog.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoTableSelectionDialog.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoText" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoText.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoText.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoToolbar" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoToolbar.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoToolbar.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoToolbarDark" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoToolbarDark.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoToolbarDark.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoTree" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoTree.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoTree.mlx&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+   &lt;/exampleCategory&gt;
+&lt;/examples&gt;</param.examples>
+    <param.demosxml />
+    <param.apps />
+    <param.registered.apps />
+    <param.docs>${PROJECT_ROOT}\toolbox\info.xml</param.docs>
+    <param.getting.started.guide>${PROJECT_ROOT}\toolbox\doc\GettingStarted.mlx</param.getting.started.guide>
+    <param.matlabpath.excludes>
+      <item>/doc/helpsearch-v2</item>
+      <item>/demo/html</item>
+    </param.matlabpath.excludes>
+    <param.javaclasspath.excludes />
+    <param.exported.on.package>false</param.exported.on.package>
+    <param.required.addons>
+      <requiredaddons>
+        <requiredAddOn earliest="2.3.4" fromRepository="true" id="e5af5a78-4a80-11e4-9553-005056977bd0" include="true" latest="latest">GUI Layout Toolbox</requiredAddOn>
+      </requiredaddons>
+    </param.required.addons>
+    <param.matlab.project.id />
+    <param.matlab.project.name />
+    <param.release.start>R2017a</param.release.start>
+    <param.release.end>latest</param.release.end>
+    <param.release.current.only>false</param.release.current.only>
+    <param.compatiblity.windows>true</param.compatiblity.windows>
+    <param.compatiblity.macos>true</param.compatiblity.macos>
+    <param.compatiblity.linux>true</param.compatiblity.linux>
+    <param.compatiblity.matlabonline>false</param.compatiblity.matlabonline>
+    <param.installation.map />
+    <param.additional.sw.names />
+    <param.additional.sw.licenses />
+    <param.additional.sw.win.url />
+    <param.additional.sw.mac.url />
+    <param.additional.sw.linux.url />
+    <unset>
+      <param.output />
+      <param.platforms />
+      <param.exclude.filters />
+      <param.exclude.pcodedmfiles />
+      <param.demosxml />
+      <param.apps />
+      <param.registered.apps />
+      <param.javaclasspath.excludes />
+      <param.exported.on.package />
+      <param.matlab.project.id />
+      <param.matlab.project.name />
+      <param.release.current.only />
+      <param.compatiblity.windows />
+      <param.compatiblity.macos />
+      <param.compatiblity.linux />
+      <param.additional.sw.names />
+      <param.additional.sw.licenses />
+      <param.additional.sw.win.url />
+      <param.additional.sw.mac.url />
+      <param.additional.sw.linux.url />
+    </unset>
+    <fileset.rootdir>
+      <file>${PROJECT_ROOT}\toolbox</file>
+    </fileset.rootdir>
+    <fileset.rootfiles>
+      <file>${PROJECT_ROOT}\toolbox\demo</file>
+      <file>${PROJECT_ROOT}\toolbox\demos.xml</file>
+      <file>${PROJECT_ROOT}\toolbox\doc</file>
+      <file>${PROJECT_ROOT}\toolbox\info.xml</file>
+      <file>${PROJECT_ROOT}\toolbox\resource</file>
+      <file>${PROJECT_ROOT}\toolbox\widgets</file>
+      <file>${PROJECT_ROOT}\toolbox\widgetsRoot.m</file>
+    </fileset.rootfiles>
+    <fileset.depfun.included />
+    <fileset.depfun.excluded>
+      <file>${MATLAB_ROOT}\toolbox\matlab\demos\patients.mat</file>
+    </fileset.depfun.excluded>
+    <fileset.package />
+    <build-deliverables>
+      <file location="${PROJECT_ROOT}" name="Widgets Toolbox.mltbx" optional="false">C:\Work\Widgets\Widgets Toolbox.mltbx</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2019a</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="embeddedcoder" />
+        <toolbox name="gpucoder" />
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="neuralnetwork" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
+      </toolbox>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
