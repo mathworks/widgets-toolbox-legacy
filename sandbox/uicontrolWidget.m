@@ -1,7 +1,4 @@
-classdef tempWidget < matlab.ui.componentcontainer.internal.ComponentContainer
-    %UNTITLED Summary of this class goes here
-    %   Detailed explanation goes here
-    
+classdef uicontrolWidget < matlab.ui.componentcontainer.internal.ComponentContainer
     
     methods (Access=protected)
         function setup(obj)
