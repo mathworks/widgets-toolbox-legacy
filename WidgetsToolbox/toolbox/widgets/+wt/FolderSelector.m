@@ -1,4 +1,4 @@
-classdef FolderSelector < wt.abstract.WidgetBase & wt.mixin.HasTextEditField
+classdef FolderSelector < wt.abstract.WidgetBase & wt.abstract.HasTextEditField
     % FolderSelector - A folder selection control with browse button
     %
     % Create a widget that allows you to specify a folder by editable
@@ -79,7 +79,7 @@ classdef FolderSelector < wt.abstract.WidgetBase & wt.mixin.HasTextEditField
             obj.Grid.RowHeight = {'1x'};
             
             % Create text field from superclass method
-            obj.setup@wt.mixin.HasTextEditField(obj.Grid);
+            obj.setup@wt.abstract.HasTextEditField(obj.Grid);
             
             % Create Button
             obj.ButtonControl = uibutton(obj.Grid, ...
@@ -93,7 +93,7 @@ classdef FolderSelector < wt.abstract.WidgetBase & wt.mixin.HasTextEditField
         function update(obj)
             
             % Call superclass method
-            obj.update@wt.mixin.HasTextEditField();
+            obj.update@wt.abstract.HasTextEditField();
             
             % Update the edit control text
             obj.EditControl.Value = obj.Value;

@@ -1,5 +1,5 @@
 classdef FolderSelectorConfigurable2 < wt.abstract.WidgetBase & ...
-        wt.mixin.HasCallback
+        wt.abstract.HasCallback
     % FolderSelectorConfigurable2 - A folder selection control with browse button
     %
     % Create a widget that allows you to specify a folder by editable

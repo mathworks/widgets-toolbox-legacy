@@ -1,11 +1,8 @@
-classdef HasTextEditField < wt.mixin.HasCallback
-    % TextEditField - A field for editable text
+classdef HasTextEditField < wt.abstract.HasCallback
+    % HasTextEditField - Abstract for components with a text edit field
     %
-    % Create a widget with an editable text field, and optional history
+    % Defines a widget with an editable text field or optional history
     % dropdown. 
-    %
-    % Syntax:
-    %           w = wt.TextField('Property','Value',...)
     %
     
     %   Copyright 2020 The MathWorks Inc.

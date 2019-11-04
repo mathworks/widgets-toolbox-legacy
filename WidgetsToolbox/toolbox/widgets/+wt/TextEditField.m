@@ -1,4 +1,4 @@
-classdef TextEditField < wt.abstract.WidgetBase & wt.mixin.HasCallback
+classdef TextEditField < wt.abstract.WidgetBase & wt.abstract.HasCallback
     % TextEditField - A field for editable text
     %
     % Create a widget with an editable text field, and optional history

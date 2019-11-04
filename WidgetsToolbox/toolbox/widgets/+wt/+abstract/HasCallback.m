@@ -1,11 +1,8 @@
 classdef (Abstract) HasCallback < handle
-    % HasCallback - Mixin to provide a callback for a widget
+    % HasCallback - Provides a standard callback for a widget
     % ---------------------------------------------------------------------
-    % This is a mixin class. It provides a callback for a widget.
-    %
-    % The class must inherit this object to access the Callback property
-    % and callCallback method. The callback must be stored as a function
-    % handle, such as:
+    % This class provides a Callback property and callCallback method. The
+    % callback must be stored as a function handle, such as:
     %
     %   obj.Callback = @(src,evt)foo(obj,evt);
     %
@@ -19,7 +16,7 @@ classdef (Abstract) HasCallback < handle
     %   obj.callCallback(evt);
     %
     
-%   Copyright 2016-2019 The MathWorks Inc.
+    %   Copyright 2016-2020 The MathWorks Inc.
     %
     % Auth/Revision:
     %   MathWorks Consulting

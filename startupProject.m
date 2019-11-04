@@ -1,7 +1,7 @@
 function startupProject()
 
 % Disable warning
-warning('off','MATLAB:javaclasspath:jarAlreadySpecified');
+warnState = warning('off','MATLAB:javaclasspath:jarAlreadySpecified');
 warning('off','MATLAB:GENERAL:JAVARMPATH:NotFoundInPath');
 
 % Disable installed Widgets Toolbox
