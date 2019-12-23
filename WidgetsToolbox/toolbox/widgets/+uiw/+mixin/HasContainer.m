@@ -125,18 +125,6 @@ classdef HasContainer < uiw.mixin.AssignPVPairs & matlab.mixin.SetGet & ...
             
         end %function
         
-        
-        function hAll = findHandleObjects(obj)
-            
-            % Look for all encapsulated graphics objects in "h" property
-            %hEncapsulatedCell = struct2cell(obj.h);
-            hEncapsulatedCell = [struct2cell(obj.h); struct2cell(obj.hLayout)];
-            isGraphicsObj = cellfun(@ishghandle,hEncapsulatedCell,'UniformOutput',false);
-            isGraphicsObj = cellfun(@all,isGraphicsObj,'UniformOutput',true);
-            hAll = [hEncapsulatedCell{isGraphicsObj}]';
-            
-        end %function
-        
     end %methods
     
     

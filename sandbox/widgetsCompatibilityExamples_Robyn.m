@@ -84,12 +84,16 @@ s.matlab.ui.internal.uicontrol.UseRedirectInUifigure.TemporaryValue = 1;
 % start matlab with the -webfigures flag.
 
 
-%% Issue 3: Legacy figure support
+%% Issue 3: Legacy figure support 
 
 % This very simple example works to show I can create a uicontrol in a
-% ComponentContainer.
+% ComponentContainer and place in a traditional figure and a uifigure
 f = figure;
 t = uicontrolWidget(f);
+
+uf = uifigure;
+t = uicontrolWidget(uf);
+
 
 
 %% Issue 3: Legacy figure support
