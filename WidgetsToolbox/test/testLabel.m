@@ -68,9 +68,9 @@ function testLabelVisibility(testCase)
 
 w = uiw.widget.EditableText();
 
-verifyEqual(testCase, w.LabelVisible, 'off')
+verifyEqual(testCase, char(w.LabelVisible), 'off')
 w.Label = 'test label';
-verifyEqual(testCase, w.LabelVisible, 'on')
+verifyEqual(testCase, char(w.LabelVisible), 'on')
 
 end %function
 
@@ -164,7 +164,7 @@ verifyEqual(testCase, w.LabelLocation, testCase.TestData.LabelLocation)
 verifyEqual(testCase, w.LabelHeight, testCase.TestData.LabelHeight)
 verifyEqual(testCase, w.LabelWidth, testCase.TestData.LabelWidth)
 verifyEqual(testCase, w.LabelSpacing, testCase.TestData.LabelSpacing)
-verifyEqual(testCase, w.LabelVisible, testCase.TestData.LabelVisible)
+verifyEqual(testCase, char(w.LabelVisible), testCase.TestData.LabelVisible)
 
 verifyEqual(testCase, w.FontAngle, 'normal')
 verifyEqual(testCase, w.FontName, 'Arial')

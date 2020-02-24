@@ -139,7 +139,7 @@ w = uiw.widget.FileSelector(...
     'Position',[10 10 400 25]);
 
 % Get the internal edit box
-hEdit = findall(w,'Type','UIControl','Style','edit');
+hEdit = w.hEditBox;
 
 % Ensure we found it
 assumeNumElements(testCase, hEdit, 1)
