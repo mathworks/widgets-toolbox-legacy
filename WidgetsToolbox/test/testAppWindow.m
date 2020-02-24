@@ -69,13 +69,13 @@ classdef testAppWindow < matlab.unittest.TestCase
         
         function testFigureDeletion(testCase)
             
-            % Verify deleting the app deletes the figure
+            % Verify deleting the app deletes the uifigure
             app = testHelper.AppWindowHelper();
             fig = app.Figure;
             delete(app);
             testCase.verifyFalse( isvalid(fig) );
             
-            % Verify deleting the figure deletes the app
+            % Verify deleting the uifigure deletes the app
             app = testHelper.AppWindowHelper();
             fig = app.Figure;
             delete(fig);

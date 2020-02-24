@@ -17,7 +17,7 @@ classdef (Abstract) EditableTextControl < uiw.abstract.WidgetContainer ...
     % ---------------------------------------------------------------------
     
     %% Properties
-    properties (GetAccess=protected, SetAccess=protected)
+    properties (Hidden, SetAccess=protected)
         hEditBox matlab.graphics.Graphics % The editable text control
     end
     

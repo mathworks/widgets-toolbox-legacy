@@ -11,3 +11,11 @@ end
 
 % Restore warning
 warning(warnState);
+
+% Leave off javacomponent warning
+warning('off','MATLAB:ui:javacomponent:FunctionToBeRemoved');
+
+% Turn on uicontrol redirect
+s = settings;
+s.matlab.ui.internal.uicontrol.UseRedirect.TemporaryValue = 1;
+s.matlab.ui.internal.uicontrol.UseRedirectInUifigure.TemporaryValue = 1;

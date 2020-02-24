@@ -32,7 +32,7 @@ end %function
 % Setup once for each test
 function setup(testCase)
 
-    testCase.TestData.Figure = figure();
+    testCase.TestData.Figure = uifigure();
     
 end %function
 

@@ -28,7 +28,7 @@ end %function
 % Setup once for each test
 function setup(testCase)
 
-testCase.TestData.Figure = figure();
+testCase.TestData.Figure = uifigure();
 
 end %function
 
@@ -172,7 +172,7 @@ w = uiw.widget.EditableText(...
     'Position', [10 10 400 25]);
 
 % Get the internal edit box
-hEdit = findall(w,'Type','UIControl','Style','edit');
+hEdit = w.hEditBox;
 
 % Ensure we found it
 assumeNumElements(testCase, hEdit, 1)

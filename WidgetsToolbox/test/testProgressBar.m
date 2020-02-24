@@ -19,7 +19,7 @@ end %function
 % Setup once for each test
 function setup(testCase)
 
-testCase.TestData.Figure = figure('Units','pixels','Position',[100 100 320 45]);
+testCase.TestData.Figure = uifigure('Units','pixels','Position',[100 100 320 45]);
 
 end %function
 

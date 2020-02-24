@@ -56,7 +56,6 @@ verDate = datestr(now,1); % Today's date
 
 % Define input file locations
 demoPath = fullfile(toolboxRoot,'toolbox', 'demo');
-unitTestPath = fullfile(toolboxRoot,'test');
 docInputPath = fullfile(toolboxRoot,'doc_input');
 toolboxPath = fullfile(toolboxRoot,'toolbox');
 
@@ -78,7 +77,7 @@ jarFile = fullfile(widgetsRoot,'resource','MathWorksConsultingWidgets.jar');
 javaaddpath(jarFile);
 
 %% Run unit tests
-testResult = runtests(unitTestPath);
+testResult = runToolboxUnitTests;
 if ~all([testResult.Passed])
     error('Unit tests failed.');
 end

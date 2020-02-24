@@ -54,7 +54,7 @@ classdef AppWindowHelper < uiw.abstract.AppWindow
             % Redraw the entire view
             obj.redraw();
             
-            % Now, make the figure visible
+            % Now, make the uifigure visible
             obj.Visible = 'on';
             
         end %function
@@ -68,7 +68,7 @@ classdef AppWindowHelper < uiw.abstract.AppWindow
         
         function create(obj)
             
-            % Put something on the figure
+            % Put something on the uifigure
             obj.h.TestControl = uicontrol(...
                 'Parent',obj.Figure,...
                 'Style','text',...

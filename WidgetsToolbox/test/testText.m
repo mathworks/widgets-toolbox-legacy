@@ -29,7 +29,7 @@ end %function
 % Setup once for each test
 function setup(testCase)
 
-testCase.TestData.Figure = figure();
+testCase.TestData.Figure = uifigure();
 
 end %function
 
@@ -116,7 +116,7 @@ w = uiw.widget.Text(...
     'Position', [10 10 400 25]);
 
 % Get the internal text box
-hText = findall(w,'Type','UIControl','Style','text','String','abcdef');
+hText = w.hText;
 
 % Ensure we found it
 assumeNumElements(testCase, hText, 1)

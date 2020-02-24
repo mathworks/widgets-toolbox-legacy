@@ -18,7 +18,7 @@ classdef Text < uiw.abstract.WidgetContainer & uiw.mixin.HasEditableText
     
     
     %% Properties
-    properties (GetAccess=protected, SetAccess=private)
+    properties (Hidden, SetAccess=private)
         hText matlab.ui.control.UIControl % The text control
     end
     
