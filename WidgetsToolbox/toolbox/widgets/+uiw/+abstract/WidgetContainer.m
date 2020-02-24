@@ -1,7 +1,5 @@
-classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
-        matlab.ui.componentcontainer.internal.ComponentContainer
-    %uiw.abstract.BaseContainer
-    %uiw.abstract.BasePanel & uiw.abstract.BaseLabel
+classdef WidgetContainer < uiw.abstract.BaseContainer & ...
+        uiw.abstract.BasePanel & uiw.abstract.BaseLabel
     % WidgetContainer - Base class for a graphical widget
     %
     % This class provides the basic properties needed for a panel that will
@@ -10,7 +8,7 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
     % shown once any Label* property has been set.
     %
     
-    %   Copyright 2008-2019 The MathWorks Inc.
+%   Copyright 2008-2019 The MathWorks Inc.
     %
     % Auth/Revision:
     %   MathWorks Consulting
@@ -19,83 +17,11 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
     %   $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
     % ---------------------------------------------------------------------
     
-    %% Properties
-    properties (AbortSet)
-        Enable = 'on' %Allow interaction with this widget [(on)|off]
-        Padding = 0 %Pixel spacing around the widget (applies to some widgets)
-        Spacing = 4 %Pixel spacing between controls (applies to some widgets)
-    end %properties
-    
-    properties (AbortSet, Dependent)
-        FontAngle %Style of the font [(normal)|italic]
-        FontName %Name of the font
-        FontSize %Size of the font
-        FontUnits %Units of the font [inches|centimeters|characters|normalized|(points)|pixels]
-        FontWeight %Weight of the font [(normal)|bold]
-        ForegroundColor %Foreground/font color of the panel
-    end %properties
-    
-    properties (Access=protected)
-        %hBasePanel = matlab.ui.container.Panel.empty(0,1); %The internal panel upon which the widget contents are placed
-        hBasePanel %The internal panel upon which the widget contents are placed
-        hLabel %The label control
-    end %properties
-    
-    properties (SetAccess=protected)
-        h struct = struct() %For widgets to store internal graphics objects
-        hLayout struct = struct() %For widgets to store internal layout objects
-        IsConstructed logical = false %Indicates widget has completed construction, useful for optimal performance to minimize redraws on launch, etc.
-    end %properties
-    
-    
-    %% Properties
-    properties (AbortSet, Dependent)
-        Label char %The label (char). If set, LabelVisible changes to 'on'.
-        LabelFontAngle char %Font angle of the label [(normal)|italic]
-        LabelFontName char %Font name of the label
-        LabelFontSize double %Font size of the label
-        LabelFontUnits char %Font units of the label [inches|centimeters|characters|normalized|(points)|pixels]
-        LabelFontWeight char %Font weight of the label [(normal)|bold]
-        LabelForegroundColor %Font color of the label
-        LabelHorizontalAlignment char %Alignment of the label
-        LabelVisible char %Toggles the label visibility [on|(off)]
-        LabelTooltipString char %Tooltip of the label
-    end %properties
-    
-    properties (AbortSet)
-        %Placement of the label [(left)|right|top|bottom]
-        LabelLocation char {mustBeMember(LabelLocation,{'left','right','top','bottom'})} = 'left'
-        
-        %Pixel height of label (applies to top|bottom location)
-        LabelHeight (1,1) double {mustBePositive} = 20
-        
-        %Pixel width of label (applies to left|right location)
-        LabelWidth (1,1) double {mustBePositive} = 75
-        
-        %Pixel spacing between label and widget
-        LabelSpacing (1,1) double {mustBeNonnegative} = 4
-    end %properties
-    
-    properties (Access=protected)
-        LabelVisible_ (1,1) logical = false; %Cache of LabelVisible
-    end
-    
-    properties (SetAccess=immutable, GetAccess=protected)
-        %hLabel %The label control
-    end %properties
-    
     
     %% Properties
     properties (Access=private)
         InnerSize_ double = [1 1] % Cache of the inner pixel size of the widget (will not report below a minimum size)
     end
-    properties (Access=private)
-        DestroyedListener %Listener for container destroyed
-        VisibleChangedListener %Listener for visibility changes
-        SizeChangedListener %Listener for resize of container
-        StyleChangedListener %Listener for container style changes
-    end
-    
     
     
     %% Constructor
@@ -104,34 +30,14 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
         function obj = WidgetContainer()
             % Construct the control
             
-            parent = uifigure('Visible','off');
-            %parent = gobjects(0);
-            
             % Call superclass constructors
-            obj@matlab.ui.componentcontainer.internal.ComponentContainer(parent);
-            
-            % Attach listeners and callbacks
-            obj.DestroyedListener = event.listener(obj,...
-                'ObjectBeingDestroyed',@(h,e)onContainerBeingDestroyed(obj));
-            obj.SizeChangedListener = event.listener(obj,...
-                'SizeChanged',@(h,e)onContainerResized(obj));
-            obj.StyleChangedListener = event.proplistener(obj,...
-                findprop(obj,'BackgroundColor'),'PostSet',@(h,e)onStyleChanged(obj,e));
-            obj.VisibleChangedListener = event.proplistener(obj,...
-                findprop(obj,'Visible'),'PostSet',@(h,e)onVisibleChanged(obj));
-            
-            
-            
-            
-            
-            % Call superclass constructors
-            %obj@uiw.abstract.BaseContainer();
-            %obj@uiw.abstract.BasePanel();
-            %obj@uiw.abstract.BaseLabel();
+            obj@uiw.abstract.BasePanel();
+            obj@uiw.abstract.BaseContainer();
+            obj@uiw.abstract.BaseLabel();
             
             % Assign parents
-            %             obj.hBasePanel.Parent = obj;
-            %             obj.hLabel.Parent = obj;
+            obj.hLabel.Parent = obj;
+            obj.hBasePanel.Parent = obj;
             
             % Adjust sizing of label and widget panel
             obj.onContainerResized();
@@ -144,31 +50,6 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
     
     %% Protected methods
     methods (Access=protected)
-        
-        function setup(obj)
-            % To support ComponentContainer
-            
-            if isempty(obj.hBasePanel)
-                %obj.hBasePanel = matlab.ui.container.Panel(...
-                obj.hLabel = uicontrol(...
-                    'Parent',obj,...
-                    'HandleVisibility','off',...
-                    'Style', 'text', ...
-                    'HorizontalAlignment','left',...
-                    'Units','pixels',...
-                    'TooltipString','',...
-                    'Visible','off',...
-                    'FontSize',10);
-                obj.hBasePanel = uipanel(...
-                    'Parent',obj,...
-                    'HandleVisibility','off',...
-                    'BorderType','none',...
-                    'Units','pixels',...
-                    'FontSize', 10);
-            end
-            
-        end %function
-        
         
         function redraw(obj)
             % Handle state changes that may need UI redraw - subclass may override
@@ -193,112 +74,40 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
         end %function
         
         
-        function onEnableChanged(obj,hAdd)
+        function onEnableChanged(obj,~)
             % Handle updates to Enable state - subclass may override
             
             % Ensure the construction is complete
             if obj.IsConstructed
                 
                 % Find all uicontrols depth 1 that have an Enable field
-                if nargin < 2
-                    hAdd = [obj.hLabel;
-                        findall(obj.hBasePanel,'-property','Enable','-depth',1) ];
-                end
+                hTopLevel = [obj.hLabel;
+                    findall(obj.hBasePanel,'-property','Enable','-depth',1) ];
                 
-                % Look for all encapsulated graphics objects in "h" property
-                hAll = obj.findHandleObjects();
-                
-                % Combine them all
-                if nargin>1 && ~isempty(hAdd) && all(ishghandle(hAdd))
-                    hAll = unique([hAll(:); hAdd(:)]);
-                end
-                
-                % Default behavior: Set all objects with an Enable field
-                hHasEnable = hAll( isprop(hAll,'Enable') );
-                set(hHasEnable,'Enable',obj.Enable);
+                % Call superclass method implementation to make changes
+                obj.onEnableChanged@uiw.mixin.HasContainer(hTopLevel)
                 
             end %if obj.IsConstructed
             
         end %function
         
-        
-        function onVisibleChanged(obj)
-            % Handle updates to Visible state - subclass may override
-            
-            % Ensure the construction is complete
-            if obj.IsConstructed
-                
-            end %if obj.IsConstructed
-            
-        end %function
-        
-        
-        function onStyleChanged(obj,hAdd)
+
+        function onStyleChanged(obj,~)
             % Handle updates to style changes - subclass may override
             
             % Ensure the construction is complete
             if obj.IsConstructed
                 
                 % Get any other objects at the top level of the widget
-                if nargin < 2
-                    hAdd = findall(obj.hBasePanel,'-depth',1);
-                end
+                hTopLevel = findall(obj.hBasePanel,'-depth',1);
                 
-                
-                % Look for all encapsulated graphics objects in "h" property
-                hAll = obj.findHandleObjects();
-                
-                % Combine them all
-                if nargin>1 && ~isempty(hAdd)
-                    hAll = unique([hAll(:); hAdd(:)]);
-                end
-                
-                % Set all objects that have font props
-                if isprop(obj,'FontName')
-                    set(hAll( isprop(hAll,'FontName') ),...
-                        'FontName',obj.FontName,...
-                        'FontSize',obj.FontSize);
-                    set(hAll( isprop(hAll,'FontWeight') ),...
-                        'FontWeight',obj.FontWeight,...
-                        'FontAngle',obj.FontAngle);
-                    try %#ok<TRYNC>
-                        set(hAll( isprop(hAll,'FontUnits') ),...
-                            'FontUnits',obj.FontUnits);
-                    end
-                end
-                
-                % Set all objects that have ForegroundColor
-                % Exclude boxpanels
-                if isprop(obj,'ForegroundColor')
-                    isBoxPanel = arrayfun(@(x)isa(x,'uix.BoxPanel'),hAll);
-                    set(hAll( isprop(hAll,'ForegroundColor') & ~isBoxPanel ),...
-                        'ForegroundColor',obj.ForegroundColor);
-                end
-                
-                % Set all objects that have BackgroundColor
-                if isprop(obj,'BackgroundColor')
-                    hasBGColor = isprop(hAll,'BackgroundColor');
-                    set(hAll( hasBGColor ),...
-                        'BackgroundColor',obj.BackgroundColor);
-                end
-                
+                % Call superclass method implementation to make changes
+                obj.onStyleChanged@uiw.mixin.HasContainer(hTopLevel)
                 
                 % Also modify label
                 obj.hLabel.BackgroundColor = obj.BackgroundColor;
                 
             end %if obj.IsConstructed
-            
-        end %function
-        
-        
-        function hAll = findHandleObjects(obj)
-            
-            % Look for all encapsulated graphics objects in "h" property
-            %hEncapsulatedCell = struct2cell(obj.h);
-            hEncapsulatedCell = [struct2cell(obj.h); struct2cell(obj.hLayout)];
-            isGraphicsObj = cellfun(@ishghandle,hEncapsulatedCell,'UniformOutput',false);
-            isGraphicsObj = cellfun(@all,isGraphicsObj,'UniformOutput',true);
-            hAll = [hEncapsulatedCell{isGraphicsObj}]';
             
         end %function
         
@@ -333,50 +142,9 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
     end %methods
     
     
-    %% Private methods
-    methods (Access=private)
-        
-        function makeLabelVisible(obj)
-            % Turns on the label visibility
-            
-            obj.LabelVisible_ = true;
-            uiw.utility.setPropsIfDifferent(obj.hLabel,'Visible','on')
-            obj.onContainerResized();
-            
-        end %function
-        
-    end %methods
-    
-    
     
     %% Sealed Protected methods
     methods (Sealed, Access=protected)
-        
-        function pos = getPixelPosition(obj,recursive)
-            % Return the container's pixel position
-            
-            if strcmp(obj.Units,'pixels') && (nargin<2 || ~recursive)
-                pos = obj.Position;
-            else
-                pos = getpixelposition(obj, recursive);
-                pos = ceil(pos);
-            end
-            
-        end %function
-        
-        
-        function [w,h] = getPixelSize(obj)
-            % Return the container's outer pixel size
-            
-            if strcmp(obj.Units,'pixels')
-                pos = obj.Position;
-            else
-                pos = getpixelposition(obj,false);
-            end
-            w = max(pos(3), 10);
-            h = max(pos(4), 10);
-        end %function
-        
         
         function [w,h] = getInnerPixelSize(obj)
             % Return the widget's inner pixel size
@@ -446,212 +214,6 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
     end %methods
     
     
-    
-    %% Get/Set methods
-    methods
-        
-        % Enable
-        function set.Enable(obj,value)
-            value = validatestring(value,{'on','off'});
-            evt = struct('Property','Enable',...
-                'OldValue',obj.Enable,...
-                'NewValue',value);
-            obj.Enable = value;
-            obj.onEnableChanged(evt);
-        end
-        
-        % Padding
-        function set.Padding(obj,value)
-            validateattributes(value,{'numeric'},{'real','nonnegative','scalar','finite'})
-            obj.Padding = value;
-            obj.onContainerResized();
-        end
-        
-        % Spacing
-        function set.Spacing(obj,value)
-            validateattributes(value,{'numeric'},{'real','nonnegative','scalar','finite'})
-            obj.Spacing = value;
-            obj.onContainerResized();
-        end
-        
-        % IsConstructed
-        function value = get.IsConstructed(obj)
-            value = isvalid(obj) && obj.IsConstructed;
-        end
-        
-        % ForegroundColor
-        function value = get.ForegroundColor(obj)
-            value = obj.hBasePanel.ForegroundColor;
-        end
-        function set.ForegroundColor(obj,value)
-            evt = struct('Property','ForegroundColor',...
-                'OldValue',obj.ForegroundColor,...
-                'NewValue',value);
-            obj.hBasePanel.ForegroundColor = value;
-            obj.onStyleChanged(evt);
-        end
-        
-        % FontAngle
-        function value = get.FontAngle(obj)
-            value = obj.hBasePanel.FontAngle;
-        end
-        function set.FontAngle(obj,value)
-            evt = struct('Property','FontAngle',...
-                'OldValue',obj.FontAngle,...
-                'NewValue',value);
-            obj.hBasePanel.FontAngle = value;
-            obj.onStyleChanged(evt);
-        end
-        
-        % FontName
-        function value = get.FontName(obj)
-            value = obj.hBasePanel.FontName;
-        end
-        function set.FontName(obj,value)
-            evt = struct('Property','',...
-                'OldValue',obj.FontName,...
-                'NewValue',value);
-            obj.hBasePanel.FontName = value;
-            obj.onStyleChanged(evt);
-        end
-        
-        % FontSize
-        function value = get.FontSize(obj)
-            value = obj.hBasePanel.FontSize;
-        end
-        function set.FontSize(obj,value)
-            evt = struct('Property','FontSize',...
-                'OldValue',obj.FontSize,...
-                'NewValue',value);
-            obj.hBasePanel.FontSize = value;
-            obj.onStyleChanged(evt);
-        end
-        
-        % FontUnits
-        function value = get.FontUnits(obj)
-            value = obj.hBasePanel.FontUnits;
-        end
-        function set.FontUnits(obj,value)
-            evt = struct('Property','FontUnits',...
-                'OldValue',obj.FontUnits,...
-                'NewValue',value);
-            obj.hBasePanel.FontUnits = value;
-            obj.onStyleChanged(evt);
-        end
-        
-        % FontWeight
-        function value = get.FontWeight(obj)
-            value = obj.hBasePanel.FontWeight;
-        end
-        function set.FontWeight(obj,value)
-            evt = struct('Property','FontWeight',...
-                'OldValue',obj.FontWeight,...
-                'NewValue',value);
-            obj.hBasePanel.FontWeight = value;
-            obj.onStyleChanged(evt);
-        end
-        
-        function set.LabelSpacing(obj,value)
-            obj.LabelSpacing = value;
-            obj.makeLabelVisible();
-        end
-        
-        function value = get.Label(obj)
-            value = obj.hLabel.String;
-        end
-        function set.Label(obj, value)
-            obj.hLabel.String = value;
-            obj.makeLabelVisible();
-        end
-        
-        function set.LabelLocation(obj, value)
-            obj.LabelLocation = value;
-            obj.makeLabelVisible();
-        end
-        
-        function set.LabelWidth(obj, value)
-            obj.LabelWidth = value;
-            obj.makeLabelVisible();
-        end
-        
-        function set.LabelHeight(obj, value)
-            obj.LabelHeight = value;
-            obj.makeLabelVisible();
-        end
-        
-        
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % Pass-through properties that modify the label uicontrol
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        
-        function value = get.LabelVisible(obj)
-            value = obj.hLabel.Visible;
-        end
-        function set.LabelVisible(obj,value)
-            obj.hLabel.Visible = value;
-            obj.makeLabelVisible();
-        end
-        
-        function value = get.LabelForegroundColor(obj)
-            value = obj.hLabel.ForegroundColor;
-        end
-        function set.LabelForegroundColor(obj,value)
-            obj.hLabel.ForegroundColor = value;
-        end
-        
-        function value = get.LabelFontAngle(obj)
-            value = obj.hLabel.FontAngle;
-        end
-        function set.LabelFontAngle(obj,value)
-            obj.hLabel.FontAngle = value;
-        end
-        
-        function value = get.LabelFontName(obj)
-            value = obj.hLabel.FontName;
-        end
-        function set.LabelFontName(obj,value)
-            obj.hLabel.FontName = value;
-        end
-        
-        function value = get.LabelFontSize(obj)
-            value = obj.hLabel.FontSize;
-        end
-        function set.LabelFontSize(obj,value)
-            obj.hLabel.FontSize = value;
-        end
-        
-        function value = get.LabelFontUnits(obj)
-            value = obj.hLabel.FontUnits;
-        end
-        function set.LabelFontUnits(obj,value)
-            obj.hLabel.FontUnits = value;
-        end
-        
-        function value = get.LabelFontWeight(obj)
-            value = obj.hLabel.FontWeight;
-        end
-        function set.LabelFontWeight(obj,value)
-            obj.hLabel.FontWeight = value;
-        end
-        
-        function value = get.LabelHorizontalAlignment(obj)
-            value = obj.hLabel.HorizontalAlignment;
-        end
-        function set.LabelHorizontalAlignment(obj,value)
-            obj.hLabel.HorizontalAlignment = value;
-        end
-        
-        function value = get.LabelTooltipString(obj)
-            value = obj.hLabel.TooltipString;
-        end
-        function set.LabelTooltipString(obj,value)
-            obj.hLabel.TooltipString = value;
-        end
-        
-    end % Get/Set methods
-    
-    
-    
     %% Display Customization
     methods (Access=protected)
         
@@ -711,7 +273,7 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
             propGroup = matlab.mixin.util.PropertyGroup(thisProps,titleTxt);
             
         end %function
-        
+            
     end %methods
     
 end % classdef

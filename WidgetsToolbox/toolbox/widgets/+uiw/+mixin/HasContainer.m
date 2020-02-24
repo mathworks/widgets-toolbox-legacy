@@ -97,13 +97,10 @@ classdef HasContainer < uiw.mixin.AssignPVPairs & matlab.mixin.SetGet & ...
                     set(hAll( isprop(hAll,'FontName') ),...
                         'FontName',obj.FontName,...
                         'FontSize',obj.FontSize);
-                    set(hAll( isprop(hAll,'FontWeight') ),...
+                    set(hAll( isprop(hAll,'FontUnits') ),...
                         'FontWeight',obj.FontWeight,...
-                        'FontAngle',obj.FontAngle);
-                    try %#ok<TRYNC>
-                        set(hAll( isprop(hAll,'FontUnits') ),...
-                            'FontUnits',obj.FontUnits);
-                    end
+                        'FontAngle',obj.FontAngle,...
+                        'FontUnits',obj.FontUnits);
                 end
                 
                 % Set all objects that have ForegroundColor
@@ -122,6 +119,18 @@ classdef HasContainer < uiw.mixin.AssignPVPairs & matlab.mixin.SetGet & ...
                 end
                 
             end %if obj.IsConstructed
+            
+        end %function
+        
+        
+        function hAll = findHandleObjects(obj)
+            
+            % Look for all encapsulated graphics objects in "h" property
+            %hEncapsulatedCell = struct2cell(obj.h);
+            hEncapsulatedCell = [struct2cell(obj.h); struct2cell(obj.hLayout)];
+            isGraphicsObj = cellfun(@ishghandle,hEncapsulatedCell,'UniformOutput',false);
+            isGraphicsObj = cellfun(@all,isGraphicsObj,'UniformOutput',true);
+            hAll = [hEncapsulatedCell{isGraphicsObj}]';
             
         end %function
         

@@ -1,7 +1,4 @@
-classdef (Abstract) BaseContainer < ...
-        matlab.ui.componentcontainer.internal.ComponentContainer & ...
-         uiw.mixin.HasContainer
-        %uix.Container
+classdef (Abstract) BaseContainer < uix.Container & uiw.mixin.HasContainer
     % BaseContainer - Base class for a container
     %
     % This class provides a container and sizing utilities for
@@ -39,12 +36,6 @@ classdef (Abstract) BaseContainer < ...
         
         function obj = BaseContainer()
             % Construct the container
-            
-            parent = figure('Visible','off');
-            %parent = gobjects(0);
-            
-            % Call superclass constructors
-            obj@matlab.ui.componentcontainer.internal.ComponentContainer(parent);
             
             % Attach listeners and callbacks
             obj.DestroyedListener = event.listener(obj,...
@@ -96,12 +87,6 @@ classdef (Abstract) BaseContainer < ...
     
     %% Protected methods
     methods (Access=protected)
-        
-        function setup(obj)
-            % Dummy to support ComponentContainer
-            
-        end %function
-        
         
         function onVisibleChanged(~)
             % Handle updates to Visible state - subclass may override
