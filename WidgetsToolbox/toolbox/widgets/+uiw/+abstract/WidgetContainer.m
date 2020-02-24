@@ -1,5 +1,5 @@
 classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
-        matlab.ui.componentcontainer.internal.ComponentContainer
+        matlab.ui.componentcontainer.ComponentContainer
     %uiw.abstract.BaseContainer
     %uiw.abstract.BasePanel & uiw.abstract.BaseLabel
     % WidgetContainer - Base class for a graphical widget
@@ -104,11 +104,8 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
         function obj = WidgetContainer()
             % Construct the control
             
-            parent = uifigure('Visible','off');
-            %parent = gobjects(0);
-            
             % Call superclass constructors
-            obj@matlab.ui.componentcontainer.internal.ComponentContainer(parent);
+            obj@matlab.ui.componentcontainer.ComponentContainer('ParentMode','manual');
             
             % Attach listeners and callbacks
             obj.DestroyedListener = event.listener(obj,...
@@ -119,19 +116,6 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
                 findprop(obj,'BackgroundColor'),'PostSet',@(h,e)onStyleChanged(obj,e));
             obj.VisibleChangedListener = event.proplistener(obj,...
                 findprop(obj,'Visible'),'PostSet',@(h,e)onVisibleChanged(obj));
-            
-            
-            
-            
-            
-            % Call superclass constructors
-            %obj@uiw.abstract.BaseContainer();
-            %obj@uiw.abstract.BasePanel();
-            %obj@uiw.abstract.BaseLabel();
-            
-            % Assign parents
-            %             obj.hBasePanel.Parent = obj;
-            %             obj.hLabel.Parent = obj;
             
             % Adjust sizing of label and widget panel
             obj.onContainerResized();
@@ -244,12 +228,11 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
                     hAdd = findall(obj.hBasePanel,'-depth',1);
                 end
                 
-                
                 % Look for all encapsulated graphics objects in "h" property
                 hAll = obj.findHandleObjects();
                 
                 % Combine them all
-                if nargin>1 && ~isempty(hAdd)
+                if ~isempty(hAdd)
                     hAll = unique([hAll(:); hAdd(:)]);
                 end
                 
