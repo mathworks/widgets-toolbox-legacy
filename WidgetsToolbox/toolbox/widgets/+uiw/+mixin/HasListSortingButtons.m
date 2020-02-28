@@ -1,4 +1,4 @@
-classdef HasListSortingButtons < uiw.mixin.HasContainer & uiw.mixin.HasCallback
+classdef HasListSortingButtons < uiw.mixin.HasCallback & uiw.mixin.HasContainer
     % HasListSortingButtons - Mixin to provide list editing and ordering buttons
     %
     % This mixin class provides buttons for editing and ordering a list
@@ -12,7 +12,7 @@ classdef HasListSortingButtons < uiw.mixin.HasContainer & uiw.mixin.HasCallback
     %   $Author: rjackey $
     %   $Revision: 324 $  $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
     % ---------------------------------------------------------------------
-
+    
 
     %% Properties
     properties (AbortSet)

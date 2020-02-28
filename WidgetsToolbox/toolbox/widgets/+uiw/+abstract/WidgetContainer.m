@@ -1,5 +1,5 @@
 classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
-        matlab.ui.componentcontainer.ComponentContainer
+        matlab.ui.componentcontainer.ComponentContainer & uiw.mixin.HasContainer
     %uiw.abstract.BaseContainer
     %uiw.abstract.BasePanel & uiw.abstract.BaseLabel
     % WidgetContainer - Base class for a graphical widget
@@ -20,13 +20,13 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
     % ---------------------------------------------------------------------
     
     %% Properties
-    properties (AbortSet)
+    properties (AbortSet, UsedInUpdate = false)
         Enable = 'on' %Allow interaction with this widget [(on)|off]
         Padding = 0 %Pixel spacing around the widget (applies to some widgets)
         Spacing = 4 %Pixel spacing between controls (applies to some widgets)
     end %properties
     
-    properties (AbortSet, Dependent)
+    properties (AbortSet, Dependent, UsedInUpdate = false)
         FontAngle %Style of the font [(normal)|italic]
         FontName %Name of the font
         FontSize %Size of the font
@@ -35,16 +35,15 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
         ForegroundColor %Foreground/font color of the panel
     end %properties
     
-    properties (Access=protected)
-        %hBasePanel = matlab.ui.container.Panel.empty(0,1); %The internal panel upon which the widget contents are placed
+    properties (Access=protected, UsedInUpdate = false)
         hBasePanel %The internal panel upon which the widget contents are placed
         hLabel %The label control
     end %properties
     
-    properties (SetAccess=protected)
-        h struct = struct() %For widgets to store internal graphics objects
-        hLayout struct = struct() %For widgets to store internal layout objects
-        IsConstructed logical = false %Indicates widget has completed construction, useful for optimal performance to minimize redraws on launch, etc.
+    properties (SetAccess=protected, UsedInUpdate = false)
+        h = struct() %For widgets to store internal graphics objects
+        hLayout = struct() %For widgets to store internal layout objects
+        IsConstructed = false %Indicates widget has completed construction, useful for optimal performance to minimize redraws on launch, etc.
     end %properties
     
     
@@ -256,6 +255,10 @@ classdef WidgetContainer < uiw.mixin.AssignPVPairs & ...
                     isBoxPanel = arrayfun(@(x)isa(x,'uix.BoxPanel'),hAll);
                     set(hAll( isprop(hAll,'ForegroundColor') & ~isBoxPanel ),...
                         'ForegroundColor',obj.ForegroundColor);
+                    
+                    % Set all objects that have FontColor
+                    set(hAll( isprop(hAll,'FontColor') ),...
+                        'FontColor',obj.ForegroundColor);
                 end
                 
                 % Set all objects that have BackgroundColor

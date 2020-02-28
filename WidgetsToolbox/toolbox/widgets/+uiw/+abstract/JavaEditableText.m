@@ -18,6 +18,10 @@ classdef (Abstract) JavaEditableText < uiw.abstract.JavaControl & ...
     %   $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
     % ---------------------------------------------------------------------
 
+    %% Properties
+    properties
+        WebControl
+    end
     
     %% Protected Methods
     methods (Access=protected)
@@ -45,8 +49,11 @@ classdef (Abstract) JavaEditableText < uiw.abstract.JavaControl & ...
                 % Get widget dimensions
                 [w,h] = obj.getInnerPixelSize;
                 
-                % Position the HG container of the Java widget
-                obj.HGJContainer.Position = [1 1 w h];
+                if obj.FigureIsJava
+                    obj.onResized@uiw.abstract.JavaControl();
+                else
+                    obj.WebControl.Position = [1 1 w h];
+                end
                 
             end %if obj.IsConstructed
             
@@ -64,7 +71,11 @@ classdef (Abstract) JavaEditableText < uiw.abstract.JavaControl & ...
                 onEnableChanged@uiw.mixin.HasEditableText(obj);
                 
                 % Enable/Disable the Java control
-                obj.JControl.setEditable( strcmpi(obj.TextEditable,'on') );
+                if obj.FigureIsJava
+                    obj.JControl.setEditable( strcmpi(obj.TextEditable,'on') );
+                else
+                    
+                end
                 
             end %if obj.IsConstructed
             
@@ -83,25 +94,29 @@ classdef (Abstract) JavaEditableText < uiw.abstract.JavaControl & ...
                 onStyleChanged@uiw.mixin.HasEditableText(obj);
                 
                 % Set TextHorizontalAlignment
-                jEnum = upper(obj.TextHorizontalAlignment);
-                jValue = javax.swing.SwingConstants.(jEnum);
-                obj.JEditor.setHorizontalAlignment(jValue);
-                
-                % Set Colors
-                if obj.TextIsValid
+                if obj.FigureIsJava
+                    
+                    jEnum = upper(obj.TextHorizontalAlignment);
+                    jValue = javax.swing.SwingConstants.(jEnum);
+                    obj.JEditor.setHorizontalAlignment(jValue);
+                    
+                    % Set Colors
+                    if obj.TextIsValid
                         jColor = obj.rgbToJavaColor(obj.TextForegroundColor);
                         obj.JEditor.setForeground(jColor)
                         jColor = obj.rgbToJavaColor(obj.TextBackgroundColor);
                         obj.JEditor.setBackground(jColor);
-                else
-                    if ~isempty(obj.TextInvalidForegroundColor)
-                        jColor = obj.rgbToJavaColor(obj.TextInvalidForegroundColor);
-                        obj.JEditor.setForeground(jColor)
+                    else
+                        if ~isempty(obj.TextInvalidForegroundColor)
+                            jColor = obj.rgbToJavaColor(obj.TextInvalidForegroundColor);
+                            obj.JEditor.setForeground(jColor)
+                        end
+                        if ~isempty(obj.TextInvalidBackgroundColor)
+                            jColor = obj.rgbToJavaColor(obj.TextInvalidBackgroundColor);
+                            obj.JEditor.setBackground(jColor);
+                        end
                     end
-                    if ~isempty(obj.TextInvalidBackgroundColor)
-                        jColor = obj.rgbToJavaColor(obj.TextInvalidBackgroundColor);
-                        obj.JEditor.setBackground(jColor);
-                    end
+                    
                 end
                 
             end %if obj.IsConstructed
@@ -121,7 +136,12 @@ classdef (Abstract) JavaEditableText < uiw.abstract.JavaControl & ...
         function value = getValue(obj)
             % Get the text from Java control - subclass may override
             
-            value = char(obj.JEditor.getText());
+            if obj.FigureIsJava
+                value = char(obj.JEditor.getText());
+            else
+                value = obj.WebControl.Value;
+            end
+            
             if ~isempty(value)
                 value = value(:)';
             end
@@ -132,8 +152,16 @@ classdef (Abstract) JavaEditableText < uiw.abstract.JavaControl & ...
         function setValue(obj,value)
             % Set the text to Java control - subclass may override
             
+            if isStringScalar(value)
+                value = char(value);
+            end
             validateattributes(value,{'char'},{})
-            javaMethodEDT('setText',obj.JEditor,value);
+            
+            if obj.FigureIsJava
+                javaMethodEDT('setText',obj.JEditor,value);
+            else
+                obj.WebControl.Value = value;
+            end
             
         end %function
         

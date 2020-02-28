@@ -76,10 +76,26 @@ fcn = @()uiw.widget.ListSelector(...
     'AllowPlot', true, ... %Requires callback implementation
     'AllowReverse', true, ... %Requires callback implementation
     'AllowRun', true, ... %Requires callback implementation
-    'AllowSearch',true, ...
     'Visible','on');
 
 verifyWarningFree(testCase,fcn)
+
+end %function
+
+
+%% Test search functionality using editable popup
+function testSearch(testCase)
+
+w = uiw.widget.ListSelector(...
+    'Parent',testCase.TestData.Figure,...
+    'AllItems',testCase.TestData.Items);
+
+
+testCase.verifyWarningFree( @()set(w,'AllowSearch',true) )
+testCase.verifyTrue(w.AllowSearch)
+
+testCase.verifyWarningFree( @()set(w,'AllowSearch',false) )
+testCase.verifyFalse(w.AllowSearch)
 
 end %function
 

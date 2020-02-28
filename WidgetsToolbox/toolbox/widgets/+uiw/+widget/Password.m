@@ -15,29 +15,15 @@ classdef Password < uiw.abstract.JavaEditableText
     %   $Revision: 324 $
     %   $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
     % ---------------------------------------------------------------------
-    
+
     
     %% Constructor / Destructor
     methods
         function obj = Password(varargin)
             % Construct the control
             
-            % Create
-            obj.createJControl('javax.swing.JPasswordField');
-            obj.JEditor = obj.JControl;
-            obj.JControl.ActionPerformedCallback = @(h,e)onTextEdited(obj,h,e);
-            
             % Set properties from P-V pairs
             obj.assignPVPairs(varargin{:});
-            
-            % Assign the construction flag
-            obj.IsConstructed = true;
-            
-            % Redraw the widget
-            obj.onResized();
-            obj.onEnableChanged();
-            obj.onStyleChanged();
-            obj.redraw();
             
         end % constructor
     end %methods - constructor/destructor
@@ -47,6 +33,32 @@ classdef Password < uiw.abstract.JavaEditableText
     
     %% Protected methods
     methods (Access=protected)
+        
+        function createJavaComponent(obj)
+            
+            disp('java');
+            
+            % Create
+            obj.createJControl('javax.swing.JPasswordField');
+            obj.JEditor = obj.JControl;
+            obj.JControl.ActionPerformedCallback = @(h,e)onTextEdited(obj,h,e);
+            
+        end %function
+        
+        
+        function createWebComponent(obj)
+            
+            disp('web');
+            
+            % Create
+            obj.WebControl = uieditfield(...
+                'Parent',obj.hBasePanel,...
+                'ValueChangedFcn', @(h,e)obj.onTextEdited() );
+            obj.hTextFields(end+1) = obj.WebControl;
+            
+            
+        end %function
+        
         
         function onFocusLost(obj,h,e)
             % Triggered on focus lost from the control

@@ -68,12 +68,24 @@ classdef HasEditableText < handle & matlab.mixin.CustomDisplay...
                 thisFields = obj.hTextFields( isprop(obj.hTextFields,'HorizontalAlignment') );
                 set(thisFields,'HorizontalAlignment',obj.TextHorizontalAlignment);
                 if obj.TextIsValid
-                    set(obj.hTextFields,...
-                        'ForegroundColor',obj.TextForegroundColor,...
-                        'BackgroundColor',obj.TextBackgroundColor);
+                    set(obj.hTextFields,'BackgroundColor',obj.TextBackgroundColor);
+                    
+                    % Set all objects that have ForegroundColor
+                    set(obj.hTextFields( isprop(obj.hTextFields,'ForegroundColor') ),...
+                        'ForegroundColor',obj.ForegroundColor);
+                    
+                    % Set all objects that have FontColor
+                    set(obj.hTextFields( isprop(obj.hTextFields,'FontColor') ),...
+                        'FontColor',obj.ForegroundColor);
                 else
                     if ~isempty(obj.TextInvalidForegroundColor)
-                        set(obj.hTextFields,'ForegroundColor',obj.TextInvalidForegroundColor)
+                        % Set all objects that have ForegroundColor
+                        set(obj.hTextFields( isprop(obj.hTextFields,'ForegroundColor') ),...
+                            'ForegroundColor',obj.TextInvalidForegroundColor);
+                        
+                        % Set all objects that have FontColor
+                        set(obj.hTextFields( isprop(obj.hTextFields,'FontColor') ),...
+                            'FontColor',obj.TextInvalidForegroundColor);
                     end
                     if ~isempty(obj.TextInvalidBackgroundColor)
                         set(obj.hTextFields,'BackgroundColor',obj.TextInvalidBackgroundColor)

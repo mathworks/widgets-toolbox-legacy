@@ -6,6 +6,14 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     % Java control. It also has a label which may optionally be used. The
     % label will be shown once any Label* property has been set.
     %
+    % For web figures compatibility, the component is not created until
+    % it's placed into a figure. If the component is placed in a
+    % traditional figure, the createWebComponent method is called. If
+    % placed in a uifigure, the createJavaComponent is called. Detection of
+    % the placement in a figure is achieved by listening for the event
+    % LocationChanged. The detection ceases once there is an ancestor
+    % figure for the component.
+    %
     
     %   Copyright 2009-2019 The MathWorks Inc.
     %
@@ -23,6 +31,12 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
         JScrollPane % The Java scrollpane (applies to some controls)
         JEditor % The editor component of the Java control (applies to some controls)
         HGJContainer % The container for the Java control
+        
+        FigurePlacementListener % Used to track when the component is first placed in a figure
+        FigureIsJava (1,1) logical = false
+        JavaFrameListener
+        ControllerListener
+        %FigureType char {mustBeMember(FigureType,{'','java','web'})} = ''
     end
     
     properties (AbortSet, Hidden, SetAccess=protected)
@@ -30,12 +44,29 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     end
     
     
-    
     %% Events
     events
         MouseDrag %Triggered on mouse drag over the control
         MouseMotion %Triggered on mouse motion over the control
     end
+    
+    
+    %% Abstract Methods
+    methods (Abstract, Access = protected)
+        createJavaComponent(obj)
+        createWebComponent(obj)
+    end
+    
+    
+    %% Constructor / Destructor
+    methods
+        function obj = JavaControl(varargin)
+            
+            obj.FigurePlacementListener = event.listener(obj,...
+                'LocationChanged',@(h,e)createComponent(obj,e));
+            
+        end % constructor
+    end %methods - constructor/destructor
     
     
     
@@ -59,7 +90,9 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
         end
         
         function requestFocus(obj)
-            obj.JControl.requestFocusInWindow();
+            if obj.IsConstructed && obj.FigureIsJava
+                obj.JControl.requestFocusInWindow();
+            end
         end
         
     end %methods
@@ -67,6 +100,62 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     
     %% Sealed Protected methods
     methods (Sealed, Access=protected)
+        
+        function createComponent(obj,evt)
+            
+            fig = ancestor(obj.Parent,'figure');
+            
+            if isempty(fig)
+                warning('No ancestor figure to place component %s',class(obj));
+            else
+                
+                % Is it a Java figure or web uifigure?
+                obj.FigureIsJava = ~matlab.ui.internal.isUIFigure(fig);
+                % warnState = warning('off','MATLAB:ui:javaframe:PropertyToBeRemoved');
+                % obj.FigureIsJava = isprop(obj,'JavaFrame') && ...
+                %     ~isempty(obj.JavaFrame); %#ok<JAVFM>
+                % warning(warnState);
+                
+                if obj.FigureIsJava
+                    
+                    % Turn off javacomponent warning
+                    warnState = warning('off','MATLAB:ui:javacomponent:FunctionToBeRemoved');
+                    
+                    % Call abstract method that must create the component
+                    obj.createJavaComponent()
+                    
+                    % Restore warning
+                    warning(warnState);
+                    
+                else
+                    % It's a web uifigure
+                    
+                    obj.HGJContainer = uicontainer(...
+                        'Parent',obj.hBasePanel,...
+                        'Units','Pixels',...
+                        'Position',[1 1 100 25]);
+                    
+                    % Call abstract method that must create the component
+                    obj.createWebComponent();
+                    
+                end %if obj.FigureIsJava
+                
+                % Stop listening for placement in a figure
+                delete(obj.FigurePlacementListener);
+                
+                % Assign the construction flag
+                obj.IsConstructed = true;
+                
+                % Redraw the widget
+                obj.onResized();
+                obj.onEnableChanged();
+                obj.onStyleChanged();
+                obj.redraw();
+                
+            end %if isempty(fig)
+            
+        end %function
+        
         
         function value = getJFont(obj)
             % Return a Java font object matching the widget's font settings
@@ -300,7 +389,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
             % Handle changes to widget size - subclass may override
             
             % Ensure the construction is complete
-            if obj.IsConstructed
+            if obj.IsConstructed && obj.FigureIsJava
                 
                 % Get widget dimensions
                 [w,h] = obj.getInnerPixelSize();
@@ -419,7 +508,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
         end
         function set.CallbacksEnabled(obj,value)
             if isvalid(obj) && obj.IsConstructed
-                if value
+                if value && obj.FigureIsJava %#ok<MCSUP>
                     drawnow;
                 end
                 obj.CallbacksEnabled = value;
