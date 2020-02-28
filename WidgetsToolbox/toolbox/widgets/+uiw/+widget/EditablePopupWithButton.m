@@ -44,19 +44,9 @@ classdef EditablePopupWithButton < uiw.widget.EditablePopup
             % Set properties from P-V pairs
             obj.assignPVPairs(varargin{:});
             
-            % Do the following only if the object is not a subclass
-            if strcmp(class(obj), 'uiw.widget.EditablePopupWithButton') %#ok<STISA>
-                
-                % Assign the construction flag
-                obj.IsConstructed = true;
-                
-                % Redraw the widget
-                obj.onResized();
-                obj.onEnableChanged();
-                obj.onStyleChanged();
-                obj.redraw();
-                
-            end %if strcmp(class(obj),...
+            obj.onResized();
+            obj.onEnableChanged();
+            obj.onStyleChanged();
             
         end % constructor
     end %methods
@@ -100,21 +90,27 @@ classdef EditablePopupWithButton < uiw.widget.EditablePopup
                     
                 end %if strcmp(obj.ButtonVisible,'on')
                 
-                % Calculations for a normal uicontrol popup:
-                % FontSize =  10: Height = 25
-                % FontSize =  20: Height = 42
-                % FontSize =  50: Height = 92
-                % FontSize = 100: Height = 175
-                % Buffer is 8-9, so h = FontSize*1.6666 + 8
                 
-                % Calculate popup height based on font size
-                if strcmp(obj.FontUnits,'points')
-                    hW = round(obj.FontSize*1.666666) + 8;
-                    txtPos([2 4]) = [h-hW+1 hW];
+                if obj.FigureIsJava
+                    % Calculations for a normal uicontrol popup:
+                    % FontSize =  10: Height = 25
+                    % FontSize =  20: Height = 42
+                    % FontSize =  50: Height = 92
+                    % FontSize = 100: Height = 175
+                    % Buffer is 8-9, so h = FontSize*1.6666 + 8
+                    
+                    % Calculate popup height based on font size
+                    if strcmp(obj.FontUnits,'points')
+                        hW = round(obj.FontSize*1.666666) + 8;
+                        txtPos([2 4]) = [h-hW+1 hW];
+                    end
+                    
+                    % Set popup position
+                    set(obj.HGJContainer,'Position',txtPos);
+                    
+                else
+                    obj.WebControl.Position = txtPos;
                 end
-                
-                % Set popup position
-                set(obj.HGJContainer,'Position',txtPos);
                 
             end %if obj.IsConstructed
             

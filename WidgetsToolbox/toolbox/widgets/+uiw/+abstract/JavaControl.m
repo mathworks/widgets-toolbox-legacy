@@ -8,7 +8,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     %
     % For web figures compatibility, the component is not created until
     % it's placed into a figure. If the component is placed in a
-    % traditional figure, the createWebComponent method is called. If
+    % traditional figure, the createWebControl method is called. If
     % placed in a uifigure, the createJavaComponent is called. Detection of
     % the placement in a figure is achieved by listening for the event
     % LocationChanged. The detection ceases once there is an ancestor
@@ -54,7 +54,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     %% Abstract Methods
     methods (Abstract, Access = protected)
         createJavaComponent(obj)
-        createWebComponent(obj)
+        createWebControl(obj)
     end
     
     
@@ -101,7 +101,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     %% Sealed Protected methods
     methods (Sealed, Access=protected)
         
-        function createComponent(obj,evt)
+        function createComponent(obj,~)
             
             fig = ancestor(obj.Parent,'figure');
             
@@ -136,7 +136,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
                         'Position',[1 1 100 25]);
                     
                     % Call abstract method that must create the component
-                    obj.createWebComponent();
+                    obj.createWebControl();
                     
                 end %if obj.FigureIsJava
                 
@@ -306,7 +306,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
             % Create the Java control and set any additional properties
             
             [jControl, hgContainer] = javacomponent([{JavaClassName},varargin],...
-                [1 1 100 100], obj.hBasePanel);
+                [1 1 100 100], obj.hBasePanel); %#ok<JAVCM>
             set(hgContainer,'Units','Pixels','Position',[1 1 100 25]);
             if nargout<2
                 obj.HGJContainer = hgContainer;
@@ -329,8 +329,11 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
             % Set Java control interactions
             
             % Set keyboard callbacks
-            jObj.KeyPressedCallback = @(h,e)onKeyPressed(obj,e);
-            jObj.KeyReleasedCallback = @(h,e)onKeyReleased(obj,e);
+            
+            if obj.FigureIsJava
+                jObj.KeyPressedCallback = @(h,e)onKeyPressed(obj,e);
+                jObj.KeyReleasedCallback = @(h,e)onKeyReleased(obj,e);
+            end
             
         end % setFocusProps
         
@@ -338,12 +341,14 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
         function setFocusProps(obj,jObj)
             % Set Java control focusability and tab order
             
-            jObj.putClientProperty('TabCycleParticipant', true);
-            jObj.setFocusable(true);
-            
-            CbProps = handle(jObj,'CallbackProperties');
-            CbProps.FocusGainedCallback = @(h,e)onFocusGained(obj,h,e);
-            CbProps.FocusLostCallback = @(h,e)onFocusLost(obj,h,e);
+            if obj.FigureIsJava
+                jObj.putClientProperty('TabCycleParticipant', true);
+                jObj.setFocusable(true);
+                
+                CbProps = handle(jObj,'CallbackProperties');
+                CbProps.FocusGainedCallback = @(h,e)onFocusGained(obj,h,e);
+                CbProps.FocusLostCallback = @(h,e)onFocusLost(obj,h,e);
+            end
             
         end % setFocusProps
         
@@ -351,8 +356,10 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
         function onFocusGained(obj,~,~)
             % Triggered on focus on the control, sets this widget as the figure's current object
             
-            hFigure = ancestor(obj,'figure');
-            hFigure.CurrentObject = obj;
+            if obj.FigureIsJava
+                hFigure = ancestor(obj,'figure');
+                hFigure.CurrentObject = obj;
+            end
             
         end
         
