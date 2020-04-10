@@ -7,7 +7,7 @@ classdef Password < uiw.abstract.JavaEditableText
     %     w = uiw.widget.Password('Property','Value',...)
     %
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
     % Auth/Revision:
     %   MathWorks Consulting
@@ -15,19 +15,6 @@ classdef Password < uiw.abstract.JavaEditableText
     %   $Revision: 324 $
     %   $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
     % ---------------------------------------------------------------------
-
-    
-    %% Constructor / Destructor
-    methods
-        function obj = Password(varargin)
-            % Construct the control
-            
-            % Set properties from P-V pairs
-            obj.assignPVPairs(varargin{:});
-            
-        end % constructor
-    end %methods - constructor/destructor
-    
     
     
     %% Protected methods
@@ -75,11 +62,13 @@ classdef Password < uiw.abstract.JavaEditableText
         function value = getValue(obj)
             % Get the text from Java control - subclass may override
             
-            if obj.FigureIsJava
+            if ~obj.IsConstructed
+                value = char(obj.Value);
+            elseif obj.FigureIsJava
                 value = obj.getValue@uiw.abstract.JavaEditableText();
             else
                 value = obj.WebControl.Data;
-            end
+            end %if ~obj.IsConstructed
             
             if ~isempty(value)
                 value = value(:)';
@@ -96,7 +85,9 @@ classdef Password < uiw.abstract.JavaEditableText
             end
             validateattributes(value,{'char'},{})
             
-            if obj.FigureIsJava
+            if ~obj.IsConstructed
+                obj.Value = value;
+            elseif obj.FigureIsJava
                 obj.setValue@uiw.abstract.JavaEditableText(value);
             else
                 obj.WebControl.Data = value;

@@ -62,8 +62,18 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     methods
         function obj = JavaControl(varargin)
             
+            % Call superclass constructors
+            obj@uiw.mixin.HasKeyEvents();
+            obj@uiw.abstract.WidgetContainer()
+            
             obj.FigurePlacementListener = event.listener(obj,...
                 'LocationChanged',@(h,e)createComponent(obj,e));
+            
+            % Apply parent last
+            [parentArgs,remArgs] = obj.splitArgs({'Parent'},varargin{:});
+
+            % Set properties from P-V pairs
+            obj.assignPVPairs(remArgs{:},parentArgs{:});
             
         end % constructor
     end %methods - constructor/destructor
@@ -139,6 +149,9 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
                     obj.createWebControl();
                     
                 end %if obj.FigureIsJava
+            
+                % Set interactions
+                obj.setInteractions();
                 
                 % Stop listening for placement in a figure
                 delete(obj.FigurePlacementListener);
@@ -155,6 +168,70 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
             end %if isempty(fig)
             
         end %function
+        
+        
+        function createScrollPaneJControl(obj,JavaClassName,varargin)
+            % Create the Java control on a scroll pane, and set any additional properties
+            
+            jControl = obj.constructJObj(JavaClassName,varargin{:});
+            obj.JScrollPane = createJControl(obj,'com.mathworks.mwswing.MJScrollPane',jControl);
+            obj.JControl = jControl;
+            obj.JavaObj = java(jControl);
+            
+        end %function
+        
+        
+        function [jControl,hgContainer] = createJControl(obj, JavaClassName, varargin)
+            % Create the Java control and set any additional properties
+            
+            [jControl, hgContainer] = javacomponent([{JavaClassName},varargin],...
+                [1 1 100 100], obj.hBasePanel); %#ok<JAVCM>
+            set(hgContainer,'Units','Pixels','Position',[1 1 100 25]);
+            if nargout<2
+                obj.HGJContainer = hgContainer;
+                if nargout<1
+                    obj.JControl = jControl;
+                    obj.JavaObj = java(jControl);
+                end
+            end
+            
+            % Set focusability of the object
+            obj.setFocusProps(jControl);
+            
+        end % createControl
+        
+        
+        function setInteractions(obj)
+            % Set Java control interactions
+            
+            % Set keyboard callbacks
+            
+            if obj.FigureIsJava
+                obj.JControl.KeyPressedCallback = @(h,e)onKeyPressed(obj,e);
+                obj.JControl.KeyReleasedCallback = @(h,e)onKeyReleased(obj,e);
+            else
+                obj.WebComponent.KeyPressFcn = @(h,e)onKeyPressed(obj,e);
+                obj.WebComponent.KeyReleaseFcn = @(h,e)onKeyReleased(obj,e);
+            end
+            
+        end % setFocusProps
+        
+        
+        function setFocusProps(obj,jControl)
+            % Set Java control focusability and tab order
+            
+            if obj.FigureIsJava
+                jControl.putClientProperty('TabCycleParticipant', true);
+                jControl.setFocusable(true);
+                
+                CbProps = handle(jControl,'CallbackProperties');
+                CbProps.FocusGainedCallback = @(h,e)onFocusGained(obj,h,e);
+                CbProps.FocusLostCallback = @(h,e)onFocusLost(obj,h,e);
+            else
+                % Not Applicable
+            end
+            
+        end % setFocusProps
         
         
         function value = getJFont(obj)
@@ -288,69 +365,6 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     
     %% Protected methods
     methods (Access=protected)
-        
-        function createScrollPaneJControl(obj,JavaClassName,varargin)
-            % Create the Java control on a scroll pane, and set any additional properties
-            
-            jControl = obj.constructJObj(JavaClassName,varargin{:});
-            obj.JScrollPane = createJControl(obj,'com.mathworks.mwswing.MJScrollPane',jControl);
-            obj.JControl = jControl;
-            obj.JavaObj = java(jControl);
-            
-            % Set interactions
-            obj.setInteractions(jControl);
-            
-        end %function
-        
-        function [jControl,hgContainer] = createJControl(obj, JavaClassName, varargin)
-            % Create the Java control and set any additional properties
-            
-            [jControl, hgContainer] = javacomponent([{JavaClassName},varargin],...
-                [1 1 100 100], obj.hBasePanel); %#ok<JAVCM>
-            set(hgContainer,'Units','Pixels','Position',[1 1 100 25]);
-            if nargout<2
-                obj.HGJContainer = hgContainer;
-                if nargout<1
-                    obj.JControl = jControl;
-                    obj.JavaObj = java(jControl);
-                end
-            end
-            
-            % Set interactions
-            obj.setInteractions(jControl);
-            
-            % Set focusability of the object
-            obj.setFocusProps(jControl);
-            
-        end % createControl
-        
-        
-        function setInteractions(obj,jObj)
-            % Set Java control interactions
-            
-            % Set keyboard callbacks
-            
-            if obj.FigureIsJava
-                jObj.KeyPressedCallback = @(h,e)onKeyPressed(obj,e);
-                jObj.KeyReleasedCallback = @(h,e)onKeyReleased(obj,e);
-            end
-            
-        end % setFocusProps
-        
-        
-        function setFocusProps(obj,jObj)
-            % Set Java control focusability and tab order
-            
-            if obj.FigureIsJava
-                jObj.putClientProperty('TabCycleParticipant', true);
-                jObj.setFocusable(true);
-                
-                CbProps = handle(jObj,'CallbackProperties');
-                CbProps.FocusGainedCallback = @(h,e)onFocusGained(obj,h,e);
-                CbProps.FocusLostCallback = @(h,e)onFocusLost(obj,h,e);
-            end
-            
-        end % setFocusProps
         
         
         function onFocusGained(obj,~,~)
