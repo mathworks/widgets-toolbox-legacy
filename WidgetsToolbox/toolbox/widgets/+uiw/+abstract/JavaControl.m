@@ -481,8 +481,13 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
         function throwDeprecatedWarning(obj,propName)
             
             warnId = 'widgets:Java:DeprecatedProperty';
-            message = 'Property "%s" of widget "%s" is deprecated and is not used in uifigure widgets. To disable this warning, use "warning(''off'',%s)".';
-            warning(warnId,message,propName,class(obj),warnId);
+            if isprop(propName,obj)
+                type = 'Property';
+            else
+                type = 'Method';
+            end
+            message = '%s "%s" of widget "%s" is deprecated and is not used in uifigure widgets. To disable this warning, use "warning(''off'',%s)".';
+            warning(warnId,message,type,propName,class(obj),warnId);
         
         end %function
         

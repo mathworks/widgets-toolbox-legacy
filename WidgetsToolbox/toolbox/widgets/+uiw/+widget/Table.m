@@ -611,7 +611,7 @@ classdef Table < uiw.abstract.JavaControl
             obj.validateIndex(rIdx,cIdx);
             
             % Is the table sorted? If so, use the sorted row index.
-            if obj.IsConstructed
+            if obj.IsConstructed && ~isempty(obj.RowSortIndex)
                 rIdx = obj.RowSortIndex(rIdx);
             end
             
@@ -715,8 +715,14 @@ classdef Table < uiw.abstract.JavaControl
             %           none
             %
             
-            com.mathworks.mwswing.MJUtilities.initJIDE;
-            com.jidesoft.grid.TableUtils.autoResizeAllColumns(obj.JControl);
+            if ~obj.IsConstructed
+                return;
+            elseif obj.FigureIsJava
+                com.mathworks.mwswing.MJUtilities.initJIDE;
+                com.jidesoft.grid.TableUtils.autoResizeAllColumns(obj.JControl);
+            else
+                obj.throwDeprecatedWarning('sizeColumnsToData');
+            end
             
         end %function
         
@@ -813,10 +819,13 @@ classdef Table < uiw.abstract.JavaControl
                     end
                     jEditableArray.set(idx-1, thisValue);
                 end
-                obj.JTableModel.setEditable(jEditableArray);
+                %obj.JTableModel.setEditable(jEditableArray);
+                javaMethodEDT('setEditable',obj.JTableModel,jEditableArray);
                 
                 % Repaint to show everything correctly
-                obj.JControl.repaint();
+                %obj.JControl.repaint();
+                javaMethodEDT('repaint',obj.JControl);
+
                 
             end %if obj.IsConstructed
             
@@ -1016,6 +1025,19 @@ classdef Table < uiw.abstract.JavaControl
                 
             else
                 
+                % Column formats
+                colFormat = {obj.ColumnFormatEnum.WebFormat};
+                formatData = obj.ColumnFormatData;
+                if numel(formatData) < numel(colFormat)
+                    formatData(numel(colFormat)) = {{}};
+                end
+                isPopup = strcmp(colFormat,'popup');
+                colFormat(isPopup) = formatData(isPopup);
+                needsClear = cellfun(@isempty,colFormat) & isPopup;
+                colFormat(needsClear) = {''};
+                obj.WebControl.ColumnFormat = colFormat;
+                
+                % Column Widths
                 if ~isempty(obj.ColumnWidth)
                     obj.WebControl.ColumnWidth = obj.ColumnWidth;
                 elseif ~isempty(obj.ColumnPreferredWidth)

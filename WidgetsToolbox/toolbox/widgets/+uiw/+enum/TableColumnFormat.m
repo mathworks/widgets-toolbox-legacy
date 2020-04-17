@@ -71,6 +71,7 @@ classdef TableColumnFormat < handle
     properties (SetAccess=immutable)
         Name = '' %The user viewable/settable name for this column format
         DefaultFormat = '' %The default ColumnFormatData to use, if the table's ColumnFormatData is empty
+        WebFormat = '' %The format to use for web figure uitable
         RendererClass %The Java class to instantiate for the column renderer
         EditorClass %The Java class to instantiate for the column editor
         NeedsCustomRenderer = false %True if we can't reuse the same renderer on multiple columns, e.g. we need to instantiate a new editor for each column
@@ -101,25 +102,30 @@ classdef TableColumnFormat < handle
                 case 'numeric'
                     obj.RendererClass = 'com.jidesoft.grid.NumberCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.DoubleCellEditor';
+                    obj.WebFormat = 'numeric';
                     
                 case 'integer'
                     obj.RendererClass = 'com.jidesoft.grid.NumberCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.IntegerCellEditor';
+                    obj.WebFormat = 'numeric';
                     
                     obj.ToJavaFcn = @(x)cellfun(@fix,x,'UniformOutput',false); %discard any decimal
                     
                 case 'logical'
                     obj.RendererClass = 'com.jidesoft.grid.BooleanCheckBoxCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.BooleanCheckBoxCellEditor';
+                    obj.WebFormat = 'logical';
                     
-                case 'char'
+                case ''
                     obj.RendererClass = 'javax.swing.table.DefaultTableCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.StringCellEditor';
+                    obj.WebFormat = 'char';
                     
                 case 'longchar'
                     %obj.RendererClass = 'javax.swing.table.DefaultTableCellRenderer';
                     obj.RendererClass = 'com.jidesoft.grid.MultilineStringCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.MultilineStringCellEditor';
+                    obj.WebFormat = 'char';
                     
                 case 'popup'
                     %obj.RendererClass = 'javax.swing.table.DefaultTableCellRenderer';
@@ -130,6 +136,7 @@ classdef TableColumnFormat < handle
                     else
                         obj.EditorClass = 'com.jidesoft.grid.ListComboBoxCellEditor';
                     end
+                    obj.WebFormat = 'popup';
                     
                     obj.NeedsCustomEditor = true;
                     obj.EditorNeedsFormatData = true;
@@ -143,6 +150,7 @@ classdef TableColumnFormat < handle
                     else
                         obj.EditorClass = 'com.jidesoft.grid.CheckBoxListComboBoxCellEditor';
                     end
+                    obj.WebFormat = 'popup';
                     
                     obj.NeedsCustomEditor = true;
                     obj.EditorNeedsFormatData = true;
@@ -153,6 +161,7 @@ classdef TableColumnFormat < handle
                 case 'bank'
                     obj.RendererClass = 'com.mathworks.consulting.widgets.table.NumberCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.DoubleCellEditor';
+                    obj.WebFormat = 'bank';
                     
                     obj.NeedsCustomRenderer = true;
                     obj.RendererNeedsFormatData = true;
@@ -166,8 +175,8 @@ classdef TableColumnFormat < handle
                         obj.EditorClass = 'com.mathworks.consulting.widgets.table.LegacyDateCellEditor';
                     else
                         obj.EditorClass = 'com.mathworks.consulting.widgets.table.DateCellEditor';
-                        
                     end
+                    obj.WebFormat = '';
                     
                     obj.NeedsCustomEditor = true;
                     obj.EditorNeedsFormatData = true;
@@ -186,12 +195,14 @@ classdef TableColumnFormat < handle
                     else
                         obj.EditorClass = 'com.jidesoft.grid.ColorCellEditor';
                     end
+                    obj.WebFormat = '';
                     
                     obj.ToJavaFcn = @(x)uiw.utility.mat2java(x,'java.awt.Color');
                     obj.FromJavaFcn = @(x)uiw.utility.java2mat(x);
                     
                 case 'imageicon'
                     obj.RendererClass = 'com.jidesoft.grid.IconCellRenderer';
+                    obj.WebFormat = '';
                     
                     obj.ToJavaFcn = @(x)uiw.utility.mat2java(x,'javax.swing.ImageIcon');
                     obj.FromJavaFcn = @(x)uiw.utility.java2mat(x);
@@ -199,6 +210,7 @@ classdef TableColumnFormat < handle
                 case 'custom'
                     obj.RendererClass = 'com.mathworks.consulting.widgets.table.NumberCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.DoubleCellEditor';
+                    obj.WebFormat = '';
                     
                     obj.NeedsCustomRenderer = true;
                     obj.RendererNeedsFormatData = true;
@@ -206,6 +218,7 @@ classdef TableColumnFormat < handle
                 otherwise
                     obj.RendererClass = 'javax.swing.table.DefaultTableCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.StringCellEditor';
+                    obj.WebFormat = '';
                     
             end %switch
             
