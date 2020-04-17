@@ -39,7 +39,7 @@ classdef Table < uiw.abstract.JavaControl
         CellSelectionCallback = '' %callback for change in selection
         ColumnEditable logical = false(0,1) %boolean array the same size as number of columns, indicating whether each column is editable or not
         ColumnFormatData cell = cell(0,1) %cell array the same size as ColumnFormat, and containing a cellstr list of choices for any column that has a popup list.
-        ColumnResizable %whether each column is resizable (true/false)
+        ColumnResizable = false(1,0) %whether each column is resizable (true/false)
         ColumnResizePolicy {ismember(ColumnResizePolicy,...
             {'off','next','subsequent','last','all'})} ...
             = 'subsequent' %automatic resize policy for columns. ('off','next',['subsequent'],'last','all')
@@ -56,7 +56,7 @@ classdef Table < uiw.abstract.JavaControl
         SelectionMode char = 'single' %can we select multiple: (['single'],'contiguous','discontiguous')
         SelectionType char = 'row' %type of selection area allowed: (['row'],'column','cell','none')
         SortCallback = '' %callback when sorted order of data has changed. May be triggered by clicking on column headers, or upon automatic resorting after changing the value in Data or DataTable.
-        Sortable %controls whether the columns are sortable. You may sort by clicking on column headers, and sort by multiple criteria by CTRL-click on additional column headers.
+        Sortable (1,1) logical = false %controls whether the columns are sortable. You may sort by clicking on column headers, and sort by multiple criteria by CTRL-click on additional column headers.
     end
     
     properties (Dependent)
@@ -88,7 +88,7 @@ classdef Table < uiw.abstract.JavaControl
         JSelectionModel %Java table selection model
         JSortableTableModel %Java table model for sorting
         DataM %Cache of MATLAB data
-        ColumnName_ %Cache of column name
+        ColumnName_ cell = cell.empty(1,0) %Cache of column name
         SelectedRows_ %Cache of row selection
         SelectedColumns_ %Cache of column selection
     end
@@ -145,6 +145,24 @@ classdef Table < uiw.abstract.JavaControl
     %% Protected Methods
     methods (Access=protected)
         
+        
+        
+        function createComponent(obj,evt)
+            % Create the component
+            
+            % Call superclass method
+            obj.createComponent@uiw.abstract.JavaControl(evt)
+            
+            % After IsConstructed, we need to apply data, formats,
+            % selections
+            obj.applyData();
+            obj.applySelectionModel();
+            obj.applySelection();
+            obj.applyColumnFormats();
+            
+        end %function
+        
+            
         function createJavaComponent(obj)
             % Create the graphics objects
             
@@ -184,12 +202,6 @@ classdef Table < uiw.abstract.JavaControl
             % Default sorting off
             obj.JControl.setSortingEnabled(false);
             
-            % Apply formats and selections
-            obj.applyData();
-            obj.applySelectionModel();
-            obj.applySelection();
-            obj.applyColumnFormats();
-            
         end %function
         
         
@@ -197,9 +209,12 @@ classdef Table < uiw.abstract.JavaControl
             
             obj.WebControl = uitable(...
                 'Parent',obj.hBasePanel,...
+                'RowName',[],...
                 'CellEditCallback',@(h,e)onTableModelChanged(obj,h,e),...
                 'CellSelectionCallback',@(h,e)onSelectionChanged(obj,h,e),...
-                'ColumnEditable',obj.ColumnEditable);
+                'ColumnEditable',obj.ColumnEditable,...
+                'Units','normalized',...
+                'Position',[0 0 1 1]);
             
             %--- Normal ---%
             % ColumnFormatData cell = cell(0,1) %cell array the same size as ColumnFormat, and containing a cellstr list of choices for any column that has a popup list.
@@ -230,8 +245,6 @@ classdef Table < uiw.abstract.JavaControl
             % MouseMotionFcn = '' %callback while the mouse is being moved over the table
             % RowHeight = -1 %height of the rows in the table
             
-            
-            
         end %function
         
         
@@ -244,41 +257,52 @@ classdef Table < uiw.abstract.JavaControl
                 % Call superclass methods
                 onStyleChanged@uiw.abstract.JavaControl(obj);
                 
-                % Is row height fixed?
-                jFontPixels = obj.JControl.getFont().getSize();
-                if obj.RowHeight >= 0
-                    rowHeight = obj.RowHeight;
-                else
-                    % Base on font size
-                    rowHeight = jFontPixels + 6;
-                end
-                headerHeight = jFontPixels + 8;
-                
-                % Give the java thread a brief instant to catch up before
-                % setting header width. Otherwise, ColumnWidth may be
-                % incorrect.
-                pause(0.01)
-                
-                % Set row height
-                obj.JControl.setRowHeight(rowHeight);
-                
-                % Adjust font of headers too
-                jHeader = obj.JControl.getTableHeader();
-                jHeader.setFont(obj.getJFont());
-                headerMinSize = jHeader.getMinimumSize();
-                headerMinSize.height = headerHeight;
-                jHeader.setMinimumSize(headerMinSize)
-                headerMaxSize = jHeader.getMaximumSize();
-                headerMaxSize.height = headerHeight;
-                jHeader.setMaximumSize(headerMaxSize)
-                headerSize = jHeader.getPreferredSize();
-                headerSize.height = headerHeight;
-                headerSize.width = sum(obj.ColumnWidth);
-                jHeader.setPreferredSize(headerSize)
-                
-                % Set the background
-                jColor = obj.rgbToJavaColor(obj.BackgroundColor);
-                obj.JControl.setBackground(jColor);
+                % Java tree needs special handling
+                if obj.FigureIsJava
+                    
+                    % Is row height fixed?
+                    jFontPixels = obj.JControl.getFont().getSize();
+                    if obj.RowHeight >= 0
+                        rowHeight = obj.RowHeight;
+                    else
+                        % Base on font size
+                        rowHeight = jFontPixels + 6;
+                    end
+                    headerHeight = jFontPixels + 8;
+                    
+                    % Give the java thread a brief instant to catch up before
+                    % setting header width. Otherwise, ColumnWidth may be
+                    % incorrect.
+                    pause(0.01)
+                    
+                    % Set row height
+                    %obj.JControl.setRowHeight(rowHeight);
+                    javaMethodEDT('setRowHeight',obj.JControl,rowHeight)
+                    
+                    % Adjust font of headers too
+                    jHeader = obj.JControl.getTableHeader();
+                    %jHeader.setFont(obj.getJFont());
+                    javaMethodEDT('setFont',jHeader,obj.getJFont())
+                    headerMinSize = jHeader.getMinimumSize();
+                    headerMinSize.height = headerHeight;
+                    %jHeader.setMinimumSize(headerMinSize)
+                    javaMethodEDT('setMinimumSize',jHeader,headerMinSize)
+                    headerMaxSize = jHeader.getMaximumSize();
+                    headerMaxSize.height = headerHeight;
+                    %jHeader.setMaximumSize(headerMaxSize)
+                    javaMethodEDT('setMaximumSize',jHeader,headerMaxSize)
+                    headerSize = jHeader.getPreferredSize();
+                    headerSize.height = headerHeight;
+                    headerSize.width = sum(obj.ColumnWidth);
+                    %jHeader.setPreferredSize(headerSize)
+                    javaMethodEDT('setPreferredSize',jHeader,headerSize)
+                    
+                    % Set the background
+                    jColor = obj.rgbToJavaColor(obj.BackgroundColor);
+                    %obj.JControl.setBackground(jColor);
+                    javaMethodEDT('setBackground',obj.JControl,jColor)
+                    
+                end %if obj.FigureIsJava
                 
             end %if obj.IsConstructed
             
@@ -344,34 +368,71 @@ classdef Table < uiw.abstract.JavaControl
         function onSelectionChanged(obj, ~, e)
             % Triggered on cell selection changed by interaction
             
-            if obj.isvalid() && obj.CallbacksEnabled && ~e.getValueIsAdjusting()
+            if obj.isvalid() && obj.IsConstructed
                 
-                % Cache the selected rows/columns
-                switch obj.SelectionType
+                if ~obj.FigureIsJava
                     
-                    case 'column'
-                        selRows = ':';
-                        selCols = double(obj.JControl.getSelectedColumns() + 1)';
-                        isNew = ~isequal(obj.SelectedColumns_, selCols);
+                    % Cache the selected rows/columns
+                    switch obj.SelectionType
                         
-                    case 'row'
-                        selRows = double(obj.JControl.getSelectedRows() + 1)';
-                        selCols = ':';
-                        isNew = ~isequal(obj.SelectedRows_, selRows);
+                        case 'column'
+                            selRows = ':';
+                            selCols = obj.WebControl.Selection;
+                            isNew = ~isequal(obj.SelectedColumns_, selCols);
+                            
+                        case 'row'
+                            selRows = obj.WebControl.Selection;
+                            selCols = ':';
+                            isNew = ~isequal(obj.SelectedRows_, selRows);
+                            
+                        case 'cell'
+                            selRows = obj.WebControl.Selection(:,1);
+                            selCols = obj.WebControl.Selection(:,2);
+                            isNew = ~isequal(obj.SelectedRows_, selRows) ||...
+                                ~isequal(obj.SelectedColumns_, selCols);
+                            
+                        otherwise %none
+                            selRows = [];
+                            selCols = [];
+                            isNew = ~isequal(obj.SelectedRows_, selRows) ||...
+                                ~isequal(obj.SelectedColumns_, selCols);
+                            
+                    end %switch obj.SelectionType
+                    
+                elseif obj.CallbacksEnabled && ~e.getValueIsAdjusting()
+                    
+                    % Cache the selected rows/columns
+                    switch obj.SelectionType
                         
-                    case 'cell'
-                        selRows = double(obj.JControl.getSelectedRows() + 1)';
-                        selCols = double(obj.JControl.getSelectedColumns() + 1)';
-                        isNew = ~isequal(obj.SelectedRows_, selRows) ||...
-                            ~isequal(obj.SelectedColumns_, selCols);
-                        
-                    otherwise %none
-                        selRows = [];
-                        selCols = [];
-                        isNew = ~isequal(obj.SelectedRows_, selRows) ||...
-                            ~isequal(obj.SelectedColumns_, selCols);
-                        
-                end %switch obj.SelectionType
+                        case 'column'
+                            selRows = ':';
+                            selCols = double(obj.JControl.getSelectedColumns() + 1)';
+                            isNew = ~isequal(obj.SelectedColumns_, selCols);
+                            
+                        case 'row'
+                            selRows = double(obj.JControl.getSelectedRows() + 1)';
+                            selCols = ':';
+                            isNew = ~isequal(obj.SelectedRows_, selRows);
+                            
+                        case 'cell'
+                            selRows = double(obj.JControl.getSelectedRows() + 1)';
+                            selCols = double(obj.JControl.getSelectedColumns() + 1)';
+                            isNew = ~isequal(obj.SelectedRows_, selRows) ||...
+                                ~isequal(obj.SelectedColumns_, selCols);
+                            
+                        otherwise %none
+                            selRows = [];
+                            selCols = [];
+                            isNew = ~isequal(obj.SelectedRows_, selRows) ||...
+                                ~isequal(obj.SelectedColumns_, selCols);
+                            
+                    end %switch obj.SelectionType
+                    
+                else
+                    % Can occur multiple times during Java - ignore
+                    return
+                    
+                end %if ~obj.FigureIsJava
                 
                 % Did anything really change?
                 if isNew
@@ -393,7 +454,8 @@ classdef Table < uiw.abstract.JavaControl
                     
                 end %if isNew
                 
-            end %if obj.isvalid()&& ~eventData.getValueIsAdjusting()
+            end %if obj.isvalid && obj.IsConstructed
+            
         end % onSelectionChanged
         
         
@@ -549,7 +611,7 @@ classdef Table < uiw.abstract.JavaControl
             obj.validateIndex(rIdx,cIdx);
             
             % Is the table sorted? If so, use the sorted row index.
-            if ~isempty(obj.RowSortIndex)
+            if obj.IsConstructed
                 rIdx = obj.RowSortIndex(rIdx);
             end
             
@@ -592,22 +654,34 @@ classdef Table < uiw.abstract.JavaControl
                 value = {value};
             end
             
-            % Convert data to Java types as needed
-            jValue = obj.ColumnFormatEnum(cIdx).toJavaType(value);
-            
-            % Is the table sorted? If so, use the sorted row index.
-            if ~isempty(obj.RowSortIndex)
-                rIdx = obj.RowSortIndex(rIdx);
-            end
-            
-            % Disable callbacks while updating Java
-            obj.CallbacksEnabled = false;
-            
-            % Set the value
-            obj.JTableModel.setValueAt(jValue{:},rIdx-1,cIdx-1);
-            
-            % Re-enable callbacks
-            obj.CallbacksEnabled = true;
+            if obj.IsConstructed
+                
+                % Is the table sorted? If so, use the sorted row index.
+                if ~isempty(obj.RowSortIndex)
+                    rIdx = obj.RowSortIndex(rIdx);
+                end
+                
+                if obj.FigureIsJava
+                    
+                    % Convert data to Java types as needed
+                    jValue = obj.ColumnFormatEnum(cIdx).toJavaType(value);
+                    
+                    % Disable callbacks while updating Java
+                    obj.CallbacksEnabled = false;
+                    
+                    % Set the value
+                    obj.JTableModel.setValueAt(jValue{:},rIdx-1,cIdx-1);
+                    
+                    % Re-enable callbacks
+                    obj.CallbacksEnabled = true;
+                    
+                else
+                    
+                    obj.WebControl.Data(rIdx,cIdx) = value;
+                    
+                end %if obj.FigureIsJava
+                
+            end %if obj.IsConstructed
             
             % Set the cached value
             if isnumeric(obj.DataM)
@@ -757,10 +831,22 @@ classdef Table < uiw.abstract.JavaControl
                 FlagRemove = true;
             end
             
-            if obj.JavaObj.setColumnCount(NumCol,FlagRemove)
-                obj.ColumnFormatEnum(end+1:NumCol) = uiw.enum.TableColumnFormat.DEFAULT;
-                obj.redrawJava_private();
-                obj.onStyleChanged(); %To get column header widths set properly for scrolling right
+            numNamedCols = numel(obj.ColumnName_);
+            if NumCol > numNamedCols
+                %newColNames = cellstr(string(numNamedCols+1:NumCol));
+                obj.ColumnName_(numNamedCols+1:NumCol) = {''};
+            elseif NumCol < numNamedCols && FlagRemove
+                obj.ColumnName_(NumCol+1 : end) = [];
+            end
+                
+            if obj.FigureIsJava
+                if obj.JavaObj.setColumnCount(NumCol,FlagRemove)
+                    obj.ColumnFormatEnum(end+1:NumCol) = uiw.enum.TableColumnFormat.DEFAULT;
+                    obj.redrawJava_private();
+                    obj.onStyleChanged(); %To get column header widths set properly for scrolling right
+                end
+            else
+                obj.WebControl.ColumnName = obj.ColumnName_;
             end
             
         end %function
@@ -812,7 +898,6 @@ classdef Table < uiw.abstract.JavaControl
                 % Do nothing
                 
             elseif obj.FigureIsJava
-                
                 
                 % Get the data
                 data = obj.DataM;
@@ -870,7 +955,14 @@ classdef Table < uiw.abstract.JavaControl
                 
             else
                 
-                % obj.WebComponent
+                % Get the data
+                data = obj.DataM;
+                
+                % Set the data in the table
+                [~, NumCols] = size(data);
+                updateNumberOfColumns(obj,NumCols,fromDataTable) %REDUCE COLUMNS IF NEEDED
+                obj.WebControl.Data = data;
+                obj.WebControl.ColumnName = obj.ColumnName_;
                 
             end %if ~obj.IsConstructed
             
@@ -897,7 +989,8 @@ classdef Table < uiw.abstract.JavaControl
                 obj.CellEditor = editors;
                 
                 % Apply column sizes
-                ModeIdx = find(strcmp(value,obj.ValidResizeModes), 1) - 1;
+                isMatch = strcmp(obj.ColumnResizePolicy,obj.ValidResizeModes);
+                ModeIdx = find(isMatch, 1) - 1;
                 obj.JControl.setAutoResizeMode(ModeIdx);
                 obj.evalOnColumns('setResizable',num2cell(obj.ColumnResizable));
                 if strcmp(obj.ColumnResizePolicy, 'off')
@@ -912,7 +1005,8 @@ classdef Table < uiw.abstract.JavaControl
                 obj.JControl.SortingEnabled = logical(obj.Sortable);
                 jNumCol = obj.JSortableTableModel.getColumnCount();
                 for idx=jNumCol:-1:1
-                    obj.JSortableTableModel.setColumnSortable(idx-1,obj.ColumnSortable(idx));
+                    %obj.JSortableTableModel.setColumnSortable(idx-1,obj.ColumnSortable(idx));
+                    javaMethodEDT('setColumnSortable',obj.JSortableTableModel,idx-1,obj.ColumnSortable(idx))
                 end
                 
                 
@@ -922,9 +1016,17 @@ classdef Table < uiw.abstract.JavaControl
                 
             else
                 
-                % obj.WebComponent.ColumnSortable = logical(obj.Sortable);
-                % obj.WebComponent.ColumnEditable = obj.Editable
-                %obj.onStyleChanged();
+                if ~isempty(obj.ColumnWidth)
+                    obj.WebControl.ColumnWidth = obj.ColumnWidth;
+                elseif ~isempty(obj.ColumnPreferredWidth)
+                    obj.WebControl.ColumnWidth = obj.ColumnPreferredWidth;
+                elseif ~strcmp(obj.ColumnResizePolicy,'off')
+                    obj.WebControl.ColumnWidth = {'auto'};
+                end
+                    
+                obj.WebControl.ColumnSortable = logical(obj.Sortable);
+                obj.WebControl.ColumnEditable = obj.ColumnEditable & obj.Editable;
+                
             end %if ~obj.IsConstructed
             
         end %function
@@ -995,7 +1097,7 @@ classdef Table < uiw.abstract.JavaControl
                 
             else
                 
-                % obj.WebComponent
+                obj.WebControl.SelectionType = obj.SelectionType;
                 
             end %if ~obj.IsConstructed
             
@@ -1065,7 +1167,25 @@ classdef Table < uiw.abstract.JavaControl
                 
             else
                 
-                % obj.WebComponent
+                % What selection mode?
+                switch obj.SelectionType
+                    
+                    case 'column'
+                        obj.WebControl.Selection = obj.SelectedColumns_;
+                    
+                    case 'row'
+                        obj.WebControl.Selection = obj.SelectedRows_;
+                    
+                    case 'cell'
+                        colIdx = obj.SelectedColumns_;
+                        rowIdx = obj.SelectedRows_;
+                        selCells = [...
+                            reshape(repmat(rowIdx,numel(colIdx),1),[],1) ,...
+                            reshape(repmat(colIdx,numel(colIdx),1)',[],1) ];
+                        obj.WebControl.Selection = selCells;
+                        
+                end
+                % obj.WebControl
                 
                 % Redraw in case changes have been made
                 obj.redraw();
@@ -1148,35 +1268,114 @@ classdef Table < uiw.abstract.JavaControl
         
         
         % ColumnName
+        function value = get.ColumnName(obj)
+            value = obj.ColumnName_;
+        end
         function set.ColumnName(obj, value)
             validateattributes(value,{'cell'},{'vector'})
             obj.ColumnName_ = value;
-            obj.applyData(true);
+            if obj.IsConstructed
+                if obj.FigureIsJava
+                    obj.evalOnColumns('setHeaderValue',obj.ColumnName_);
+                else
+                    obj.WebControl.ColumnName = obj.ColumnName_;
+                end
+            end
         end
         
-        % ColumnMinWidth
-        function set.ColumnMinWidth(obj, value)
+        
+        % ColumnWidth
+        function value = get.ColumnWidth(obj)
+            if ~obj.IsConstructed
+                value = obj.ColumnWidth_;
+            elseif obj.FigureIsJava
+                value = cell2mat( obj.evalOnColumns('getWidth') );
+            else
+                value = obj.WebControl.ColumnWidth;
+            end
+        end
+        function set.ColumnWidth(obj, value)
             validateattributes(value,{'numeric'},...
                 {'nonnegative','integer','finite','nonnan','vector'});
-            obj.ColumnMinWidth = value;
-            obj.applyColumnFormats()
+            if ~obj.IsConstructed
+                obj.ColumnWidth_ = value;
+            elseif obj.FigureIsJava
+                obj.ColumnResizePolicy = 'off'; %#ok<MCSUP>
+                obj.evalOnColumns('setWidth',num2cell(value));
+                obj.onStyleChanged();
+            else
+                obj.WebControl.ColumnWidth = value;
+            end
         end
         
-        % ColumnMaxWidth
-        function set.ColumnMaxWidth(obj, value)
-            validateattributes(value,{'numeric'},...
-                {'nonnegative','integer','finite','nonnan','vector'});
-            obj.ColumnMaxWidth = value;
-            obj.applyColumnFormats()
-        end
         
         % ColumnPreferredWidth
+        function value = get.ColumnPreferredWidth(obj)
+            if ~obj.IsConstructed
+                value = obj.ColumnWidth_;
+            elseif obj.FigureIsJava
+                value = cell2mat( obj.evalOnColumns('getPreferredWidth') );
+            else
+                value = obj.WebControl.ColumnWidth;
+            end
+        end
         function set.ColumnPreferredWidth(obj, value)
             validateattributes(value,{'numeric'},...
                 {'nonnegative','integer','finite','nonnan','vector'});
-            obj.ColumnPreferredWidth = value;
-            obj.applyColumnFormats()
+            if ~obj.IsConstructed
+                obj.ColumnWidth_ = value;
+            elseif obj.FigureIsJava
+                obj.evalOnColumns('setPreferredWidth',num2cell(value));
+                obj.onStyleChanged();
+            else
+                obj.WebControl.ColumnWidth = value;
+            end
         end
+        
+        
+        % ColumnMinWidth
+        function value = get.ColumnMinWidth(obj)
+            if obj.IsConstructed && obj.FigureIsJava
+                value = cell2mat( obj.evalOnColumns('getMinWidth') );
+            else
+                value = obj.ColumnMinWidth;
+            end
+        end
+        function set.ColumnMinWidth(obj, value)
+            validateattributes(value,{'numeric'},...
+                {'nonnegative','integer','finite','nonnan','vector'});
+            if ~obj.IsConstructed
+                obj.ColumnMinWidth = value;
+            elseif obj.FigureIsJava
+                obj.evalOnColumns('setMinWidth',num2cell(value));
+                obj.onStyleChanged();
+            else
+                obj.throwDeprecatedWarning('ColumnMinWidth');
+            end
+        end
+        
+        
+        % ColumnMaxWidth
+        function value = get.ColumnMaxWidth(obj)
+            if obj.IsConstructed && obj.FigureIsJava
+                value = cell2mat( obj.evalOnColumns('getMaxWidth') );
+            else
+                value = obj.ColumnMaxWidth;
+            end
+        end
+        function set.ColumnMaxWidth(obj, value)
+            validateattributes(value,{'numeric'},...
+                {'nonnegative','integer','finite','nonnan','vector'});
+            if ~obj.IsConstructed
+                obj.ColumnMaxWidth = value;
+            elseif obj.FigureIsJava
+                obj.evalOnColumns('setMaxWidth',num2cell(value));
+                obj.onStyleChanged();
+            else
+                obj.throwDeprecatedWarning('ColumnMaxWidth');
+            end
+        end
+        
         
         % ColumnIsSorted (read-only)
         function value = get.ColumnIsSorted(obj)
@@ -1193,55 +1392,72 @@ classdef Table < uiw.abstract.JavaControl
         
         % ColumnSortDirection (read-only)
         function value = get.ColumnSortDirection(obj)
-            if obj.IsConstructed && obj.FigureIsJava
+            if ~obj.IsConstructed
+                value = obj.ColumnSortDirection;
+            elseif obj.FigureIsJava
                 jNumCol = obj.JSortableTableModel.getColumnCount();
-                value = zeros(1,jNumCol);
                 for idx=jNumCol:-1:1
-                    if obj.JSortableTableModel.isColumnSorted(idx-1)
-                        if obj.JSortableTableModel.isColumnAscending(idx-1)
-                            value(idx) = 1;
-                        else
-                            value(idx) = -1;
-                        end
-                    end
+                    value(idx) = obj.JSortableTableModel.isColumnSortable(idx-1);
                 end
             else
-                value = [];
-                %TODO
+                value = zeros(size(obj.ColumnName_));
             end
         end
         
         % ColumnSortable
+        function value = get.ColumnSortable(obj)
+            if ~obj.IsConstructed
+                value = obj.ColumnSortable;
+            elseif obj.FigureIsJava
+                jNumCol = obj.JSortableTableModel.getColumnCount();
+                for idx=jNumCol:-1:1
+                    value(idx) = obj.JSortableTableModel.isColumnSortable(idx-1);
+                end
+            else
+                value = obj.WebControl.ColumnSortable;
+                if isscalar(value) && numel(obj.ColumnName_) > 1
+                    value = repmat(value,size(obj.ColumnName));
+                end
+            end
+        end
         function set.ColumnSortable(obj, value)
-            obj.ColumnSortable = value;
+            obj.ColumnSortable = logical(value);
             obj.applyColumnFormats();
         end
-        
-        
-        % ColumnWidth
-        function set.ColumnWidth(obj, value)
-            validateattributes(value,{'numeric'},...
-                {'nonnegative','integer','finite','nonnan','vector'});
-            % Need to turn off auto-resize
-            obj.ColumnResizePolicy = 'off'; %#ok<MCSUP>
-            obj.ColumnWidth = value;
-            obj.applyColumnFormats();
-            obj.onStyleChanged();
-        end
-        
         
         % ColumnResizable
+        function value = get.ColumnResizable(obj)
+            if ~obj.IsConstructed
+                value = obj.ColumnResizable;
+            elseif obj.FigureIsJava
+                value = cell2mat( obj.evalOnColumns('getResizable') );
+            else
+                value = true(size(obj.ColumnName_));
+            end
+        end
         function set.ColumnResizable(obj, value)
             validateattributes(value,{'logical'},{'vector'});
             obj.ColumnResizable = value;
-            obj.applyColumnFormats();
+            if obj.IsConstructed
+                if obj.FigureIsJava
+                    obj.applyColumnFormats();
+                else
+                    obj.throwDeprecatedWarning('ColumnResizable');
+                end
+            end
         end
         
         
         % ColumnResizePolicy
         function set.ColumnResizePolicy(obj, value)
             obj.ColumnResizePolicy = value;
-            obj.applyColumnFormats();
+            if obj.IsConstructed
+                if obj.FigureIsJava
+                    obj.applyColumnFormats();
+                else
+                    obj.throwDeprecatedWarning('ColumnResizePolicy');
+                end
+            end
         end
         
         
@@ -1308,8 +1524,12 @@ classdef Table < uiw.abstract.JavaControl
         function set.RowHeight(obj, value)
             validateattributes(value,{'numeric'},{'real','scalar','>=',-1});
             obj.RowHeight = value;
-            if obj.IsConstructed && obj.FigureIsJava
-                obj.onStyleChanged();
+            if obj.IsConstructed
+                if obj.FigureIsJava
+                    obj.onStyleChanged();
+                else
+                    obj.throwDeprecatedWarning('RowHeight');
+                end
             end
         end
         
@@ -1321,16 +1541,30 @@ classdef Table < uiw.abstract.JavaControl
             elseif obj.FigureIsJava
                 value = obj.JSortableTableModel.getIndexes()+1;
             else
-                %TODO
-                %value = obj.WebComponent.;
+                value = obj.WebControl.DisplayRowOrder;
             end
         end
         
         
         % Sortable
+        function value = get.Sortable(obj)
+            if ~obj.IsConstructed
+                value = obj.Sortable;
+            elseif obj.FigureIsJava
+            value = obj.JControl.SortingEnabled;
+            else
+                value = obj.WebControl.ColumnSortable;
+            end
+        end
         function set.Sortable(obj, value)
             validateattributes(value,{'logical','numeric'},{'real','scalar'});
-            obj.applyColumnFormats();
+            if ~obj.IsConstructed
+                obj.Sortable_ = value;
+            elseif obj.FigureIsJava
+                obj.JControl.SortingEnabled = logical(value);
+            else
+                obj.WebControl.ColumnSortable = value;
+            end
         end
         
         
@@ -1358,7 +1592,11 @@ classdef Table < uiw.abstract.JavaControl
         
         % SelectedData
         function value = get.SelectedData(obj)
-            value = obj.DataM(obj.SelectedRows, obj.SelectedColumns);
+            rIdx = obj.SelectedRows;
+            if ~isempty(obj.RowSortIndex)
+                rIdx = obj.RowSortIndex(rIdx);
+            end
+            value = obj.DataM(rIdx, obj.SelectedColumns);
         end
         
         % SelectionMode
@@ -1366,6 +1604,9 @@ classdef Table < uiw.abstract.JavaControl
             value = validatestring(value,obj.ValidSelectionModes);
             obj.SelectionMode = value;
             obj.applySelectionModel();
+            if obj.IsConstructed && ~obj.FigureIsJava
+                obj.throwDeprecatedWarning('SelectionMode');
+            end
         end
         
         %  SelectionType
@@ -1373,6 +1614,14 @@ classdef Table < uiw.abstract.JavaControl
             value = validatestring(value,obj.ValidSelectionTypes);
             obj.SelectionType = value;
             obj.applySelectionModel();
+        end
+        
+        % SortCallback
+        function set.SortCallback(obj, value)
+            obj.SortCallback = value;
+            if obj.IsConstructed && ~obj.FigureIsJava
+                obj.throwDeprecatedWarning('SortCallback');
+            end
         end
         
     end % get/set methods

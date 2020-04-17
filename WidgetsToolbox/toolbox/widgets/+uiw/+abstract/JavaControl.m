@@ -26,7 +26,8 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     
     %% Properties
     properties (Hidden, SetAccess=protected)
-        JControl % The main Java control
+        WebControl % The web control (if web figures used)
+        JControl % The main Java control (if traditional figures used)
         JavaObj % The raw Java control object without MATLAB callbacks
         JScrollPane % The Java scrollpane (applies to some controls)
         JEditor % The editor component of the Java control (applies to some controls)
@@ -71,7 +72,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
             
             % Apply parent last
             [parentArgs,remArgs] = obj.splitArgs({'Parent'},varargin{:});
-
+            
             % Set properties from P-V pairs
             obj.assignPVPairs(remArgs{:},parentArgs{:});
             
@@ -110,65 +111,6 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     
     %% Sealed Protected methods
     methods (Sealed, Access=protected)
-        
-        function createComponent(obj,~)
-            
-            fig = ancestor(obj.Parent,'figure');
-            
-            if isempty(fig)
-                warning('No ancestor figure to place component %s',class(obj));
-            else
-                
-                % Is it a Java figure or web uifigure?
-                obj.FigureIsJava = ~matlab.ui.internal.isUIFigure(fig);
-                % warnState = warning('off','MATLAB:ui:javaframe:PropertyToBeRemoved');
-                % obj.FigureIsJava = isprop(obj,'JavaFrame') && ...
-                %     ~isempty(obj.JavaFrame); %#ok<JAVFM>
-                % warning(warnState);
-                
-                if obj.FigureIsJava
-                    
-                    % Turn off javacomponent warning
-                    warnState = warning('off','MATLAB:ui:javacomponent:FunctionToBeRemoved');
-                    
-                    % Call abstract method that must create the component
-                    obj.createJavaComponent()
-                    
-                    % Restore warning
-                    warning(warnState);
-                    
-                else
-                    % It's a web uifigure
-                    
-                    obj.HGJContainer = uicontainer(...
-                        'Parent',obj.hBasePanel,...
-                        'Units','Pixels',...
-                        'Position',[1 1 100 25]);
-                    
-                    % Call abstract method that must create the component
-                    obj.createWebControl();
-                    
-                end %if obj.FigureIsJava
-            
-                % Set interactions
-                obj.setInteractions();
-                
-                % Stop listening for placement in a figure
-                delete(obj.FigurePlacementListener);
-                
-                % Assign the construction flag
-                obj.IsConstructed = true;
-                
-                % Redraw the widget
-                obj.onResized();
-                obj.onEnableChanged();
-                obj.onStyleChanged();
-                obj.redraw();
-                
-            end %if isempty(fig)
-            
-        end %function
-        
         
         function createScrollPaneJControl(obj,JavaClassName,varargin)
             % Create the Java control on a scroll pane, and set any additional properties
@@ -210,8 +152,8 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
                 obj.JControl.KeyPressedCallback = @(h,e)onKeyPressed(obj,e);
                 obj.JControl.KeyReleasedCallback = @(h,e)onKeyReleased(obj,e);
             else
-                obj.WebComponent.KeyPressFcn = @(h,e)onKeyPressed(obj,e);
-                obj.WebComponent.KeyReleaseFcn = @(h,e)onKeyReleased(obj,e);
+                obj.WebControl.KeyPressFcn = @(h,e)onKeyPressed(obj,e);
+                obj.WebControl.KeyReleaseFcn = @(h,e)onKeyReleased(obj,e);
             end
             
         end % setFocusProps
@@ -366,6 +308,64 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     %% Protected methods
     methods (Access=protected)
         
+        function createComponent(obj,~)
+            
+            fig = ancestor(obj.Parent,'figure');
+            
+            if isempty(fig)
+                warning('No ancestor figure to place component %s',class(obj));
+            else
+                
+                % Is it a Java figure or web uifigure?
+                obj.FigureIsJava = ~matlab.ui.internal.isUIFigure(fig);
+                % warnState = warning('off','MATLAB:ui:javaframe:PropertyToBeRemoved');
+                % obj.FigureIsJava = isprop(obj,'JavaFrame') && ...
+                %     ~isempty(obj.JavaFrame); %#ok<JAVFM>
+                % warning(warnState);
+                
+                if obj.FigureIsJava
+                    
+                    % Turn off javacomponent warning
+                    warnState = warning('off','MATLAB:ui:javacomponent:FunctionToBeRemoved');
+                    
+                    % Call abstract method that must create the component
+                    obj.createJavaComponent()
+                    
+                    % Restore warning
+                    warning(warnState);
+                    
+                else
+                    % It's a web uifigure
+                    
+                    obj.HGJContainer = uicontainer(...
+                        'Parent',obj.hBasePanel,...
+                        'Units','Pixels',...
+                        'Position',[1 1 100 25]);
+                    
+                    % Call abstract method that must create the component
+                    obj.createWebControl();
+                    
+                end %if obj.FigureIsJava
+                
+                % Set interactions
+                obj.setInteractions();
+                
+                % Stop listening for placement in a figure
+                delete(obj.FigurePlacementListener);
+                
+                % Assign the construction flag
+                obj.IsConstructed = true;
+                
+                % Redraw the widget
+                obj.onResized();
+                obj.onEnableChanged();
+                obj.onStyleChanged();
+                obj.redraw();
+                
+            end %if isempty(fig)
+            
+        end %function
+        
         
         function onFocusGained(obj,~,~)
             % Triggered on focus on the control, sets this widget as the figure's current object
@@ -410,13 +410,18 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
             % Handle changes to widget size - subclass may override
             
             % Ensure the construction is complete
-            if obj.IsConstructed && obj.FigureIsJava
+            if obj.IsConstructed 
                 
                 % Get widget dimensions
                 [w,h] = obj.getInnerPixelSize();
                 
+                if obj.FigureIsJava
                 % Adjust the java control, due to positioning issues
                 set(obj.HGJContainer,'Units','pixels','Position',[2 2 w-2 h-2]);
+                else
+                    % Position the web control
+                    %obj.WebControl.Position = r
+                end
                 
             end %if obj.IsConstructed
             
@@ -459,15 +464,26 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
                 onStyleChanged@uiw.abstract.WidgetContainer(obj);
                 
                 % Set the font
-                for idx = 1:numel(obj.JControl)
-                    j = obj.JControl(idx);
-                    j.setFont(obj.getJFont());
-                    j.setBackground( obj.rgbToJavaColor(obj.BackgroundColor) );
-                    j.setForeground( obj.rgbToJavaColor(obj.ForegroundColor) );
+                if obj.FigureIsJava
+                    for idx = 1:numel(obj.JControl)
+                        j = obj.JControl(idx);
+                        j.setFont(obj.getJFont());
+                        j.setBackground( obj.rgbToJavaColor(obj.BackgroundColor) );
+                        j.setForeground( obj.rgbToJavaColor(obj.ForegroundColor) );
+                    end
                 end
                 
             end %if obj.IsConstructed
             
+        end %function
+        
+        
+        function throwDeprecatedWarning(obj,propName)
+            
+            warnId = 'widgets:Java:DeprecatedProperty';
+            message = 'Property "%s" of widget "%s" is deprecated and is not used in uifigure widgets. To disable this warning, use "warning(''off'',%s)".';
+            warning(warnId,message,propName,class(obj),warnId);
+        
         end %function
         
     end % Protected methods

@@ -18,10 +18,6 @@ classdef (Abstract) JavaEditableText < uiw.abstract.JavaControl & ...
     %   $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
     % ---------------------------------------------------------------------
 
-    %% Properties
-    properties
-        WebControl
-    end
     
     %% Protected Methods
     methods (Access=protected)
