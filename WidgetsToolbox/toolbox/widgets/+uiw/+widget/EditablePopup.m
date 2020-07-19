@@ -65,7 +65,7 @@ classdef EditablePopup < uiw.abstract.EditablePopupControl
         function createJavaComponent(obj)
             
             % Call superclass method
-            obj.createJavaComponent@uiw.abstract.EditablePopupControl(value);
+            obj.createJavaComponent@uiw.abstract.EditablePopupControl();
             
             obj.updateSelection();
             

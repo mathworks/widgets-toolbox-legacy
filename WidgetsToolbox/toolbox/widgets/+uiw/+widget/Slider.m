@@ -71,7 +71,7 @@ classdef Slider < uiw.abstract.JavaControl & ...
             obj.JControl.setOpaque(false);
             
             % Use the default value
-            obj.Value = obj.JControl.getValue();
+            obj.Value = 1;
             
             % Set properties from P-V pairs
             obj.assignPVPairs(varargin{:});
@@ -96,6 +96,30 @@ classdef Slider < uiw.abstract.JavaControl & ...
     
     %% Protected methods
     methods (Access=protected)
+            
+        function createJavaComponent(obj)
+            
+            % Create
+            obj.createJControl('javax.swing.JSlider');
+            obj.JControl.StateChangedCallback = @(h,e)onSliderMotion(obj,e);
+            obj.JControl.MouseReleasedCallback = @(h,e)onSliderChanged(obj,e);
+            obj.HGJContainer.Units = 'pixels';
+            obj.JControl.setOpaque(false);
+            
+        end %function
+        
+        
+        function createWebControl(obj)
+            
+            % Create
+            obj.WebControl = uislider(...
+                'Parent',obj.hBasePanel,...
+                'ValueChangingFcn', @(h,e)obj.onSliderMotion(),...
+                'ValueChangedFcn', @(h,e)obj.onSliderChanged() );
+            
+            
+        end %function
+        
         
         function onValueChanged(obj,~)
             % Handle updates to value changes
