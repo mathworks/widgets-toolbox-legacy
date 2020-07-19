@@ -26,26 +26,18 @@ classdef (Abstract) BasePanel < uiw.mixin.HasContainer
     end %properties
     
     properties (SetAccess=immutable, GetAccess=protected)
-        %hBasePanel = matlab.ui.container.Panel.empty(0,1); %The internal panel upon which the widget contents are placed
-        hBasePanel %The internal panel upon which the widget contents are placed
+        hBasePanel = matlab.ui.container.Panel.empty(0,1); %The internal panel upon which the widget contents are placed
     end %properties
     
     
     
     %% Constructor
     methods
-        function obj = BasePanel(parent)
+        function obj = BasePanel()
             % Construct the panel
             
-            if nargin < 1
-                parent = obj;
-                %parent = [];
-            end
-            
             if isempty(obj.hBasePanel)
-                %obj.hBasePanel = matlab.ui.container.Panel(...
-                obj.hBasePanel = uipanel(...
-                    'Parent',parent,...
+                obj.hBasePanel = matlab.ui.container.Panel(...
                     'HandleVisibility','off',...
                     'BorderType','none',...
                     'Units','pixels',...

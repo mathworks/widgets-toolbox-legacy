@@ -47,7 +47,7 @@ classdef (Abstract) JavaEditableText < uiw.abstract.JavaControl & ...
                 
                 if obj.FigureIsJava
                     obj.onResized@uiw.abstract.JavaControl();
-                else
+                elseif ~isempty(obj.WebControl)
                     obj.WebControl.Position = [1 1 w h];
                 end
                 
@@ -155,7 +155,7 @@ classdef (Abstract) JavaEditableText < uiw.abstract.JavaControl & ...
             
             if obj.FigureIsJava
                 javaMethodEDT('setText',obj.JEditor,value);
-            else
+            elseif ~isempty(obj.WebControl)
                 obj.WebControl.Value = value;
             end
             

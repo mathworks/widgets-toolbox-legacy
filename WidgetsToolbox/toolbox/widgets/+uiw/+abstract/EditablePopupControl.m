@@ -115,31 +115,9 @@ classdef (Abstract) EditablePopupControl < uiw.abstract.JavaEditableText
             obj.JControl.setFocusable(false);
             obj.setFocusProps(obj.JEditor);
             
-            % Set the items in the component
-            obj.updateItems();
-            
             % Default value (twice as AbortSet treats [] and '' the same)
             obj.Value = 'temp';
             obj.Value = '';
-            
-            obj.updateSelection();
-            
-        end %function
-        
-        
-        function createWebControl(obj)
-            
-            % Create
-            obj.WebControl = uidropdown(...
-                'Parent',obj.hBasePanel,...
-                'Editable',true,...
-                'Items',obj.Items,...
-                'Value',obj.Value,...
-                'ValueChangedFcn', @(h,e)obj.onTextEdited(h,e) );
-            
-            obj.hTextFields(end+1) = obj.WebControl;
-            
-            obj.updateSelection();
             
         end %function
         
@@ -227,57 +205,6 @@ classdef (Abstract) EditablePopupControl < uiw.abstract.JavaEditableText
             else
                 obj.setValue@uiw.abstract.JavaEditableText(value);
             end
-            
-        end %function
-        
-        
-        function updateItems(obj)
-            
-            % Ensure the construction is complete
-            if obj.IsConstructed
-                
-                if obj.FigureIsJava
-                    % If the Items was just edited, perhaps we shouldn't replace
-                    % the whole model. Only replace model if very new Items? Check
-                    % performance.
-                    items = obj.Items;
-                    if isempty(items)
-                        items = {''};
-                    end
-                    currentValue = obj.Value;
-                    jModel = javaObjectEDT('javax.swing.DefaultComboBoxModel',items);
-                    obj.JControl.setModel(jModel);
-                    javaMethod('setSelectedItem',obj.JControl,currentValue);
-                else
-                    obj.WebControl.Items = obj.Items;
-                    obj.setValue(obj.Value);
-                end
-                
-            end %if obj.IsConstructed
-            
-        end %function
-        
-        
-        
-        function updateSelection(obj)
-            
-            % Ensure the construction is complete
-            if obj.IsConstructed && ~isempty(obj.SelectedIndex) && obj.SelectedIndex < numel(obj.Items)
-                
-                if obj.FigureIsJava
-                    obj.CallbacksEnabled = false;
-                    if obj.SelectedIndex~=0
-                        obj.Value = obj.Items{obj.SelectedIndex};
-                    else
-                        obj.Value = '';
-                    end
-                    %javaMethodEDT('setSelectedIndex',obj.JControl,value-1);
-                    obj.CallbacksEnabled = true;
-                else
-                    obj.WebControl.Value = obj.Items{obj.SelectedIndex};
-                end
-                
-            end %if obj.IsConstructed
             
         end %function
         

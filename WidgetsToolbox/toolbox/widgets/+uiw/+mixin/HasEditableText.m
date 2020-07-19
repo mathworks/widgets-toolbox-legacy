@@ -11,7 +11,7 @@ classdef HasEditableText < handle & matlab.mixin.CustomDisplay...
     % onStyleChanged to customize how the widget responds to invalid
     % values.
     
-    %   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2019 The MathWorks Inc.
     %
     % Auth/Revision:
     %   MathWorks Consulting

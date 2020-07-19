@@ -152,8 +152,10 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
                 obj.JControl.KeyPressedCallback = @(h,e)onKeyPressed(obj,e);
                 obj.JControl.KeyReleasedCallback = @(h,e)onKeyReleased(obj,e);
             else
-                obj.WebControl.KeyPressFcn = @(h,e)onKeyPressed(obj,e);
-                obj.WebControl.KeyReleaseFcn = @(h,e)onKeyReleased(obj,e);
+                if isprop(obj.WebControl,'KeyPressFcn')
+                    obj.WebControl.KeyPressFcn = @(h,e)onKeyPressed(obj,e);
+                    obj.WebControl.KeyReleaseFcn = @(h,e)onKeyReleased(obj,e);
+                end
             end
             
         end % setFocusProps
@@ -416,8 +418,8 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
                 [w,h] = obj.getInnerPixelSize();
                 
                 if obj.FigureIsJava
-                % Adjust the java control, due to positioning issues
-                set(obj.HGJContainer,'Units','pixels','Position',[2 2 w-2 h-2]);
+                    % Adjust the java control, due to positioning issues
+                    set(obj.HGJContainer,'Units','pixels','Position',[2 2 w-2 h-2]);
                 else
                     % Position the web control
                     %obj.WebControl.Position = r
@@ -471,7 +473,21 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
                         j.setBackground( obj.rgbToJavaColor(obj.BackgroundColor) );
                         j.setForeground( obj.rgbToJavaColor(obj.ForegroundColor) );
                     end
-                end
+                else
+                    
+                    if isprop(obj.WebControl,'FontName')
+                        obj.WebControl.FontName = obj.FontName;
+                        obj.WebControl.FontSize = obj.FontSize;
+                        obj.WebControl.FontWeight = obj.FontWeight;
+                        obj.WebControl.FontAngle = obj.FontAngle;
+                        obj.WebControl.FontColor = obj.ForegroundColor;
+                    end
+                    
+                    if isprop(obj.WebControl,'BackgroundColor')
+                        obj.WebControl.BackgroundColor = obj.BackgroundColor;
+                    end
+                    
+                end %if obj.FigureIsJava
                 
             end %if obj.IsConstructed
             
@@ -555,6 +571,12 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
                 end
                 obj.CallbacksEnabled = value;
             end
+        end
+        
+        
+        function set.WebControl(obj,value)
+            validateattributes(value,{'matlab.graphics.Graphics'},{'scalar'});
+            obj.WebControl = value;
         end
         
     end %methods
