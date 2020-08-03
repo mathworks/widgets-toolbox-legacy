@@ -56,6 +56,9 @@ classdef (AllowedSubclasses = ?uiw.widget.Toolstrip) Toolbar < ...
         function obj = Toolbar(varargin)
             % Construct the control
             
+            % Call superclass constructors
+            obj@uiw.abstract.WidgetContainer();
+            
             % Standards that may be overridden by inputs
             obj.Padding = 6;
             obj.Spacing = 4;
@@ -138,6 +141,7 @@ classdef (AllowedSubclasses = ?uiw.widget.Toolstrip) Toolbar < ...
                 
                 % Get widget dimensions
                 [w,~] = obj.getInnerPixelSize;
+                
                 
                 % Panel sizes
                 posP = {obj.hGroupPanel.Position};

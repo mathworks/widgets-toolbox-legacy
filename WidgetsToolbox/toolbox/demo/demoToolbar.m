@@ -28,7 +28,8 @@ w = uiw.widget.Toolbar(...
     'Parent',f,... %Normally start with this empty, until later
     'Visible','on',... %Normally start with this 'off'
     'Callback',@(h,e)disp(e),...
-    'Position',[0 50 879 78]);
+    'Units','normalized',...
+    'Position',[0 .5 1 .5]);
 
 % Initially, the toolbar will be blank
 %% Add a section
