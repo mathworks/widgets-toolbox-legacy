@@ -663,7 +663,9 @@ classdef Table < uiw.abstract.JavaControl
             validateattributes(value,{'cell','char','string','numeric','logical','datetime'},{});
             
             % Put the value in a cell if not already
-            if ~iscell(value)
+            if isstring(value)
+                value = cellstr(value);
+            elseif~iscell(value)
                 value = {value};
             end
             
@@ -690,7 +692,25 @@ classdef Table < uiw.abstract.JavaControl
                     
                 else
                     
-                    obj.WebControl.Data(rIdx,cIdx) = value;
+                    % Convert data to Web types as needed
+                    if numel(obj.ColumnFormatEnum) >= cIdx
+                        wValue = obj.ColumnFormatEnum(cIdx).toWebType(value);
+                    else
+                        wValue = value;
+                    end
+                    if isstring(wValue)
+                        wValue = cellstr(wValue);
+                    end
+                    
+                    if isnumeric(obj.WebControl.Data)
+                        
+                        obj.WebControl.Data(rIdx,cIdx) = wValue{:};
+                        
+                    else
+                        
+                        obj.WebControl.Data(rIdx,cIdx) = wValue;
+                        
+                    end
                     
                 end %if obj.FigureIsJava
                 
@@ -961,9 +981,9 @@ classdef Table < uiw.abstract.JavaControl
                 
                 % Set the data in the table
                 [NumRows, NumCols] = size(data);
-                if obj.JTableModel.getColumnCount() > NumCols
+                %if obj.JTableModel.getColumnCount() > NumCols
                     updateNumberOfColumns(obj,NumCols,fromDataTable) %REDUCE COLUMNS IF NEEDED
-                end
+                %end
                 obj.JTableModel.setDataVector(jValue, obj.ColumnName_)
                 
                 % Retain the selection if possible
@@ -1002,6 +1022,9 @@ classdef Table < uiw.abstract.JavaControl
                 
                 % Convert data to Web types as needed
                 wValue = obj.ColumnFormatEnum.toWebType(data);
+                if isstring(wValue)
+                    wValue = cellstr(wValue);
+                end                
                 
                 % Set the data in the table
                 [~, NumCols] = size(wValue);
@@ -1039,7 +1062,7 @@ classdef Table < uiw.abstract.JavaControl
                 obj.JControl.setAutoResizeMode(ModeIdx);
                 obj.evalOnColumns('setResizable',num2cell(obj.ColumnResizable));
                 if strcmp(obj.ColumnResizePolicy, 'off')
-                    obj.evalOnColumns('setWidth',num2cell(value));
+                    obj.evalOnColumns('setWidth',num2cell(obj.ColumnWidth));
                 end
                 
                 obj.evalOnColumns('setMinWidth',num2cell(obj.ColumnMinWidth));
@@ -1557,9 +1580,11 @@ classdef Table < uiw.abstract.JavaControl
             validateattributes(value,{'table'},{})
             % Did the data change?
             columnName = value.Properties.VariableNames;
+            
             value = table2cell(value);
-            if ~isequaln(value, obj.Data)
+            if ~isequaln(value, obj.DataM)
                 obj.DataM = value;
+                obj.ColumnName_ = columnName;
                 obj.applyData(true);
             elseif ~isequal(obj.ColumnName, columnName)
                 obj.ColumnName = columnName;
