@@ -577,13 +577,26 @@ classdef Table < uiw.abstract.JavaControl
             narginchk(4,4);
             obj.validateIndex(rIdx,cIdx);
             
-            % Set the color
-            color = uiw.utility.interpretColor(color);
-            jColor = obj.rgbToJavaColor(color);
-            obj.JControl.setCellColor(rIdx,cIdx,jColor)
-            
-            % Redraw in case changes have been made
-            obj.redrawJava_private();
+            if ~obj.IsConstructed
+                
+                return
+                
+            elseif obj.FigureIsJava
+                
+                % Set the color
+                color = uiw.utility.interpretColor(color);
+                jColor = obj.rgbToJavaColor(color);
+                obj.JControl.setCellColor(rIdx,cIdx,jColor)
+                
+                % Redraw in case changes have been made
+                obj.redrawJava_private();
+                
+            else
+                
+                s = uistyle('BackgroundColor',color);
+                addStyle(obj.WebControl,s,'cell',[rIdx,cIdx]);
+                
+            end
             
         end %setCellColor
         
@@ -743,10 +756,12 @@ classdef Table < uiw.abstract.JavaControl
             %           none
             %
             
-            jEditor = obj.JControl.getCellEditor();
-            if ~isempty(jEditor)
-                jEditor.stopCellEditing();
-                pause(0.01); % Allow Java to catch up
+            if obj.IsConstructed && obj.FigureIsJava
+                jEditor = obj.JControl.getCellEditor();
+                if ~isempty(jEditor)
+                    jEditor.stopCellEditing();
+                    pause(0.01); % Allow Java to catch up
+                end
             end
             
         end %function
@@ -772,25 +787,39 @@ classdef Table < uiw.abstract.JavaControl
             %           none
             %
             
-            % Parse and validate inputs
-            if nargin<4
-                append = false;
-                if nargin<3
-                    descending = false;
+            
+            if ~obj.IsConstructed
+                
+                return
+                
+            elseif obj.FigureIsJava
+                
+                % Parse and validate inputs
+                if nargin<4
+                    append = false;
+                    if nargin<3
+                        descending = false;
+                    end
                 end
+                validateattributes(col,{'numeric'},{'positive','integer','<=',size(obj.DataM,2)});
+                validateattributes(append,{'logical'},{'scalar'});
+                validateattributes(descending,{'logical'},{'scalar'});
+                
+                % Zero-based column index
+                jCol = col-1;
+                
+                % Perform the sort
+                obj.JSortableTableModel.sortColumn(jCol,~append);
+                if descending
+                    obj.JSortableTableModel.reverseColumnSortOrder(jCol);
+                end
+                
+            else
+                
+                obj.throwDeprecatedWarning('sortColumn');
+                
             end
-            validateattributes(col,{'numeric'},{'positive','integer','<=',size(obj.DataM,2)});
-            validateattributes(append,{'logical'},{'scalar'});
-            validateattributes(descending,{'logical'},{'scalar'});
             
-            % Zero-based column index
-            jCol = col-1;
-            
-            % Perform the sort
-            obj.JSortableTableModel.sortColumn(jCol,~append);
-            if descending
-                obj.JSortableTableModel.reverseColumnSortOrder(jCol);
-            end
             
         end %function
         
@@ -813,7 +842,9 @@ classdef Table < uiw.abstract.JavaControl
                 % Set the column editability
                 jEditableArray = obj.JTableModel.isEditable();
                 for idx = 1:jEditableArray.size()
-                    thisValue = obj.Editable && ~isempty(obj.CellEditor{idx});
+                    thisValue = obj.Editable && ...
+                        numel(obj.CellEditor) >= idx && ...
+                        ~isempty(obj.CellEditor{idx});
                     if idx <= numel(obj.ColumnEditable)
                         thisValue = obj.ColumnEditable(idx) && thisValue;
                     end
@@ -930,7 +961,9 @@ classdef Table < uiw.abstract.JavaControl
                 
                 % Set the data in the table
                 [NumRows, NumCols] = size(data);
-                updateNumberOfColumns(obj,NumCols,fromDataTable) %REDUCE COLUMNS IF NEEDED
+                if obj.JTableModel.getColumnCount() > NumCols
+                    updateNumberOfColumns(obj,NumCols,fromDataTable) %REDUCE COLUMNS IF NEEDED
+                end
                 obj.JTableModel.setDataVector(jValue, obj.ColumnName_)
                 
                 % Retain the selection if possible
@@ -967,10 +1000,13 @@ classdef Table < uiw.abstract.JavaControl
                 % Get the data
                 data = obj.DataM;
                 
+                % Convert data to Web types as needed
+                wValue = obj.ColumnFormatEnum.toWebType(data);
+                
                 % Set the data in the table
-                [~, NumCols] = size(data);
+                [~, NumCols] = size(wValue);
                 updateNumberOfColumns(obj,NumCols,fromDataTable) %REDUCE COLUMNS IF NEEDED
-                obj.WebControl.Data = data;
+                obj.WebControl.Data = wValue;
                 obj.WebControl.ColumnName = obj.ColumnName_;
                 
             end %if ~obj.IsConstructed

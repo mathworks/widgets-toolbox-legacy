@@ -120,13 +120,13 @@ end %function
 %% Test String Data Format
 function testStringFormat(testCase)
 
-str = reshape(string(num2cell('A':'F')),2,[]);
+data = reshape(string(num2cell('A':'F')),2,[]);
 t = uiw.widget.Table(...
     'Parent',testCase.TestData.Figure,...
-    'Data',str );
+    'Data',data );
 
 % Verify it set correctly
-assert( isequal(t.Data,str) );
+assert( isequal(t.Data,data) );
 
 % Set a cell
 newValue = "dd";
@@ -135,12 +135,12 @@ value = t.getCell(2,2);
 assert( isequal(value, char(newValue)) );
 
 % Flip the data and set again
-str = flipud(str);
-t.Data = str;
-assert( isequal(t.Data,str) );
+data = flipud(data);
+t.Data = data;
+assert( isequal(t.Data,data) );
 
 % Set data as table
-strTable = array2table(str);
+strTable = array2table(data);
 t.DataTable = strTable;
 assert( isequal(t.DataTable,strTable) );
 assert( isequal(t.Data,table2cell(strTable) ) );
@@ -157,7 +157,7 @@ dates = {
     dt + days(1)
     dt + days(1) + hours(1)
     };
-Data = repmat(dates,4,1);
+Data = repmat(dates,1,4);
 
 fcn = @()uiw.widget.Table(...
     'Parent',testCase.TestData.Figure,...

@@ -80,6 +80,7 @@ classdef TableColumnFormat < handle
         EditorNeedsFormatData = false %True if the Java editor needs to use the table's ColumnFormatData
         ToJavaFcn %Function to convert a column cell array to Java format
         FromJavaFcn %Function to convert a single cell's data back to MATLAB format
+        ToWebFcn %Function to convert a column cell array to Web format
     end
     
     % These are instantiated on the first access, unless a custom renderer or
@@ -158,6 +159,8 @@ classdef TableColumnFormat < handle
                     
                     obj.FromJavaFcn = @(x)uiw.utility.java2mat(x);
                     
+                    obj.ToWebFcn = @(x)cellfun(@(x)strjoin(cellstr(x),'; '),x,'UniformOutput',false);
+                    
                 case 'bank'
                     obj.RendererClass = 'com.mathworks.consulting.widgets.table.NumberCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.DoubleCellEditor';
@@ -187,6 +190,8 @@ classdef TableColumnFormat < handle
                     obj.ToJavaFcn = @(x)uiw.utility.mat2java(x);
                     obj.FromJavaFcn = @(x)uiw.utility.java2mat(x);
                     
+                    obj.ToWebFcn = @(x)cellfun(@(x)char(x),x,'UniformOutput',false);
+                    
                 case 'color'
                     obj.RendererClass = 'com.jidesoft.grid.ColorCellRenderer';
                     if ismac
@@ -199,6 +204,8 @@ classdef TableColumnFormat < handle
                     
                     obj.ToJavaFcn = @(x)uiw.utility.mat2java(x,'java.awt.Color');
                     obj.FromJavaFcn = @(x)uiw.utility.java2mat(x);
+                    
+                    obj.ToWebFcn = @(x)cellfun(@(x)mat2str(x),x,'UniformOutput',false);
                     
                 case 'imageicon'
                     obj.RendererClass = 'com.jidesoft.grid.IconCellRenderer';
@@ -259,6 +266,27 @@ classdef TableColumnFormat < handle
                 mValue = jValue;
             else
                 mValue = obj.FromJavaFcn(jValue);
+            end
+            
+        end %function
+        
+        
+        %% Conversion from MATLAB to WebControl by column format
+        function wValue = toWebType(obj,mValue)
+            % Convert a data column to the web data equivalent by column format
+            
+            % Copy the input over
+            wValue = mValue;
+            
+            % What columns need conversion?
+            needConvert = find( ~cellfun(@isempty, {obj.ToWebFcn}) );
+            numCol = size(mValue,2);
+            for idx = 1:numel(needConvert)
+                thisIdx = needConvert(idx);
+                if thisIdx<=numCol
+                    % Convert to java type
+                    wValue(:,thisIdx) = obj(thisIdx).ToWebFcn( mValue(:,thisIdx) );
+                end
             end
             
         end %function

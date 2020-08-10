@@ -480,7 +480,13 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
                         obj.WebControl.FontSize = obj.FontSize;
                         obj.WebControl.FontWeight = obj.FontWeight;
                         obj.WebControl.FontAngle = obj.FontAngle;
+                    end
+                    
+                    
+                    if isprop(obj.WebControl,'FontColor')
                         obj.WebControl.FontColor = obj.ForegroundColor;
+                    elseif  isprop(obj.WebControl,'ForegroundColor')
+                        obj.WebControl.ForegroundColor = obj.ForegroundColor;
                     end
                     
                     if isprop(obj.WebControl,'BackgroundColor')
