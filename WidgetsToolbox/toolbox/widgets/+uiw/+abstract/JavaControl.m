@@ -422,7 +422,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
                     set(obj.HGJContainer,'Units','pixels','Position',[2 2 w-2 h-2]);
                 else
                     % Position the web control
-                    %obj.WebControl.Position = r
+                    obj.WebControl.Position = [1 1 w h];
                 end
                 
             end %if obj.IsConstructed

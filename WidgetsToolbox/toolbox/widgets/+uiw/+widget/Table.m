@@ -204,6 +204,7 @@ classdef Table < uiw.abstract.JavaControl
         
         
         function createWebControl(obj)
+            % Create the graphics objects
             
             obj.WebControl = uitable(...
                 'Parent',obj.hBasePanel,...
@@ -211,37 +212,7 @@ classdef Table < uiw.abstract.JavaControl
                 'CellEditCallback',@(h,e)onTableModelChanged(obj,h,e),...
                 'CellSelectionCallback',@(h,e)onSelectionChanged(obj,h,e),...
                 'ColumnEditable',obj.ColumnEditable,...
-                'Units','normalized',...
-                'Position',[0 0 1 1]);
-            
-            %--- Normal ---%
-            % ColumnFormatData cell = cell(0,1) %cell array the same size as ColumnFormat, and containing a cellstr list of choices for any column that has a popup list.
-            % Editable logical = true %controls whether the table text is editable
-            % SelectionMode char = 'single' %can we select multiple: (['single'],'contiguous','discontiguous')
-            % SelectionType char = 'row' %type of selection area allowed: (['row'],'column','cell','none')
-            % SortCallback %DisplayDataChangedFcn??
-            
-            %--- Dependent ---%
-            % Data %data in the table. Must be entered as a cell array. (Also see property DataTable for an alternative.)
-            % DataTable
-            % ColumnFormat %cellstr array defining the data format for each column. For a list of formats, see uiw.enum.TableColumnFormat
-            % ColumnName %name of each column
-            % ColumnResizable %whether each column is resizable (true/false)
-            % ColumnResizePolicy %automatic resize policy for columns. ('off','next',['subsequent'],'last','all')
-            % ColumnWidth %width of each column (setting this changes ColumnResizePolicy to 'off')
-            % ColumnMaxWidth %maximum width of each column for auto sizing
-            % ColumnMinWidth %minimum width of each column for auto sizing
-            % ColumnPreferredWidth %preferred width of each column for auto sizing
-            % ColumnSortable %flag for whether each column may be sorted, when the table Sortable is true
-            % SelectedRows %table rows that are currently selected
-            % SelectedColumns %table columns that are currently selected
-            % Sortable %controls whether the columns are sortable. You may sort by clicking on column headers, and sort by multiple criteria by CTRL-click on additional column headers.
-            
-            % N/A
-            % MouseClickedCallback = '' %callback when the mouse is clicked on the table
-            % MouseDraggedCallback = '' %callback while the mouse is being dragged over the table
-            % MouseMotionFcn = '' %callback while the mouse is being moved over the table
-            % RowHeight = -1 %height of the rows in the table
+                'Units','pixels');      
             
         end %function
         

@@ -7,7 +7,7 @@ classdef Tree < uiw.abstract.JavaControl
     %   nObj = uiw.widget.Tree('Property','Value',...)
     %
     
-%   Copyright 2012-2019 The MathWorks Inc.
+    %   Copyright 2012-2019 The MathWorks Inc.
     %
     % Auth/Revision:
     %   MathWorks Consulting
@@ -17,12 +17,15 @@ classdef Tree < uiw.abstract.JavaControl
     
     
     %% Properties
-    properties (AbortSet, Dependent)
-        DndEnabled %controls whether drag and drop is enabled on the tree
-        Editable %controls whether the tree node text is editable
-        RootVisible %whether the root is visible or not
-        SelectedNodes %tree nodes that are currently selected
-        SelectionType %selection mode ('single','contiguous','discontiguous')
+    properties (AbortSet)
+        DndEnabled (1,1) logical %controls whether drag and drop is enabled on the tree
+        Editable (1,1) logical %controls whether the tree node text is editable
+        RootVisible (1,1) logical %whether the root is visible or not
+        SelectedNodes (:,1) uiw.widget.TreeNode %tree nodes that are currently selected
+        
+        %selection mode ('single','contiguous','discontiguous')
+        SelectionType char {mustBeMember(SelectionType,...
+            {'single','contiguous','discontiguous'})} = 'single' 
     end
     
     properties (AbortSet)
@@ -70,21 +73,13 @@ classdef Tree < uiw.abstract.JavaControl
         function obj = Tree(varargin)
             % Construct the control
             
-            % Create the base graphics
-            obj.create();
+            % Call superclass method
+            obj@uiw.abstract.JavaControl(varargin{:})
             
-            % Set properties from P-V pairs
-            obj.assignPVPairs(varargin{:});
-            
-            % Assign the construction flag
-            obj.IsConstructed = true;
-            obj.CallbacksEnabled = true;
-            
-            % Redraw the widget
-            obj.onResized();
-            obj.onEnableChanged();
-            obj.onStyleChanged();
-            obj.redraw();
+            % Create the root node if not already done
+            if isempty(obj.Root)
+                obj.Root = uiw.widget.TreeNode('Name','Root');
+            end
             
         end % constructor
         
@@ -96,6 +91,209 @@ classdef Tree < uiw.abstract.JavaControl
         end % destructor
         
     end %methods - constructor/destructor
+    
+    
+    
+    %% Protected Methods
+    methods (Access=protected)
+        
+        function createComponent(obj,evt)
+            % Create the component
+            
+            % Call superclass method
+            obj.createComponent@uiw.abstract.JavaControl(evt)
+            
+        end %function
+        
+        
+        function createWebControl(obj)
+            % Create the graphics objects
+            
+            % Create tree
+            obj.WebControl = uitree(...
+                'Parent',obj.hBasePanel,...
+                'SelectionChangedFcn',@(h,e)onSelectionChanged(obj,h,e),...
+                'NodeTextChangedFcn',@(h,e)onNodeEdit(obj,h,e),...
+                'Multiselect',~strcmpi(obj.SelectionType,'single'));
+            
+        end %function
+        
+        
+        function createJavaComponent(obj)
+            % Create the graphics objects
+            
+            % Create the root node if not already done
+            if isempty(obj.Root)
+                obj.Root = uiw.widget.TreeNode('Name','Root');
+            end
+            
+            % Attach root
+            obj.Root.createJavaComponent();
+            obj.Root.Tree = obj;
+            
+            % Create the tree on a scroll pane (unless subclass already
+            % did)
+            if isempty(obj.JControl)
+                obj.createScrollPaneJControl('javax.swing.JTree',obj.Root.JNode);
+            end
+            
+            % Store the model
+            obj.JModel = obj.JControl.getModel();
+            javaObjectEDT(obj.JModel); % Put it on the EDT
+            
+            % Store the selection model
+            obj.JSelModel = obj.JControl.getSelectionModel();
+            javaObjectEDT(obj.JSelModel); % Put it on the EDT
+            
+            % Set defaults
+            obj.SelectionType = 'single'; % Single selection
+            obj.JControl.setRowHeight(-1); % Auto row height (for font changes)
+            
+            % Set the java tree callbacks
+            CbProps = handle(obj.JControl,'CallbackProperties');
+            %set(CbProps,'KeyPressedCallback',@(src,e)onKeyPressed(obj,e))
+            set(CbProps,'MouseClickedCallback',@(src,e)onMouseEvent(obj,e))
+            set(CbProps,'MousePressedCallback',@(src,e)onMouseEvent(obj,e))
+            set(CbProps,'TreeWillExpandCallback',@(src,e)onExpand(obj,e))
+            set(CbProps,'TreeCollapsedCallback',@(src,e)onCollapse(obj,e))
+            set(CbProps,'MouseMovedCallback',@(src,e)onMouseEvent(obj,e))
+            set(CbProps,'ValueChangedCallback',@(src,e)onNodeSelection(obj,e))
+            
+            % Set up editability callback
+            CbProps = handle(obj.JModel,'CallbackProperties');
+            set(CbProps,'TreeNodesChangedCallback',@(src,e)onNodeEdit(obj,e))
+            
+            % Set up drag and drop
+            obj.JDropTarget = obj.constructJObj('java.awt.dnd.DropTarget');
+            obj.JControl.setDropTarget(obj.JDropTarget);
+            obj.JTransferHandler = obj.constructJObj(...
+                'com.mathworks.consulting.widgets.tree.TreeTransferHandler');
+            obj.JControl.setTransferHandler(obj.JTransferHandler);
+            
+            % Set up drop target callbacks
+            CbProps = handle(obj.JDropTarget,'CallbackProperties');
+            set(CbProps,'DropCallback',@(src,e)onNodeDND(obj,e));
+            set(CbProps,'DragOverCallback',@(src,e)onNodeDND(obj,e));
+            
+            % Allow tooltips
+            JTTipMgr = javaMethodEDT('sharedInstance','javax.swing.ToolTipManager');
+            JTTipMgr.registerComponent(obj.JControl);
+            
+            % Use the custom renderer
+            obj.JCellRenderer = obj.constructJObj(...
+                'com.mathworks.consulting.widgets.tree.TreeCellRenderer');
+            setCellRenderer(obj.JControl, obj.JCellRenderer);
+            
+            % Add properties to the java object for MATLAB data
+            hTree = handle(obj.JControl);
+            schema.prop(hTree,'Tree','MATLAB array');
+            schema.prop(hTree,'UserData','MATLAB array');
+            
+            % Add a reference to this object
+            hTree.Tree = obj;
+            
+            % Refresh the tree
+            reload(obj, obj.Root);
+            
+            % Set properties
+            obj.JControl.setEditable(obj.Editable);
+            obj.JControl.setRootVisible(obj.RootVisible); %show/hide root
+            obj.JControl.setShowsRootHandles(~obj.RootVisible); %hide/show top level handles
+            obj.JControl.setDragEnabled(obj.DndEnabled);
+            
+            % Set selection mode
+            switch obj.SelectionType
+                case 'single'
+                    mode = obj.JSelModel.SINGLE_TREE_SELECTION;
+                case 'contiguous'
+                    mode = obj.JSelModel.CONTIGUOUS_TREE_SELECTION;
+                case 'discontiguous'
+                    mode = obj.JSelModel.DISCONTIGUOUS_TREE_SELECTION;
+            end
+            obj.JSelModel.setSelectionMode(mode);
+            
+            % Set initial selection
+            selNodes = obj.SelectedNodes;
+            if isempty(selNodes)
+                
+                if ~isempty(obj.JControl.getSelectionPath)
+                    obj.JControl.setSelectionPath([])
+                end
+                
+            elseif isa(selNodes,'uiw.widget.TreeNode')
+                
+                if isscalar(selNodes)
+                    obj.JControl.setSelectionPath(selNodes.JNode.getTreePath());
+                else
+                    for idx = numel(selNodes):-1:1 %preallocate by reversing
+                        path(idx) = selNodes(idx).JNode.getTreePath();
+                    end
+                    obj.JControl.setSelectionPaths(path);
+                end
+                
+            else
+                
+                error('Expected TreeNode or empty array');
+                
+            end
+            
+        end %function
+        
+        
+        function onStyleChanged(obj,~)
+            % Handle updates to style changes
+            
+            % Ensure the construction is complete
+            if obj.IsConstructed && obj.FigureIsJava
+                
+                % Call superclass methods
+                onStyleChanged@uiw.abstract.JavaControl(obj);
+                
+                % Set the background
+                jColor = obj.rgbToJavaColor(obj.TreeBackgroundColor);
+                obj.JControl.setBackground(jColor);
+                
+                jColor = obj.rgbToJavaColor(obj.TreePaneBackgroundColor);
+                obj.JCellRenderer.setBackgroundNonSelectionColor(jColor);
+                
+                jColor = obj.rgbToJavaColor(obj.ForegroundColor);
+                obj.JCellRenderer.setTextNonSelectionColor(jColor);
+                
+                jColor = obj.rgbToJavaColor(obj.SelectionForegroundColor);
+                obj.JCellRenderer.setTextSelectionColor(jColor);
+                
+                jColor = obj.rgbToJavaColor(obj.SelectionBackgroundColor);
+                obj.JCellRenderer.setBackgroundSelectionColor(jColor);
+                
+                obj.JControl.repaint();
+                
+            elseif obj.IsConstructed && ~obj.FigureIsJava
+                
+                obj.WebControl.BackgroundColor = obj.TreeBackgroundColor;
+                obj.WebControl.FontColor = obj.ForegroundColor;
+                
+            end %if obj.IsConstructed
+            
+        end %function
+        
+        
+        function onKeyPressed(obj,jEvent)
+            % Triggered when any button is pressed in the keyboard
+            
+            % Call superclass method
+            obj.onKeyPressed@uiw.abstract.JavaControl(jEvent);
+            
+            % Deprecated functionality (KeyPressedCallback)
+            if ~isempty(obj.KeyPressedCallback)
+                keyCode = jEvent.getKeyCode;
+                e1 = struct('KeyPressed',keyCode,'SelectedNodes',obj.SelectedNodes);
+                hgfeval(obj.KeyPressedCallback,obj,e1);
+            end %if ~isempty(obj.KeyPressedCallback)
+            
+        end %function onKeyPressed
+        
+    end %methods
+    
     
     
     %% Public Methods
@@ -185,135 +383,6 @@ classdef Tree < uiw.abstract.JavaControl
     
     
     
-    %% Protected Methods
-    methods (Access=protected)
-        
-        function create(obj)
-            % Create the graphics objects
-            
-            % Create the root node (unless subclass already did)
-            if isempty(obj.Root)
-                obj.Root = uiw.widget.TreeNode('Name','Root');
-                obj.Root.Tree = obj;
-            end
-            
-            % Create the tree on a scroll pane (unless subclass already
-            % did)
-            if isempty(obj.JControl)
-                obj.createScrollPaneJControl('javax.swing.JTree',obj.Root.JNode);
-            end
-            
-            % Store the model
-            obj.JModel = obj.JControl.getModel();
-            javaObjectEDT(obj.JModel); % Put it on the EDT
-            
-            % Store the selection model
-            obj.JSelModel = obj.JControl.getSelectionModel();
-            javaObjectEDT(obj.JSelModel); % Put it on the EDT
-            
-            % Set defaults
-            obj.SelectionType = 'single'; % Single selection
-            obj.JControl.setRowHeight(-1); % Auto row height (for font changes)
-            
-            % Set the java tree callbacks
-            CbProps = handle(obj.JControl,'CallbackProperties');
-            %set(CbProps,'KeyPressedCallback',@(src,e)onKeyPressed(obj,e))
-            set(CbProps,'MouseClickedCallback',@(src,e)onMouseEvent(obj,e))
-            set(CbProps,'MousePressedCallback',@(src,e)onMouseEvent(obj,e))
-            set(CbProps,'TreeWillExpandCallback',@(src,e)onExpand(obj,e))
-            set(CbProps,'TreeCollapsedCallback',@(src,e)onCollapse(obj,e))
-            set(CbProps,'MouseMovedCallback',@(src,e)onMouseEvent(obj,e))
-            set(CbProps,'ValueChangedCallback',@(src,e)onNodeSelection(obj,e))
-            
-            % Set up editability callback
-            CbProps = handle(obj.JModel,'CallbackProperties');
-            set(CbProps,'TreeNodesChangedCallback',@(src,e)onNodeEdit(obj,e))
-            
-            % Set up drag and drop
-            obj.JDropTarget = obj.constructJObj('java.awt.dnd.DropTarget');
-            obj.JControl.setDropTarget(obj.JDropTarget);
-            obj.JTransferHandler = obj.constructJObj(...
-                'com.mathworks.consulting.widgets.tree.TreeTransferHandler');
-            obj.JControl.setTransferHandler(obj.JTransferHandler);
-            
-            % Set up drop target callbacks
-            CbProps = handle(obj.JDropTarget,'CallbackProperties');
-            set(CbProps,'DropCallback',@(src,e)onNodeDND(obj,e));
-            set(CbProps,'DragOverCallback',@(src,e)onNodeDND(obj,e));
-            
-            % Allow tooltips
-            JTTipMgr = javaMethodEDT('sharedInstance','javax.swing.ToolTipManager');
-            JTTipMgr.registerComponent(obj.JControl);
-            
-            % Use the custom renderer
-            obj.JCellRenderer = obj.constructJObj(...
-                'com.mathworks.consulting.widgets.tree.TreeCellRenderer');
-            setCellRenderer(obj.JControl, obj.JCellRenderer);
-            
-            % Add properties to the java object for MATLAB data
-            hTree = handle(obj.JControl);
-            schema.prop(hTree,'Tree','MATLAB array');
-            schema.prop(hTree,'UserData','MATLAB array');
-            
-            % Add a reference to this object
-            hTree.Tree = obj;
-            
-            % Refresh the tree
-            reload(obj, obj.Root);
-            
-        end
-        
-        
-        function onStyleChanged(obj,~)
-            % Handle updates to style changes
-            
-            % Ensure the construction is complete
-            if obj.IsConstructed
-                
-                % Call superclass methods
-                onStyleChanged@uiw.abstract.JavaControl(obj);
-                
-                % Set the background
-                jColor = obj.rgbToJavaColor(obj.TreeBackgroundColor);
-                obj.JControl.setBackground(jColor);
-                
-                jColor = obj.rgbToJavaColor(obj.TreePaneBackgroundColor);
-                obj.JCellRenderer.setBackgroundNonSelectionColor(jColor);
-                
-                jColor = obj.rgbToJavaColor(obj.ForegroundColor);
-                obj.JCellRenderer.setTextNonSelectionColor(jColor);
-                
-                jColor = obj.rgbToJavaColor(obj.SelectionForegroundColor);
-                obj.JCellRenderer.setTextSelectionColor(jColor);
-                
-                jColor = obj.rgbToJavaColor(obj.SelectionBackgroundColor);
-                obj.JCellRenderer.setBackgroundSelectionColor(jColor);
-                
-                obj.JControl.repaint();
-                
-            end %if obj.IsConstructed
-        end %function
-        
-        
-        function onKeyPressed(obj,jEvent)
-            % Triggered when any button is pressed in the keyboard
-            
-            % Call superclass method
-            obj.onKeyPressed@uiw.abstract.JavaControl(jEvent);
-            
-            % Deprecated functionality (KeyPressedCallback)
-            if ~isempty(obj.KeyPressedCallback)
-                keyCode = jEvent.getKeyCode;
-                e1 = struct('KeyPressed',keyCode,'SelectedNodes',obj.SelectedNodes);
-                hgfeval(obj.KeyPressedCallback,obj,e1);
-            end %if ~isempty(obj.KeyPressedCallback)
-            
-        end %function onKeyPressed
-        
-    end %methods
-    
-    
-    
     %% Special Access Methods
     methods (Access={?uiw.widget.Tree, ?uiw.widget.TreeNode})
         
@@ -344,23 +413,58 @@ classdef Tree < uiw.abstract.JavaControl
         function insertNode(obj,nObj,pObj,idx)
             % Insert a node at the specified location
             
-            obj.CallbacksEnabled = false;
+            if obj.IsConstructed && obj.FigureIsJava
+                
+                obj.CallbacksEnabled = false;
+                
+                % Insert this node
+                obj.JModel.insertNodeInto(nObj.JNode, pObj.JNode, idx-1);
+                
+                % Insert any children
+                insertChildrenJava(nObj)
+                
+                % If this is the first and only child, we need to reload the
+                % tree node so it renders correctly
+                if all(pObj.Children == nObj)
+                    obj.JModel.reload(pObj.JNode);
+                end
+                
+                obj.CallbacksEnabled = true;
+                
+            elseif obj.IsConstructed && ~obj.FigureIsJava
+                
+                    siblings = [pObj.Children.WNode];
+                    nObj.WNode.Parent = pObj.WNode;
+                    if idx == numel(siblings)+1
+                        % Do nothing
+                    elseif idx == 1
+                        move(nObj.WNode, siblings(1), 'before');
+                    else
+                        move(nObj.WNode, siblings(idx-1), 'after');
+                    end
+                
+                    % Insert any children
+                    insertChildrenWeb(nObj)
+                    
+            end %if obj.IsConstructed && obj.FigureIsJava
             
-            % Insert this node
-            obj.JModel.insertNodeInto(nObj.JNode, pObj.JNode, idx-1);
             
-            % Insert any children
-            insertChildren(nObj)
+            function insertChildrenWeb(nObj)
+                % Recursively add children to the tree
+                
+                allWNode = [nObj.Children.WNode];
+                set(allWNode,'Parent',nObj.WNode);
+                
+                for cIdx = 1:numel(nObj.Children)
+                    if ~isempty(nObj.Children(cIdx).Children)
+                        insertChildrenWeb(nObj.Children(cIdx));
+                    end
+                end
+                
+            end %function insertChildren(nObj)
             
-            % If this is the first and only child, we need to reload the
-            % tree node so it renders correctly
-            if all(pObj.Children == nObj)
-                obj.JModel.reload(pObj.JNode);
-            end
             
-            obj.CallbacksEnabled = true;
-            
-            function insertChildren(nObj)
+            function insertChildrenJava(nObj)
                 % Recursively add children to the tree
                 
                 for cIdx = 1:numel(nObj.Children)
@@ -370,7 +474,7 @@ classdef Tree < uiw.abstract.JavaControl
                         cIdx-1);
                     
                     if ~isempty(nObj.Children(cIdx).Children)
-                        insertChildren(nObj.Children(cIdx));
+                        insertChildrenJava(nObj.Children(cIdx));
                     end
                 end
                 
@@ -511,10 +615,10 @@ classdef Tree < uiw.abstract.JavaControl
                             % Launch the context menu
                             obj.showContextMenu(cMenu)
                             
-                        %elseif isempty(mEvent.Nodes) && ~mEvent.ControlOn && ~mEvent.ShiftOn
+                            %elseif isempty(mEvent.Nodes) && ~mEvent.ControlOn && ~mEvent.ShiftOn
                             % Click in white space - deselect everything
                             
-                        %    obj.JControl.setSelectionPath([]);
+                            %    obj.JControl.setSelectionPath([]);
                             
                         end %if mEvent.SelectionType == "alt" && ~mEvent.ControlOn
                         
@@ -767,104 +871,191 @@ classdef Tree < uiw.abstract.JavaControl
     end %methods
     
     
-    
-    
     %% Get/Set methods
     methods
         
         % DndEnabled
         function value = get.DndEnabled(obj)
-            value = obj.JControl.getDragEnabled();
+            if obj.IsConstructed && obj.FigureIsJava
+                value = obj.JControl.getDragEnabled();
+            else
+                value = obj.DndEnabled;
+            end
         end
         function set.DndEnabled(obj,value)
             if ischar(value) || ( isscalar(value) && isstring(value) )
                 value = strcmp(value,'on');
             end
             validateattributes(value,{'numeric','logical'},{'scalar'});
-            obj.JControl.setDragEnabled(logical(value));
+            obj.DndEnabled = logical(value);
+            if obj.IsConstructed && obj.FigureIsJava
+                obj.JControl.setDragEnabled(obj.DndEnabled);
+            else
+                obj.throwDeprecatedWarning('DndEnabled');
+            end
         end
         
         
         % Editable
         function value = get.Editable(obj)
-            value = get(obj.JControl,'Editable');
+            if obj.IsConstructed && obj.FigureIsJava
+                value = get(obj.JControl,'Editable');
+            else
+                value = obj.Editable;
+            end
         end
         function set.Editable(obj,value)
             validateattributes(value,{'numeric','logical'},{'scalar'});
-            obj.JControl.setEditable(logical(value));
+            obj.Editable = logical(value);
+            if obj.IsConstructed && obj.FigureIsJava
+                obj.JControl.setEditable(obj.Editable);
+            else
+                obj.throwDeprecatedWarning('Editable');
+            end
+        end
+        
+        
+        % Root
+        function value = get.Root(obj)
+            if obj.IsConstructed && ~obj.FigureIsJava
+                value = obj.WebControl;
+            else
+                value = obj.Root;
+            end
         end
         
         
         % RootVisible
         function value = get.RootVisible(obj)
-            value = get(obj.JControl,'rootVisible');
+            if obj.IsConstructed && obj.FigureIsJava
+                value = get(obj.JControl,'rootVisible');
+            else
+                value = obj.RootVisible;
+            end
         end
         function set.RootVisible(obj,value)
             if ischar(value) || ( isscalar(value) && isstring(value) )
                 value = strcmp(value,'on');
             end
             validateattributes(value,{'numeric','logical'},{'scalar'});
-            value = logical(value);
-            obj.JControl.setRootVisible(value); %show/hide root
-            obj.JControl.setShowsRootHandles(~value); %hide/show top level handles
+            obj.RootVisible = logical(value);
+            if obj.IsConstructed && obj.FigureIsJava
+                obj.JControl.setRootVisible(obj.RootVisible); %show/hide root
+                obj.JControl.setShowsRootHandles(~obj.RootVisible); %hide/show top level handles
+            else
+                obj.throwDeprecatedWarning('RootVisible');
+            end
         end
         
         
         % SelectedNodes
         function value = get.SelectedNodes(obj)
-            value = uiw.widget.TreeNode.empty(0,1);
-            srcPaths = obj.JControl.getSelectionPaths();
-            for idx = 1:numel(srcPaths)
-                value(idx) = get(srcPaths(idx).getLastPathComponent,'TreeNode');
-            end
-        end
-        function set.SelectedNodes(obj,value)
-            obj.CallbacksEnabled = false;
-            if isempty(value)
-                if ~isempty(obj.JControl.getSelectionPath)
-                    obj.JControl.setSelectionPath([])
-                end
-            elseif isa(value,'uiw.widget.TreeNode')
-                if isscalar(value)
-                    obj.JControl.setSelectionPath(value.JNode.getTreePath());
-                else
-                    for idx = numel(value):-1:1 %preallocate by reversing
-                        path(idx) = value(idx).JNode.getTreePath();
-                    end
-                    obj.JControl.setSelectionPaths(path);
+            
+            if ~obj.IsConstructed
+                
+                value = obj.SelectedNodes;
+                
+            elseif obj.FigureIsJava
+                
+                value = uiw.widget.TreeNode.empty(0,1);
+                srcPaths = obj.JControl.getSelectionPaths();
+                for idx = 1:numel(srcPaths)
+                    value(idx) = get(srcPaths(idx).getLastPathComponent,'TreeNode');
                 end
             else
-                error('Expected TreeNode or empty array');
+                
+                value = vertcat(obj.WebComponent.SelectedNodes.NodeData);
+                if isempty(value)
+                    value = uiw.widget.TreeNode.empty(0,1);
+                end
+                
             end
-            obj.CallbacksEnabled = true;
+            
         end
         
+        function set.SelectedNodes(obj,value)
+            
+            if ~obj.IsConstructed
+                
+                obj.SelectedNodes = value;
+                 
+            elseif obj.FigureIsJava
+                
+                obj.CallbacksEnabled = false;
+                
+                if isempty(value)
+                    
+                    if ~isempty(obj.JControl.getSelectionPath)
+                        obj.JControl.setSelectionPath([])
+                    end
+                    
+                elseif isa(value,'uiw.widget.TreeNode')
+                    
+                    if isscalar(value)
+                        obj.JControl.setSelectionPath(value.JNode.getTreePath());
+                    else
+                        for idx = numel(value):-1:1 %preallocate by reversing
+                            path(idx) = value(idx).JNode.getTreePath();
+                        end
+                        obj.JControl.setSelectionPaths(path);
+                    end
+                    
+                else
+                    
+                    error('Expected TreeNode or empty array');
+                    
+                end
+                
+                obj.CallbacksEnabled = true;
+                
+            else
+                
+                %RAJ - needs work
+                obj.WebComponent.SelectedNodes = obj.SelectedNodes.UITreeNode;
+                
+            end
+            
+        end
         
         % SelectionType
         function value = get.SelectionType(obj)
-            value = obj.JSelModel.getSelectionMode();
-            switch value
-                case 1
-                    value = 'single';
-                case 2
-                    value = 'contiguous';
-                case 4
-                    value = 'discontiguous';
+            if obj.IsConstructed && obj.FigureIsJava
+                value = obj.JSelModel.getSelectionMode();
+                switch value
+                    case 1
+                        value = 'single';
+                    case 2
+                        value = 'contiguous';
+                    case 4
+                        value = 'discontiguous';
+                end
+            else
+                value = obj.SelectionType;
             end
         end
         function set.SelectionType(obj,value)
-            value = validatestring(value,{'single','contiguous','discontiguous'});
-            switch value
-                case 'single'
-                    mode = obj.JSelModel.SINGLE_TREE_SELECTION;
-                case 'contiguous'
-                    mode = obj.JSelModel.CONTIGUOUS_TREE_SELECTION;
-                case 'discontiguous'
-                    mode = obj.JSelModel.DISCONTIGUOUS_TREE_SELECTION;
+            obj.SelectionType = validatestring(value,{'single','contiguous','discontiguous'});
+            if obj.IsConstructed && obj.FigureIsJava
+                switch obj.SelectionType
+                    case 'single'
+                        mode = obj.JSelModel.SINGLE_TREE_SELECTION;
+                    case 'contiguous'
+                        mode = obj.JSelModel.CONTIGUOUS_TREE_SELECTION;
+                    case 'discontiguous'
+                        mode = obj.JSelModel.DISCONTIGUOUS_TREE_SELECTION;
+                end
+                obj.CallbacksEnabled = false;
+                obj.JSelModel.setSelectionMode(mode);
+                obj.CallbacksEnabled = true;
+            else
+                if strcmpi(obj.SelectionType,'contiguous')
+                    obj.throwDeprecatedWarning('SelectionType = ''contiguous''');
+                end
+                if obj.IsConstructed && ~obj.FigureIsJava
+                    isMultiSelect = ~strcmpi(obj.SelectionType,'single');
+                    obj.WebControl.Multiselect = isMultiSelect;
+                end
             end
-            obj.CallbacksEnabled = false;
-            obj.JSelModel.setSelectionMode(mode);
-            obj.CallbacksEnabled = true;
         end
         
         
@@ -877,7 +1068,11 @@ classdef Tree < uiw.abstract.JavaControl
                 'OldValue',obj.SelectionForegroundColor,...
                 'NewValue',value);
             obj.SelectionForegroundColor = value;
-            obj.onStyleChanged(evt);
+            if obj.IsConstructed && obj.FigureIsJava
+                obj.onStyleChanged(evt);
+            else
+                obj.throwDeprecatedWarning('SelectionForegroundColor');
+            end
         end
         
         % SelectionBackgroundColor
@@ -889,7 +1084,11 @@ classdef Tree < uiw.abstract.JavaControl
                 'OldValue',obj.SelectionBackgroundColor,...
                 'NewValue',value);
             obj.SelectionBackgroundColor = value;
-            obj.onStyleChanged(evt);
+            if obj.IsConstructed && obj.FigureIsJava
+                obj.onStyleChanged(evt);
+            else
+                obj.throwDeprecatedWarning('SelectionForegroundColor');
+            end
         end
         
         % TreeBackgroundColor
@@ -913,7 +1112,11 @@ classdef Tree < uiw.abstract.JavaControl
                 'OldValue',obj.TreePaneBackgroundColor,...
                 'NewValue',value);
             obj.TreePaneBackgroundColor = value;
-            obj.onStyleChanged(evt);
+            if obj.IsConstructed && obj.FigureIsJava
+                obj.onStyleChanged(evt);
+            else
+                obj.throwDeprecatedWarning('TreePaneBackgroundColor');
+            end
         end
         
         
