@@ -145,8 +145,6 @@ classdef Table < uiw.abstract.JavaControl
     %% Protected Methods
     methods (Access=protected)
         
-        
-        
         function createComponent(obj,evt)
             % Create the component
             

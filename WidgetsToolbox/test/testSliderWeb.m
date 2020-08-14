@@ -83,16 +83,6 @@ verifyWarningFree(testCase,fcn)
 end %function
 
 
-%% Test incorrect values that throw an error
-function testBadValues(testCase)
-
-w = uiw.widget.Slider();
-
-f = @() set( w, 'Min', 'abc');
-verifyError(testCase, f, 'MATLAB:type:InvalidInputSize');
-
-end %function
-
 
 %% Test vertical slider
 function testVerticalSlider(testCase)
