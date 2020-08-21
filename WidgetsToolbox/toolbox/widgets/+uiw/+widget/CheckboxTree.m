@@ -86,12 +86,12 @@ classdef CheckboxTree < uiw.widget.Tree
             
             % Create the root node
             obj.Root = uiw.widget.CheckboxTreeNode('Name','Root');
-            obj.Root.createJavaComponent();
-            obj.Root.Tree = obj;
             
             % Create the tree on a scroll pane (unless subclass already
             % did)
-            % Create the checkbox tree on a scroll pane
+            % Attach root
+            obj.Root.createJavaComponent();
+            obj.Root.Tree = obj;
             obj.createScrollPaneJControl(...
                 'com.mathworks.consulting.widgets.tree.CheckBoxTree',obj.Root.JNode);
             

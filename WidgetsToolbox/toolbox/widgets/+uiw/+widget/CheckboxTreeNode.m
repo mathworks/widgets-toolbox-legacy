@@ -44,11 +44,11 @@ classdef CheckboxTreeNode < uiw.widget.TreeNode
     %% Constructor / Destructor
     methods
         
-        function nObj = CheckboxTreeNode(varargin)
+        function obj = CheckboxTreeNode(varargin)
             % Construct the node
             
             % Call superclass constructor
-            nObj = nObj@uiw.widget.TreeNode(varargin{:});
+            obj = obj@uiw.widget.TreeNode(varargin{:});
             
         end
         

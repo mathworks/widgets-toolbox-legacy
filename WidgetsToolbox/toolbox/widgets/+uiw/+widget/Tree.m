@@ -210,13 +210,12 @@ classdef Tree < uiw.abstract.JavaControl
                 obj.Root = uiw.widget.TreeNode('Name','Root');
             end
             
-            % Attach root
-            obj.Root.createJavaComponent();
-            obj.Root.Tree = obj;
-            
             % Create the tree on a scroll pane (unless subclass already
             % did)
             if isempty(obj.JControl)
+                % Attach root
+                obj.Root.createJavaComponent();
+                obj.Root.Tree = obj;
                 obj.createScrollPaneJControl('javax.swing.JTree',obj.Root.JNode);
             end
             

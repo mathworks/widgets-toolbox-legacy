@@ -1,7 +1,9 @@
 %% Checkbox Tree
 %%
-% 
-%   Copyright 2012-2019 The MathWorks Inc.
+%
+%   WARNING: Checkbox Tree is not supported in uifigure
+%
+%   Copyright 2012-2020 The MathWorks Inc.
 %
 
 %% Create the widget
@@ -9,7 +11,7 @@
 % This checkbox tree behaves almost identical to the normal tree, except
 % adding the checkbox capabilities
 
-f = figure(...
+f = uifigure(...
     'Toolbar','none',...
     'MenuBar','none',...
     'NumberTitle','off',...
@@ -25,10 +27,8 @@ w = uiw.widget.CheckboxTree(...
     'LabelHeight',18,...
     'Units', 'normalized', ...
     'Position', [0 0 1 1]);
-%%
-topNode =  uiw.widget.CheckboxTreeNode('Name','TopNode','Parent',w.Root);
 
-%%
+topNode =  uiw.widget.CheckboxTreeNode('Name','TopNode','Parent',w.Root);
 branchA = uiw.widget.CheckboxTreeNode('Name','BranchA','Parent',w.Root);
 branchB = uiw.widget.CheckboxTreeNode('Name','BranchB','Parent',w.Root);
 
