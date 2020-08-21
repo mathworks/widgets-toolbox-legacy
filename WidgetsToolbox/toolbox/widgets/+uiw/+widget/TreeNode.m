@@ -95,6 +95,8 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                     
                 end
                 
+                obj.IsConstructed = true;
+                
             end %if
             
         end %function
@@ -122,7 +124,27 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
             obj.WNode = uitreenode(...
                 'Parent',[],...
                 'Text',obj.Name,...
+                'ContextMenu',obj.UIContextMenu,...
                 'NodeData',obj);
+            
+        end %function
+        
+        
+        function throwDeprecatedWarning(obj,propName,value)
+            
+            warnId = 'widgets:Java:DeprecatedProperty';
+            if isprop(propName,obj)
+                type = 'Property';
+            else
+                type = 'Method';
+            end
+            if nargin >= 3
+                message = '%s "%s" set to "%s" of widget "%s" is deprecated and is not used in uifigure widgets. To disable this warning, use "warning(''off'',%s)".';
+                warning(warnId,message,type,propName,value,class(obj),warnId);
+            else
+                message = '%s "%s" of widget "%s" is deprecated and is not used in uifigure widgets. To disable this warning, use "warning(''off'',%s)".';
+                warning(warnId,message,type,propName,class(obj),warnId);
+            end
             
         end %function
         
@@ -297,14 +319,26 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
             
             validateattributes(icon,{'char'},{})
             
-            % Create a java icon
-            IconData = javaObjectEDT('javax.swing.ImageIcon',icon);
-            
-            % Update the icon in the node
-            setIcon(obj.JNode, IconData);
-            
-            % Notify the model about the update
-            nodeChanged(obj.Tree, obj)
+            if ~obj.IsConstructed || isempty(obj.Tree)
+                
+                % Do nothing
+                
+            elseif obj.Tree.FigureIsJava
+                
+                % Create a java icon
+                IconData = javaObjectEDT('javax.swing.ImageIcon',icon);
+                
+                % Update the icon in the node
+                setIcon(obj.JNode, IconData);
+                
+                % Notify the model about the update
+                nodeChangedJava(obj.Tree, obj)
+                
+            else
+                
+                obj.WNode.Icon = icon;
+                
+            end
             
         end %function setIcon()
         
@@ -349,7 +383,10 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 if ~isempty(obj.Parent) && ~obj.Parent.IsBeingDeleted
                     ChildIdx = find(obj.Parent.Children == obj,1);
                     obj.Parent.Children(ChildIdx) = [];
-                    obj.Tree.removeNode(obj, obj.Parent);
+                    if ~isempty(obj.Tree) && isvalid(obj.Tree) ...
+                            && obj.Tree.FigureIsJava
+                        obj.Tree.removeNodeJava(obj, obj.Parent);
+                    end
                 end
                 
                 
@@ -363,13 +400,20 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 if ~isempty(obj.Parent)
                     ChildIdx = find(obj.Parent.Children == obj,1);
                     obj.Parent.Children(ChildIdx) = [];
-                    obj.Tree.removeNode(obj, obj.Parent);
+                    obj.Tree.removeNodeJava(obj, obj.Parent);
                     
                     % Update the reference to the tree in the hierarchy
                     updateTreeReference(obj, newParent)
                 end
                 
             else % A new parent was provided
+                
+                % Get the tree for the parent
+                if isa(newParent,'uiw.widget.Tree')
+                    newTree = newParent;
+                else
+                    newTree = newParent.Tree;
+                end 
                 
                 % If new parent is a JTree, parent is the Root
                 if isa(newParent,'uiw.widget.Tree') && newParent.FigureIsJava
@@ -380,20 +424,21 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 if ~isempty(obj.Parent)
                     ChildIdx = find(obj.Parent.Children == obj,1);
                     obj.Parent.Children(ChildIdx) = [];
-                    obj.Tree.removeNode(obj, obj.Parent);
+                    obj.Tree.removeNodeJava(obj, obj.Parent);
                 end
                 
                 % Update the reference to the tree in the hierarchy
-                if isa(newParent,'uiw.widget.Tree') && newParent.FigureIsJava ...
-                        && ~isequal(obj.Tree, newParent.Tree)
-                    
-%RAJ - Left off HERE!!!!
-                    updateTreeReference(obj,newParent.Tree)
+                if ~isequal(obj.Tree, newTree)
+                    updateTreeReference(obj, newTree)
                 end
                 
                 % Update the list of children in the parent
-                ChildIdx = numel(newParent.Children) + 1;
-                newParent.Children(ChildIdx) = obj;
+                if isa(newParent,'uiw.widget.Tree')
+                    ChildIdx = numel(newParent.ChildNodes) + 1;
+                else
+                    ChildIdx = numel(newParent.Children) + 1;
+                    newParent.Children(ChildIdx) = obj;
+                end
                 
                 % Add this node to the parent node
                 if ~isempty(obj.Tree) && isvalid(obj.Tree)
@@ -429,7 +474,7 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 obj.WNode.Text = value;
             elseif ~isempty(obj.JNode)
                 obj.JNode.setUserObject(value);
-                nodeChanged(obj.Tree,obj);
+                nodeChangedJava(obj.Tree,obj);
             end
         end
         
@@ -459,9 +504,7 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
         function set.UIContextMenu(obj,value)
             obj.UIContextMenu = value;
             if ~isempty(obj.WNode)
-                obj.throwDeprecatedWarning('UIContextMenu');
-            elseif ~isempty(obj.JNode)
-                % Do nothing
+                obj.WNode.ContextMenu = value;
             end
         end
         

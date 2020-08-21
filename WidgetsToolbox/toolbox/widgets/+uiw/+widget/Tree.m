@@ -18,37 +18,34 @@ classdef Tree < uiw.abstract.JavaControl
     
     %% Properties
     properties (AbortSet)
-        DndEnabled (1,1) logical %controls whether drag and drop is enabled on the tree
-        Editable (1,1) logical %controls whether the tree node text is editable
-        RootVisible (1,1) logical %whether the root is visible or not
-        SelectedNodes (:,1) uiw.widget.TreeNode %tree nodes that are currently selected
         
-        %selection mode ('single','contiguous','discontiguous')
+        %controls whether the tree node text is editable
+        Editable (1,1) logical 
+        
+        %tree nodes that are currently selected
+        SelectedNodes
+        
+        %selection mode ('single','discontiguous')
         SelectionType char {mustBeMember(SelectionType,...
             {'single','contiguous','discontiguous'})} = 'single' 
+        
+        %callback for a node being expanded
+        NodeExpandedCallback 
+        
+        %callback for a node being collapsed
+        NodeCollapsedCallback 
+        
+        %callback for a node being edited
+        NodeEditedCallback 
+        
+        %callback for change in tree node selection
+        SelectionChangeFcn 
+        
+        %Background color of the tree area
+        TreeBackgroundColor = [1 1 1] 
+        
     end
     
-    properties (AbortSet)
-        MouseClickedCallback %callback when the mouse is clicked on the tree
-        MouseMotionFcn %callback while the mouse is being moved over the tree
-        NodeDraggedCallback %callback for a node being dragged. A custom callback should return a logical true when the node being dragged over is a valid drop target.
-        NodeDroppedCallback %callback for a node being dropped. A custom callback should handle the data transfer. If not specified, dragging and dropping nodes just modifies the parent of the nodes that were dragged and dropped.
-        NodeExpandedCallback %callback for a node being expanded
-        NodeCollapsedCallback %callback for a node being collapsed
-        NodeEditedCallback %callback for a node being edited
-        SelectionChangeFcn %callback for change in tree node selection
-    end
-    
-    properties (SetAccess=protected)
-        Root %the root tree node (uiw.widget.TreeNode or uiw.widget.CheckboxTreeNode)
-    end
-    
-    properties (AbortSet)
-        TreeBackgroundColor = [1 1 1] %Background color of the tree area
-        TreePaneBackgroundColor = [1 1 1] %Background color of the full pane
-        SelectionForegroundColor = [0 0 0] %Foreground color of the selection in the tree
-        SelectionBackgroundColor = [.2 .6 1] %Background color of the selection in the tree
-    end
     
     
     %% Internal properties
@@ -61,9 +58,53 @@ classdef Tree < uiw.abstract.JavaControl
         IsBeingDeleted = false; %true when the destructor is active (internal)
     end
     
+    properties (AbortSet, SetAccess={?uiw.widget.Tree, ?uiw.widget.TreeNode})
+        
+        %Child tree nodes (read-only)
+        ChildNodes = uiw.widget.TreeNode.empty(0,1) 
+        
+    end
+    
     %% Deprecated properties
     properties (Hidden)
-        KeyPressedCallback %callback for a key pressed event
+        
+        %controls whether drag and drop is enabled on the tree
+        DndEnabled (1,1) logical 
+        
+        %callback for a key pressed event
+        KeyPressedCallback 
+        
+        %callback when the mouse is clicked on the tree
+        MouseClickedCallback 
+        
+        %callback while the mouse is being moved over the tree
+        MouseMotionFcn 
+        
+        %callback for a node being dragged. A custom callback should return a logical true when the node being dragged over is a valid drop target.
+        NodeDraggedCallback 
+        
+        %callback for a node being dropped. A custom callback should handle the data transfer. If not specified, dragging and dropping nodes just modifies the parent of the nodes that were dragged and dropped.
+        NodeDroppedCallback 
+        
+        %whether the root is visible or not
+        RootVisible (1,1) logical 
+        
+        %Background color of the full pane
+        TreePaneBackgroundColor = [1 1 1] 
+        
+        %Foreground color of the selection in the tree
+        SelectionForegroundColor = [0 0 0] 
+        
+        %Background color of the selection in the tree
+        SelectionBackgroundColor = [.2 .6 1] 
+        
+    end
+    
+    properties (Hidden, SetAccess=protected)
+        
+        %the root tree node (uiw.widget.TreeNode or uiw.widget.CheckboxTreeNode)
+        Root 
+        
     end
     
     
@@ -112,9 +153,51 @@ classdef Tree < uiw.abstract.JavaControl
             % Create tree
             obj.WebControl = uitree(...
                 'Parent',obj.hBasePanel,...
-                'SelectionChangedFcn',@(h,e)onSelectionChanged(obj,h,e),...
-                'NodeTextChangedFcn',@(h,e)onNodeEdit(obj,h,e),...
+                'Editable',obj.Editable,...
+                'SelectionChangedFcn',@(h,e)onNodeSelection(obj,e),...
+                'NodeTextChangedFcn',@(h,e)onNodeEdit(obj,e),...
+                'ContextMenu',obj.UIContextMenu,...
                 'Multiselect',~strcmpi(obj.SelectionType,'single'));
+            
+            if ~isequal(obj.DndEnabled,false)
+                obj.throwDeprecatedWarning('DndEnabled');
+            end
+            
+            if ~isempty(obj.KeyPressedCallback)
+                obj.throwDeprecatedWarning('KeyPressedCallback');
+            end
+            
+            if ~isempty(obj.MouseClickedCallback)
+                obj.throwDeprecatedWarning('MouseClickedCallback');
+            end
+            
+            if ~isempty(obj.MouseMotionFcn)
+                obj.throwDeprecatedWarning('MouseMotionFcn');
+            end
+            
+            if ~isempty(obj.NodeDraggedCallback)
+                obj.throwDeprecatedWarning('NodeDraggedCallback');
+            end
+            
+            if ~isempty(obj.NodeDroppedCallback)
+                obj.throwDeprecatedWarning('NodeDroppedCallback');
+            end
+            
+            if ~isequal(obj.RootVisible,false)
+                obj.throwDeprecatedWarning('RootVisible');
+            end
+            
+            if ~isequal(obj.SelectionForegroundColor,[0 0 0])
+                obj.throwDeprecatedWarning('SelectionForegroundColor');
+            end
+            
+            if ~isequal(obj.SelectionBackgroundColor,[.2 .6 1])
+                obj.throwDeprecatedWarning('SelectionBackgroundColor');
+            end
+            
+            if ~isequal(obj.TreePaneBackgroundColor,[1 1 1])
+                obj.throwDeprecatedWarning('TreePaneBackgroundColor');
+            end
             
         end %function
         
@@ -314,9 +397,15 @@ classdef Tree < uiw.abstract.JavaControl
             %           none
             %
             
-            obj.CallbacksEnabled = false;
-            collapsePath(obj.JControl, nObj.JNode.getTreePath());
-            obj.CallbacksEnabled = true;
+            if ~obj.IsConstructed
+                % Do nothing
+            elseif obj.FigureIsJava
+                obj.CallbacksEnabled = false;
+                collapsePath(obj.JControl, nObj.JNode.getTreePath());
+                obj.CallbacksEnabled = true;
+            else
+                collapse(nObj.WNode);
+            end
             
         end %function
         
@@ -337,9 +426,15 @@ classdef Tree < uiw.abstract.JavaControl
             %           none
             %
             
-            obj.CallbacksEnabled = false;
-            expandPath(obj.JControl, nObj.JNode.getTreePath());
-            obj.CallbacksEnabled = true;
+            if ~obj.IsConstructed
+                % Do nothing
+            elseif obj.FigureIsJava
+                obj.CallbacksEnabled = false;
+                expandPath(obj.JControl, nObj.JNode.getTreePath());
+                obj.CallbacksEnabled = true;
+            else
+                expand(nObj.WNode);
+            end
             
         end %function
         
@@ -398,7 +493,7 @@ classdef Tree < uiw.abstract.JavaControl
         end %function
         
         
-        function nodeChanged(obj,nObj)
+        function nodeChangedJava(obj,nObj)
             % Triggered on node changes from Java
             
             if ~isempty([obj.JModel]) && ishandle(nObj.JNode)
@@ -433,19 +528,28 @@ classdef Tree < uiw.abstract.JavaControl
                 
             elseif obj.IsConstructed && ~obj.FigureIsJava
                 
+                % Is the parent a tree or another node?
+                if isa(pObj,'uiw.widget.Tree')
+                    % It's a tree
+                    siblings = [pObj.ChildNodes.WNode];
+                    nObj.WNode.Parent = pObj.WebControl;
+                else
+                    % It's a node
                     siblings = [pObj.Children.WNode];
                     nObj.WNode.Parent = pObj.WNode;
-                    if idx == numel(siblings)+1
-                        % Do nothing
-                    elseif idx == 1
-                        move(nObj.WNode, siblings(1), 'before');
-                    else
-                        move(nObj.WNode, siblings(idx-1), 'after');
-                    end
+                end
                 
-                    % Insert any children
-                    insertChildrenWeb(nObj)
-                    
+                if idx == numel(siblings)+1
+                    % Do nothing
+                elseif idx == 1
+                    move(nObj.WNode, siblings(1), 'before');
+                else
+                    move(nObj.WNode, siblings(idx-1), 'after');
+                end
+                
+                % Insert any children
+                insertChildrenWeb(nObj)
+                
             end %if obj.IsConstructed && obj.FigureIsJava
             
             
@@ -483,10 +587,10 @@ classdef Tree < uiw.abstract.JavaControl
         end %function
         
         
-        function removeNode(obj,nObj,~)
+        function removeNodeJava(obj,nObj,~)
             % Remove the specified node
             
-            if ~isempty([obj.JModel]) && ishandle(nObj.JNode)
+            if isvalid(obj) && ~isempty([obj.JModel]) && ishandle(nObj.JNode)
                 obj.CallbacksEnabled = false;
                 obj.JModel.removeNodeFromParent(nObj.JNode);
                 % If all children were removed, reload the node
@@ -555,17 +659,17 @@ classdef Tree < uiw.abstract.JavaControl
         end %function onCollapse
         
         
-        function onMouseEvent(obj,jEvent)
+        function onMouseEvent(obj,evt)
             % Triggered when the mouse is clicked within the pane
-            return;
+            
             if obj.isvalid() && obj.CallbacksEnabled
                 
                 % Get mouse event data
-                mEvent = obj.getMouseEventData(jEvent);
+                mEvent = obj.getMouseEventData(evt);
                 
                 % Add Tree-specific mouse event data
                 addprop(mEvent,'Nodes');
-                mEvent.Nodes = getNodeFromMouseEvent(obj,jEvent);
+                mEvent.Nodes = getNodeFromMouseEvent(obj,evt);
                 
                 % Trigger the appropriate callback and notify
                 switch mEvent.Interaction
@@ -669,24 +773,32 @@ classdef Tree < uiw.abstract.JavaControl
             %result in callback firing when programmatically changing nodes
             %though.
             
-            %if obj.isvalid() && ~isempty(obj.SelectionChangeFcn)
+            
             if obj.isvalid() && obj.CallbacksEnabled && ~isempty(obj.SelectionChangeFcn)
                 
-                
-                % Figure out what nodes were added or removed to/from the
-                % selection
-                p = e.getPaths;
-                AddedNodes = uiw.widget.TreeNode.empty(0,1);
-                RemovedNodes = uiw.widget.TreeNode.empty(0,1);
-                for idx = 1:numel(p)
-                    nObj = get(p(idx).getLastPathComponent(),'TreeNode');
-                    if isvalid(nObj)
-                        if e.isAddedPath(idx-1) %zero-based index
-                            AddedNodes(end+1) = nObj; %#ok<AGROW>
-                        else
-                            RemovedNodes(end+1) = nObj; %#ok<AGROW>
+                if obj.FigureIsJava
+                    
+                    % Figure out what nodes were added or removed to/from the
+                    % selection
+                    p = e.getPaths;
+                    AddedNodes = uiw.widget.TreeNode.empty(0,1);
+                    RemovedNodes = uiw.widget.TreeNode.empty(0,1);
+                    for idx = 1:numel(p)
+                        nObj = get(p(idx).getLastPathComponent(),'TreeNode');
+                        if isvalid(nObj)
+                            if e.isAddedPath(idx-1) %zero-based index
+                                AddedNodes(end+1) = nObj; %#ok<AGROW>
+                            else
+                                RemovedNodes(end+1) = nObj; %#ok<AGROW>
+                            end
                         end
                     end
+                    
+                else
+                    selNodes = [e.SelectedNodes.NodeData];
+                    prevNodes = [e.PreviousSelectedNodes.NodeData];
+                    AddedNodes = setdiff(selNodes,prevNodes);
+                    RemovedNodes = setdiff(prevNodes,selNodes);
                 end
                 
                 % Prepare eventdata for the callback
@@ -708,15 +820,29 @@ classdef Tree < uiw.abstract.JavaControl
             % Is there a custom NodeEditedCallback?
             if obj.isvalid() && obj.CallbacksEnabled && ~isempty(obj.NodeEditedCallback)
                 
-                % Get the tree nodes that were edited
-                c = e.getChildren;
-                EditedNode = uiw.widget.TreeNode.empty(0,1);
-                for idx = 1:numel(c)
-                    EditedNode = get(c(idx),'TreeNode');
+                if obj.FigureIsJava
+                    
+                    % Get the tree nodes that were edited
+                    c = e.getChildren;
+                    EditedNode = uiw.widget.TreeNode.empty(0,1);
+                    for idx = 1:numel(c)
+                        EditedNode = get(c(idx),'TreeNode');
+                    end
+                    
+                    % Get the parent node of the edit
+                    ParentNode = get(e.getTreePath.getLastPathComponent,'TreeNode');
+                    
+                    
+                    EditedNode.Name = EditedNode.JNode.getUserObject();
+                    
+                else
+                    
+                    EditedNode = e.Node.NodeData;
+                    ParentNode = EditedNode.Parent;
+                    EditedNode.Name = e.Text;
+                    
                 end
                 
-                % Get the parent node of the edit
-                ParentNode = get(e.getTreePath.getLastPathComponent,'TreeNode');
                 
                 % Call the custom callback
                 e1 = struct(...
@@ -888,7 +1014,9 @@ classdef Tree < uiw.abstract.JavaControl
             end
             validateattributes(value,{'numeric','logical'},{'scalar'});
             obj.DndEnabled = logical(value);
-            if obj.IsConstructed && obj.FigureIsJava
+            if ~obj.IsConstructed 
+                % Do nothing
+            elseif obj.FigureIsJava
                 obj.JControl.setDragEnabled(obj.DndEnabled);
             else
                 obj.throwDeprecatedWarning('DndEnabled');
@@ -897,20 +1025,15 @@ classdef Tree < uiw.abstract.JavaControl
         
         
         % Editable
-        function value = get.Editable(obj)
-            if obj.IsConstructed && obj.FigureIsJava
-                value = get(obj.JControl,'Editable');
-            else
-                value = obj.Editable;
-            end
-        end
         function set.Editable(obj,value)
             validateattributes(value,{'numeric','logical'},{'scalar'});
             obj.Editable = logical(value);
-            if obj.IsConstructed && obj.FigureIsJava
+            if ~obj.IsConstructed
+                % Do nothing
+            elseif obj.FigureIsJava
                 obj.JControl.setEditable(obj.Editable);
             else
-                obj.throwDeprecatedWarning('Editable');
+                obj.WebControl.Editable = obj.Editable;
             end
         end
         
@@ -918,7 +1041,7 @@ classdef Tree < uiw.abstract.JavaControl
         % Root
         function value = get.Root(obj)
             if obj.IsConstructed && ~obj.FigureIsJava
-                value = obj.WebControl;
+                value = obj;
             else
                 value = obj.Root;
             end
@@ -939,7 +1062,9 @@ classdef Tree < uiw.abstract.JavaControl
             end
             validateattributes(value,{'numeric','logical'},{'scalar'});
             obj.RootVisible = logical(value);
-            if obj.IsConstructed && obj.FigureIsJava
+            if ~obj.IsConstructed
+                % Do nothing
+            elseif obj.FigureIsJava
                 obj.JControl.setRootVisible(obj.RootVisible); %show/hide root
                 obj.JControl.setShowsRootHandles(~obj.RootVisible); %hide/show top level handles
             else
@@ -964,9 +1089,10 @@ classdef Tree < uiw.abstract.JavaControl
                 end
             else
                 
-                value = vertcat(obj.WebComponent.SelectedNodes.NodeData);
-                if isempty(value)
+                if isempty(obj.WebControl.SelectedNodes)
                     value = uiw.widget.TreeNode.empty(0,1);
+                else
+                    value = [obj.WebControl.SelectedNodes.NodeData];
                 end
                 
             end
@@ -1010,8 +1136,7 @@ classdef Tree < uiw.abstract.JavaControl
                 
             else
                 
-                %RAJ - needs work
-                obj.WebComponent.SelectedNodes = obj.SelectedNodes.UITreeNode;
+                obj.WebControl.SelectedNodes = [value.WNode];
                 
             end
             
@@ -1038,18 +1163,18 @@ classdef Tree < uiw.abstract.JavaControl
             if obj.IsConstructed && obj.FigureIsJava
                 switch obj.SelectionType
                     case 'single'
-                        mode = obj.JSelModel.SINGLE_TREE_SELECTION;
+                        mode = obj.JSelModel.SINGLE_TREE_SELECTION; %#ok<MCSUP>
                     case 'contiguous'
-                        mode = obj.JSelModel.CONTIGUOUS_TREE_SELECTION;
+                        mode = obj.JSelModel.CONTIGUOUS_TREE_SELECTION; %#ok<MCSUP>
                     case 'discontiguous'
-                        mode = obj.JSelModel.DISCONTIGUOUS_TREE_SELECTION;
+                        mode = obj.JSelModel.DISCONTIGUOUS_TREE_SELECTION; %#ok<MCSUP>
                 end
                 obj.CallbacksEnabled = false;
-                obj.JSelModel.setSelectionMode(mode);
+                obj.JSelModel.setSelectionMode(mode); %#ok<MCSUP>
                 obj.CallbacksEnabled = true;
             else
                 if strcmpi(obj.SelectionType,'contiguous')
-                    obj.throwDeprecatedWarning('SelectionType = ''contiguous''');
+                    obj.throwDeprecatedWarning('SelectionType','contiguous');
                 end
                 if obj.IsConstructed && ~obj.FigureIsJava
                     isMultiSelect = ~strcmpi(obj.SelectionType,'single');
@@ -1070,7 +1195,7 @@ classdef Tree < uiw.abstract.JavaControl
             obj.SelectionForegroundColor = value;
             if obj.IsConstructed && obj.FigureIsJava
                 obj.onStyleChanged(evt);
-            else
+            elseif obj.IsConstructed && ~obj.FigureIsJava
                 obj.throwDeprecatedWarning('SelectionForegroundColor');
             end
         end
@@ -1086,8 +1211,8 @@ classdef Tree < uiw.abstract.JavaControl
             obj.SelectionBackgroundColor = value;
             if obj.IsConstructed && obj.FigureIsJava
                 obj.onStyleChanged(evt);
-            else
-                obj.throwDeprecatedWarning('SelectionForegroundColor');
+            elseif obj.IsConstructed && ~obj.FigureIsJava
+                obj.throwDeprecatedWarning('SelectionBackgroundColor');
             end
         end
         
@@ -1114,11 +1239,44 @@ classdef Tree < uiw.abstract.JavaControl
             obj.TreePaneBackgroundColor = value;
             if obj.IsConstructed && obj.FigureIsJava
                 obj.onStyleChanged(evt);
-            else
+            elseif obj.IsConstructed && ~obj.FigureIsJava
                 obj.throwDeprecatedWarning('TreePaneBackgroundColor');
             end
         end
         
+        
+        function set.KeyPressedCallback(obj, value)
+            obj.KeyPressedCallback = value;
+            if obj.IsConstructed && ~obj.FigureIsJava
+                obj.throwDeprecatedWarning('KeyPressedCallback');
+            end
+        end
+        
+        function set.MouseClickedCallback(obj, value)
+            obj.MouseClickedCallback = value;
+            if obj.IsConstructed && ~obj.FigureIsJava
+                obj.throwDeprecatedWarning('MouseClickedCallback');
+            end
+        end
+        
+        function set.MouseMotionFcn(obj, value)
+            obj.MouseMotionFcn = value;
+            if obj.IsConstructed && ~obj.FigureIsJava
+                obj.throwDeprecatedWarning('MouseMotionFcn');
+            end
+        end
+        function set.NodeDraggedCallback(obj, value)
+            obj.NodeDraggedCallback = value;
+            if obj.IsConstructed && ~obj.FigureIsJava
+                obj.throwDeprecatedWarning('NodeDraggedCallback');
+            end
+        end
+        function set.NodeDroppedCallback(obj, value)
+            obj.NodeDroppedCallback = value;
+            if obj.IsConstructed && ~obj.FigureIsJava
+                obj.throwDeprecatedWarning('NodeDroppedCallback');
+            end
+        end
         
     end %get/set methods
     

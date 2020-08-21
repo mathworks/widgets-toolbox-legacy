@@ -72,19 +72,31 @@ classdef CheckboxTree < uiw.widget.Tree
     %% Protected Methods
     methods (Access=protected)
         
-        function create(obj)
-            % Override the createTree method to make a checkbox tree
+        function createWebControl(~)
+            % Create the graphics objects
+            
+            error('widgets:Java:DeprecatedCheckboxTree',...
+                'CheckboxTree not supported with figures created with the uifigure function');
+            
+        end %function
+        
+        
+        function createJavaComponent(obj)
+            % Override the createJavaComponent method to make a checkbox tree
             
             % Create the root node
             obj.Root = uiw.widget.CheckboxTreeNode('Name','Root');
+            obj.Root.createJavaComponent();
             obj.Root.Tree = obj;
             
+            % Create the tree on a scroll pane (unless subclass already
+            % did)
             % Create the checkbox tree on a scroll pane
             obj.createScrollPaneJControl(...
                 'com.mathworks.consulting.widgets.tree.CheckBoxTree',obj.Root.JNode);
             
             % Call superclass create method to finish up
-            obj.create@uiw.widget.Tree();
+            obj.createJavaComponent@uiw.widget.Tree();
             
             % Store the checkbox selection model
             obj.JCBoxSelModel = obj.JControl.getCheckBoxTreeSelectionModel();

@@ -30,26 +30,30 @@ for idx = 1:5
     nodesA(idx) = uiw.widget.TreeNode('Name',sprintf('NodeA %d',idx),'Parent',branchA); %#ok<SAGROW>
     nodesB(idx) = uiw.widget.TreeNode('Name',sprintf('NodeB %d',idx),'Parent',branchB); %#ok<SAGROW>
 end
-%% Expand branches
 
+
+%% Expand branches
 branchA.expand();
 branchB.expand();
-%% Hide the root
 
-w.RootVisible = false;
+
 %% Change selection mode
-
 w.SelectionType = 'discontiguous';
 w.SelectionChangeFcn = @(h,e)disp({h.SelectedNodes.Name}');
+
+
 %% Select nodes programmatically
-
 w.SelectedNodes = [nodesA(2) nodesB(4)];
+
+
 %% Toggle Enable
-
 w.Enable = 'off';
-%% Toggle Enable back on
 
+
+%% Toggle Enable back on
 w.Enable = 'on';
+
+
 %% Change some node properties
 
 % Rename a node
@@ -60,15 +64,21 @@ branchIcon = fullfile(matlabroot,'toolbox','matlab','icons','pagesicon.gif');
 nodeIcon = fullfile(matlabroot,'toolbox','matlab','icons','pageicon.gif');
 setIcon(branchA,branchIcon);
 setIcon(topNode,nodeIcon);
+
+
 %% Allow interactively renaming a node
 
 % Not working consistently
 w.Editable = true;
 w.NodeEditedCallback = @(h,e)disp({h.SelectedNodes.Name}');
+
+
 %% Relocate nodes
 
 % Move nodes around
 nodesB(1).Parent = nodesA(1);
+
+
 %% Add context menus
 
 % For the whole tree
@@ -80,6 +90,8 @@ set(w,'UIContextMenu',treeContextMenu)
 nodesAContextMenu = uicontextmenu('Parent',f);
 uimenu(nodesAContextMenu,'Label','Nodes A');
 set(nodesA,'UIContextMenu',nodesAContextMenu)
+
+
 %% Drag and drop support
 
 % Note this only supports moving nodes within the tree. It does not support
@@ -89,10 +101,11 @@ w.DndEnabled = true;
 w.NodeDraggedCallback = @(h,e)dragDropCallback(h,e);
 w.NodeDroppedCallback = @(h,e)dragDropCallback(h,e);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Callback for drag and drop
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Callback for drag and drop
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function dropOk = dragDropCallback(h,e) %#ok<INUSL>
 
 % Is this the drag or drop part?

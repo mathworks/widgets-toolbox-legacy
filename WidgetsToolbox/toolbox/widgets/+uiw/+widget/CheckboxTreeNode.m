@@ -100,7 +100,7 @@ classdef CheckboxTreeNode < uiw.widget.TreeNode
         function set.CheckboxEnabled(nObj,value)
             validateattributes(value,{'numeric','logical'},{'scalar'});
             nObj.JNode.CheckBoxEnabled = logical(value);
-            nodeChanged(nObj.Tree, nObj)
+            nodeChangedJava(nObj.Tree, nObj)
         end
         
         % CheckboxVisible
@@ -110,7 +110,7 @@ classdef CheckboxTreeNode < uiw.widget.TreeNode
         function set.CheckboxVisible(nObj,value)
             validateattributes(value,{'numeric','logical'},{'scalar'});
             nObj.JNode.CheckBoxVisible = logical(value);
-            nodeChanged(nObj.Tree, nObj)
+            nodeChangedJava(nObj.Tree, nObj)
         end
         
         % Checked

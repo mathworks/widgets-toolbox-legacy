@@ -500,7 +500,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
         end %function
         
         
-        function throwDeprecatedWarning(obj,propName)
+        function throwDeprecatedWarning(obj,propName,value)
             
             warnId = 'widgets:Java:DeprecatedProperty';
             if isprop(propName,obj)
@@ -508,9 +508,14 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
             else
                 type = 'Method';
             end
-            message = '%s "%s" of widget "%s" is deprecated and is not used in uifigure widgets. To disable this warning, use "warning(''off'',%s)".';
-            warning(warnId,message,type,propName,class(obj),warnId);
-        
+            if nargin >= 3
+                message = '%s "%s" set to "%s" of widget "%s" is deprecated and is not used in uifigure widgets. To disable this warning, use "warning(''off'',%s)".';
+                warning(warnId,message,type,propName,value,class(obj),warnId);
+            else
+                message = '%s "%s" of widget "%s" is deprecated and is not used in uifigure widgets. To disable this warning, use "warning(''off'',%s)".';
+                warning(warnId,message,type,propName,class(obj),warnId);
+            end
+            
         end %function
         
     end % Protected methods
