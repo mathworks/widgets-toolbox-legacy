@@ -1,7 +1,7 @@
 function tests = testImageSelector()
 % Unit Test - Implements a unit test for a widget or component
 
-% Copyright 2018 The MathWorks,Inc.
+% Copyright 2018-2020 The MathWorks,Inc.
 %
 % Auth/Revision:
 % MathWorks Consulting
