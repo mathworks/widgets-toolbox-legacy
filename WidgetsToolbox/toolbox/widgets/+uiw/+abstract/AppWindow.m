@@ -36,12 +36,23 @@ classdef (Abstract) AppWindow < uiw.abstract.BaseFigure & uiw.mixin.HasPreferenc
         function obj = AppWindow(varargin)
             % Construct the app
             
+            % Check for uifigure flag
+            [remainArgs,figureType] = uiw.mixin.AssignPVPairs.removeArg('FigureType', varargin{:});
+            if isempty(figureType)
+                figureType = 'figure';
+            else
+                validatestring(figureType,{'figure','uifigure'});
+                if strcmp(figureType,'uifigure') && verLessThan('matlab','9.9')
+                    error('uiw.abstract.AppWindow does not support FigureType = ''uifigure'' prior to R2020b.');
+                end
+            end
+            
             % Call superclass constructors
-            obj@uiw.abstract.BaseFigure('Visible','off');
+            obj@uiw.abstract.BaseFigure('FigureType',figureType,'Visible','off');
             
             % Check for preference input and assign it first, in case
             % Preferences was subclassed
-            [splitArgs,remainArgs] = obj.splitArgs('Preferences', varargin{:});
+            [splitArgs,remainArgs] = obj.splitArgs('Preferences', remainArgs{:});
             if ~isempty(splitArgs)
                 obj.Preferences = splitArgs{2};
             end
