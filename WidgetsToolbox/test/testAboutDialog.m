@@ -77,9 +77,12 @@ function testTimeout(testCase)
 
 fcn = @()uiw.dialog.About('Timeout', 2);
 
+% Ensure we're caught up first
+drawnow
+
 testCase.TestData.Dialog = verifyWarningFree(testCase,fcn);
 
-pause(3);
+pause(4);
 
 testCase.verifyFalse( isvalid(testCase.TestData.Dialog) );
 

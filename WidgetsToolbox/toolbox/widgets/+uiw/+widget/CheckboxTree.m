@@ -19,22 +19,36 @@ classdef CheckboxTree < uiw.widget.Tree
     
     %% Properties
     properties
-        CheckboxClickedCallback %callback when a checkbox value is changed
+        
+        % Callback when a checkbox value is changed
+        CheckboxClickedCallback 
+        
     end
     
     properties (Dependent)
-        ClickInCheckBoxOnly %clicking on label toggles checkbox (true|false)
-        DigIn %selection of a branch also checks all children (true|false)
+        
+        % Clicking on label toggles checkbox (true|false)
+        ClickInCheckBoxOnly (1,1) logical = true 
+        
+        % Selection of a branch also checks all children (true|false)
+        DigIn (1,1) logical = true  
+        
     end
     
     properties (Dependent, SetAccess=immutable)
-        CheckedNodes %tree nodes that are currently checked. In DigIn mode, this will not contain the children of fully selected branches. (read-only)
+        
+        % Tree nodes that are currently checked. In DigIn mode, this will not contain the children of fully selected branches. (read-only)
+        CheckedNodes 
+        
     end
     
     
     %% Internal properties
     properties (SetAccess=protected, GetAccess=protected)
+        
+        % Java checkbox selection model (internal)
         JCBoxSelModel %Java checkbox selection model (internal)
+        
     end
     
     
@@ -102,6 +116,10 @@ classdef CheckboxTree < uiw.widget.Tree
             obj.JCBoxSelModel = obj.JControl.getCheckBoxTreeSelectionModel();
             %obj.JCBoxSelModel.setSingleEventMode(1);
             javaObjectEDT(obj.JCBoxSelModel);
+            
+            % Configure the tree
+            obj.JControl.setDigIn(logical(obj.DigIn));
+            obj.JControl.setClickInCheckBoxOnly(logical(obj.ClickInCheckBoxOnly));
             
             % Set the callbacks
             CbProps = handle(obj.JCBoxSelModel,'CallbackProperties'); 
@@ -250,7 +268,9 @@ classdef CheckboxTree < uiw.widget.Tree
         end
         function set.ClickInCheckBoxOnly(nObj,value)
             validateattributes(value,{'numeric','logical'},{'scalar'});
-            nObj.JControl.setClickInCheckBoxOnly(logical(value));
+            if obj.IsConstructed && obj.FigureIsJava
+                nObj.JControl.setClickInCheckBoxOnly(logical(value));
+            end
         end
         
         % DigIn
@@ -259,16 +279,20 @@ classdef CheckboxTree < uiw.widget.Tree
         end
         function set.DigIn(nObj,value)
             validateattributes(value,{'numeric','logical'},{'scalar'});
-            nObj.JControl.setDigIn(logical(value));
+            if obj.IsConstructed && obj.FigureIsJava
+                nObj.JControl.setDigIn(logical(value));
+            end
         end
         
         % CheckedNodes
         function value = get.CheckedNodes(nObj)
-            p = nObj.JCBoxSelModel.getSelectionPaths;
             value = uiw.widget.TreeNode.empty(0,1);
-            for idx = 1:numel(p)
-                nObj = get(p(idx).getLastPathComponent(),'TreeNode');
-                value(end+1) = nObj; %#ok<AGROW>
+            if obj.IsConstructed && obj.FigureIsJava
+                p = nObj.JCBoxSelModel.getSelectionPaths;
+                for idx = 1:numel(p)
+                    nObj = get(p(idx).getLastPathComponent(),'TreeNode');
+                    value(end+1) = nObj; %#ok<AGROW>
+                end
             end
         end
         
