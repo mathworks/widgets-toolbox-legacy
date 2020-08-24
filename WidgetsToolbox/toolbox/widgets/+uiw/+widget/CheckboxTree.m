@@ -263,32 +263,32 @@ classdef CheckboxTree < uiw.widget.Tree
     methods
         
         % ClickInCheckBoxOnly
-        function value = get.ClickInCheckBoxOnly(nObj)
-            value = get(nObj.JControl,'ClickInCheckBoxOnly');
+        function value = get.ClickInCheckBoxOnly(obj)
+            value = get(obj.JControl,'ClickInCheckBoxOnly');
         end
-        function set.ClickInCheckBoxOnly(nObj,value)
+        function set.ClickInCheckBoxOnly(obj,value)
             validateattributes(value,{'numeric','logical'},{'scalar'});
             if obj.IsConstructed && obj.FigureIsJava
-                nObj.JControl.setClickInCheckBoxOnly(logical(value));
+                obj.JControl.setClickInCheckBoxOnly(logical(value));
             end
         end
         
         % DigIn
-        function value = get.DigIn(nObj)
-            value = get(nObj.JControl,'DigIn');
+        function value = get.DigIn(obj)
+            value = get(obj.JControl,'DigIn');
         end
-        function set.DigIn(nObj,value)
+        function set.DigIn(obj,value)
             validateattributes(value,{'numeric','logical'},{'scalar'});
             if obj.IsConstructed && obj.FigureIsJava
-                nObj.JControl.setDigIn(logical(value));
+                obj.JControl.setDigIn(logical(value));
             end
         end
         
         % CheckedNodes
-        function value = get.CheckedNodes(nObj)
+        function value = get.CheckedNodes(obj)
             value = uiw.widget.TreeNode.empty(0,1);
             if obj.IsConstructed && obj.FigureIsJava
-                p = nObj.JCBoxSelModel.getSelectionPaths;
+                p = obj.JCBoxSelModel.getSelectionPaths;
                 for idx = 1:numel(p)
                     nObj = get(p(idx).getLastPathComponent(),'TreeNode');
                     value(end+1) = nObj; %#ok<AGROW>

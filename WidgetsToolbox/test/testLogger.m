@@ -111,16 +111,16 @@ fcn = @()set(log,'BufferSize',-10);
 verifyError(testCase,fcn,'MATLAB:validators:mustBePositive')
 
 fcn = @()set(log,'BufferSize',[1 2 3]);
-verifyError(testCase,fcn,'MATLAB:type:InvalidInputSize')
+verifyError(testCase,fcn,'MATLAB:validation:IncompatibleSize')
 
 fcn = @()set(log,'Callback',[1 2 3]);
-verifyError(testCase,fcn,'MATLAB:UnableToConvert')
+verifyError(testCase,fcn,'MATLAB:validation:UnableToConvert')
 
 fcn = @()set(log,'DisplayLevel','BadValue');
-verifyError(testCase,fcn,'MATLAB:UnableToConvert')
+verifyError(testCase,fcn,'MATLAB:validation:UnableToConvert')
 
 fcn = @()set(log,'FileLevel','BadValue');
-verifyError(testCase,fcn,'MATLAB:UnableToConvert')
+verifyError(testCase,fcn,'MATLAB:validation:UnableToConvert')
 
 end %function
 
