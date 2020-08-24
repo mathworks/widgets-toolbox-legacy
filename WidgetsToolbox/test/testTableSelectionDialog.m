@@ -44,8 +44,7 @@ end %function
 %% Test Construction with Inputs
 function testConstructionArguments(testCase)
 
-filename = fullfile(matlabroot,'examples','matlab','myCsvTable.dat');
-tableData = readtable(filename);
+tableData = readtable('myCsvTable.dat');
 
 fcn = @()uiw.dialog.TableSelection(...
     'Title','My Dialog',...

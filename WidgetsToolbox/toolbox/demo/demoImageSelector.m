@@ -1,0 +1,33 @@
+%% Image Selector
+%%
+% 
+%   Copyright 2017-2019 The MathWorks Inc.
+%
+
+
+%% Locate a bunch of image files
+
+searchRoot = fullfile(matlabroot,'toolbox','images','imdata');
+fileInfo = [
+    dir(fullfile(searchRoot,'*.jpg'))
+    dir(fullfile(searchRoot,'*.tif'))
+    ];
+imageFiles = sortrows( {fileInfo.name} );
+
+
+%% Create the widget
+
+f = uifigure(...
+    'Toolbar','none',...
+    'MenuBar','none',...
+    'NumberTitle','off',...
+    'Units','pixels',...
+    'Position',[100 100 660 450]);
+movegui(f,[100 -100])
+
+w = uiw.widget.ImageSelector('Parent',f,...
+    'ImageFiles', fullfile(searchRoot,imageFiles), ...
+    'Captions', imageFiles, ...
+    'Units','normalized',...
+    'Position',[0 0 1 1],...
+    'Callback', @(h,e)disp(e) );
