@@ -1,7 +1,14 @@
-classdef MyApp < uiw.abstract.SingleSessionApp
-    %MYAPP Summary of this class goes here
-    %   Detailed explanation goes here
+classdef DemoUiFigureAppWindowApp < uiw.abstract.AppWindow
+    % App - Class definition for a MATLAB desktop application
+    % ---------------------------------------------------------------------
+    % Instantiates the Application figure window
+    %
+    % Syntax:
+    %           app = demoUiFigureApps.DemoUiFigureAppWindowApp
+    %
     
+    %   Copyright 2020 The MathWorks Inc.
+    % ---------------------------------------------------------------------
     
     %% Application Settings
     properties (Constant, Access=protected)
@@ -11,21 +18,18 @@ classdef MyApp < uiw.abstract.SingleSessionApp
         
     end %properties
     
-
+    
     
     %% Constructor and Destructor
     methods
         
         % Constructor
-        function obj = MyApp(varargin)
+        function obj = DemoUiFigureAppWindowApp(varargin)
             % Construct the app
             
             % Call superclass constructor
-            obj@uiw.abstract.SingleSessionApp('FigureType','uifigure');
+            obj@uiw.abstract.AppWindow('FigureType','uifigure');
             
-            % Create the file menu from SessionManagement & SingleSessionApp
-            obj.createFileMenu();
-
             % Create the base graphics
             obj.create();
             
@@ -52,21 +56,11 @@ classdef MyApp < uiw.abstract.SingleSessionApp
         
         function create(obj)
             
-            obj.Menu.MyMenu = uimenu(...
-                'Parent',obj.Figure,...
-                'Label','MyMenu',...
-                'Tag','MyMenu');
-            
-            obj.Menu.Robyn = uimenu(...
-                'Parent',obj.Menu.MyMenu,...
-                'Label','Robyn',...
-                'Tag','Robyn');
-            
             obj.h.Button = uicontrol(...
                 'Parent',obj.Figure,...
                 'String','Redraw',...
                 'Callback',@(h,e)redraw(obj));
-
+            
         end %function
         
         
@@ -77,23 +71,6 @@ classdef MyApp < uiw.abstract.SingleSessionApp
                 
                 
             end
-        end %function
-        
-        
-        function sessionObj = createSession(~) 
-            %Creation of the session object
-            
-            sessionObj = demoAppPkg.model.DataModel();
-            
-        end %function
-        
-        
-        function onSessionSet(obj,~)
-            %What to do when the session changes
-            
-            % New model, so full redraw is needed
-            obj.redraw();
-            
         end %function
         
     end %methods

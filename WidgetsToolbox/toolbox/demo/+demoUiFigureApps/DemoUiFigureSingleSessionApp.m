@@ -1,7 +1,14 @@
-classdef MyApp < uiw.abstract.SingleSessionApp
-    %MYAPP Summary of this class goes here
-    %   Detailed explanation goes here
+classdef DemoUiFigureSingleSessionApp < uiw.abstract.SingleSessionApp
+    % App - Class definition for a MATLAB desktop application
+    % ---------------------------------------------------------------------
+    % Instantiates the Application figure window
+    %
+    % Syntax:
+    %           app = demoUiFigureApps.DemoUiFigureSingleSessionApp
+    %
     
+    %   Copyright 2020 The MathWorks Inc.
+    % ---------------------------------------------------------------------
     
     %% Application Settings
     properties (Constant, Access=protected)
@@ -11,13 +18,13 @@ classdef MyApp < uiw.abstract.SingleSessionApp
         
     end %properties
     
-
+    
     
     %% Constructor and Destructor
     methods
         
         % Constructor
-        function obj = MyApp(varargin)
+        function obj = DemoUiFigureSingleSessionApp(varargin)
             % Construct the app
             
             % Call superclass constructor
@@ -25,7 +32,7 @@ classdef MyApp < uiw.abstract.SingleSessionApp
             
             % Create the file menu from SessionManagement & SingleSessionApp
             obj.createFileMenu();
-
+            
             % Create the base graphics
             obj.create();
             
@@ -66,7 +73,7 @@ classdef MyApp < uiw.abstract.SingleSessionApp
                 'Parent',obj.Figure,...
                 'String','Redraw',...
                 'Callback',@(h,e)redraw(obj));
-
+            
         end %function
         
         
@@ -80,7 +87,7 @@ classdef MyApp < uiw.abstract.SingleSessionApp
         end %function
         
         
-        function sessionObj = createSession(~) 
+        function sessionObj = createSession(~)
             %Creation of the session object
             
             sessionObj = demoAppPkg.model.DataModel();
