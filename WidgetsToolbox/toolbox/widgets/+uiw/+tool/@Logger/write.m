@@ -21,7 +21,7 @@ function varargout = write(obj,level,messageText,varargin)
 %           logObj = Logger.getInstance('MyLogger');
 %           write(logObj,'warning','My warning message')
 
-%   Copyright 2018-2019 The MathWorks Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
 %
 % 
 %   

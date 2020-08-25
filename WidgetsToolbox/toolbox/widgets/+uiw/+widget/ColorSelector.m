@@ -7,7 +7,7 @@ classdef ColorSelector < uiw.abstract.EditableTextWithButton
     %           w = uiw.widget.ColorSelector('Property','Value',...)
     %
     
-%   Copyright 2005-2019 The MathWorks Inc.
+%   Copyright 2005-2020 The MathWorks Inc.
     %
     % 
     %   

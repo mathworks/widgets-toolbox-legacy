@@ -8,7 +8,7 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
     %   obj = uiw.widget.TreeNode('Property','Value',...)
     %
     
-%   Copyright 2012-2019 The MathWorks Inc.
+%   Copyright 2012-2020 The MathWorks Inc.
     %
     % 
     %   

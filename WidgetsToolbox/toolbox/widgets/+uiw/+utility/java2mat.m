@@ -18,7 +18,7 @@ function mData = java2mat(jData,varargin)
 % Notes: none
 %
 
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
 %
 % 
 %   

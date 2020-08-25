@@ -22,7 +22,7 @@ classdef (Abstract) AssignPVPairs < handle & matlab.mixin.SetGet
     %   property-value pairs to matching properties of the object
     %
     
-%   Copyright 2015-2019 The MathWorks Inc.
+%   Copyright 2015-2020 The MathWorks Inc.
     %
     % 
     %   

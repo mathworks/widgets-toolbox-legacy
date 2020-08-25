@@ -6,7 +6,7 @@ classdef EditablePopupWithButton < uiw.widget.EditablePopup
     % label will be shown once any Label* property has been set.
     %
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
     % 
     %   

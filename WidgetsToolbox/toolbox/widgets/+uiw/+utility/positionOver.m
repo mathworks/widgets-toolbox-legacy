@@ -2,7 +2,7 @@ function varargout = positionOver(hFigOver,hFigUnder)
 % positionOver - Reposition figure centered over another figure
 % -------------------------------------------------------------------------
 
-%   Copyright 2017-2019 The MathWorks, Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
 %
 % 
 %   

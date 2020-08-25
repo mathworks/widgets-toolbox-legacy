@@ -10,7 +10,7 @@ classdef HasContainer < uiw.mixin.AssignPVPairs & matlab.mixin.SetGet & ...
     % object that is using multiple inheritance.
     %
     
-    %   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
     % 
     %   

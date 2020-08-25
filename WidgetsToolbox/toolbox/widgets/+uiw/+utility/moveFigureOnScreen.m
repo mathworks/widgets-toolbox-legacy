@@ -17,7 +17,7 @@ function moveFigureOnScreen(fig)
 % Notes: It is preferred (and optimized) to have figure Units in pixels.
 %
 
-% Copyright 2018-2019 The MathWorks, Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
 %
 % 
 %   

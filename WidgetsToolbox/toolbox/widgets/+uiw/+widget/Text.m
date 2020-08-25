@@ -7,7 +7,7 @@ classdef Text < uiw.abstract.WidgetContainer & uiw.mixin.HasEditableText
     %           w = uiw.widget.Text('Property','Value',...)
     %
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
     % 
     %   

@@ -7,7 +7,7 @@ classdef (Abstract) AppWindow < uiw.abstract.BaseFigure & uiw.mixin.HasPreferenc
     % inherit AppWithSessions instead.
     %
     
-    %   Copyright 2008-2019 The MathWorks, Inc.
+%   Copyright 2008-2020 The MathWorks Inc.
     %
     % 
     %   

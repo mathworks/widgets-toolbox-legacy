@@ -53,7 +53,7 @@ function varargout = throwError(varargin)
 % Notes: none
 %
 
-%   Copyright 2019 The MathWorks Inc.
+%   Copyright 2019-2020 The MathWorks Inc.
 %
 % 
 %   

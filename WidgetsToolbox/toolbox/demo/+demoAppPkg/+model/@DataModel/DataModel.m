@@ -8,7 +8,7 @@ classdef DataModel < handle & uiw.mixin.AssignPVPairs
     %           obj = demoAppPkg.model.DataModel('Property','Value',...)
     %
     
-%   Copyright 2018-2019 The MathWorks Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
     %
     % 
     %   

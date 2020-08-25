@@ -4,7 +4,7 @@ classdef ColorOrderSelector < uiw.widget.ListWithButtons
     % Create a widget that allows you to select color order for a plot
     %
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
     % 
     %   

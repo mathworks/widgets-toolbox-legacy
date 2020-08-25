@@ -4,7 +4,7 @@ classdef (Abstract) EditablePopupControl < uiw.abstract.JavaEditableText
     % Create a widget that is an editable popup/combobox/dropdown
     %
     
-    %   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
     % 
     %   

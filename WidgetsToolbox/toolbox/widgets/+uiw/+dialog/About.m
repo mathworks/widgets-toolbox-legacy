@@ -31,7 +31,7 @@ classdef About < uiw.abstract.BaseDialog
     %   useful to place the dialog in the center of an app, if you provide
     %   the app window's pixel position.
 
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
     % 
     %   

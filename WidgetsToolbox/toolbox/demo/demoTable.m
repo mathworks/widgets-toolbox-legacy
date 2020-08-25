@@ -1,7 +1,7 @@
 %% Table
 %%
 % 
-%   Copyright 2015-2019 The MathWorks Inc.
+%   Copyright 2015-2020 The MathWorks Inc.
 %
 %% Create the widget
 

@@ -8,7 +8,7 @@ classdef WidgetContainer < uiw.abstract.BaseContainer & ...
     % shown once any Label* property has been set.
     %
     
-%   Copyright 2008-2019 The MathWorks Inc.
+%   Copyright 2008-2020 The MathWorks Inc.
     %
     % 
     %   

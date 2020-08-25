@@ -7,7 +7,7 @@ classdef EditableText < uiw.abstract.EditableTextControl
     %           w = uiw.widget.EditableText('Property','Value',...)
     %
     
-%   Copyright 2005-2019 The MathWorks Inc.
+%   Copyright 2005-2020 The MathWorks Inc.
     %
     % 
     %   

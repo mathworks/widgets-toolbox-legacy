@@ -8,7 +8,7 @@ classdef BarChart < uiw.abstract.WidgetContainer
     %           obj = demoAppPkg.view.BarChart('Property','Value',...)
     %
     
-%   Copyright 2018-2019 The MathWorks Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
     %
     % 
     %   

@@ -11,7 +11,7 @@ classdef (Abstract) SingleSessionApp < uiw.abstract.AppWindow & uiw.abstract.Ses
     %   obj.createFileMenu();
     %
     
-%   Copyright 2018-2019 The MathWorks Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
     %
     % 
     %   

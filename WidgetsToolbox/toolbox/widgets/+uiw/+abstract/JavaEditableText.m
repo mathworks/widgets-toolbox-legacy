@@ -9,7 +9,7 @@ classdef (Abstract) JavaEditableText < uiw.abstract.JavaControl & ...
     % property has been set.
     %
     
-%   Copyright 2008-2019 The MathWorks Inc.
+%   Copyright 2008-2020 The MathWorks Inc.
     %
     % 
     %   

@@ -5,7 +5,7 @@ classdef (Hidden, Abstract) HasValueEvents < handle
     %
     % This class may change in the future.
     
-%   Copyright 2018-2019 The MathWorks Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
     %
     % 
     %   

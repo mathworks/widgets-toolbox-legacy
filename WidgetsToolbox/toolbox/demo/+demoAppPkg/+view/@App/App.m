@@ -8,7 +8,7 @@ classdef App < uiw.abstract.SingleSessionApp
     %           app = demoAppPkg.view.App('Property','Value',...)
     %
     
-%   Copyright 2018-2019 The MathWorks Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
     %
     % 
     %   

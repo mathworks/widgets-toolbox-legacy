@@ -6,7 +6,7 @@ classdef (Abstract) BaseLabel < handle
     % positioning of the label.
     %
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
     % 
     %   

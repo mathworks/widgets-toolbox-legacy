@@ -17,7 +17,7 @@ classdef (AllowedSubclasses = ?uiw.widget.Toolstrip) Toolbar < ...
     % referencing Toolstrip should still function, but Toolbar should be
     % used for future applications.
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
     % 
     %   

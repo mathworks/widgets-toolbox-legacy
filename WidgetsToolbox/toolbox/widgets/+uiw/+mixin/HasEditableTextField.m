@@ -2,7 +2,7 @@ classdef HasEditableTextField < uiw.mixin.HasEditableText
     % HasEditableTextField - Mixin for controls with a single editable text field
     %
 
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
     % 
     %   

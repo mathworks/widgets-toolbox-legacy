@@ -6,7 +6,7 @@ classdef (Abstract) HasPreferences < handle
     % traditional MATLAB figure window. 
     %
     
-%   Copyright 2018-2019 The MathWorks Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
     %
     % 
     %   

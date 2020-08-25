@@ -2,7 +2,7 @@ function value = validateColor(value)
 % validateColor - validates a color string or [r,g,b] input
 % -------------------------------------------------------------------------
 
-%   Copyright 2017-2019 The MathWorks, Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
 %
 % 
 %   

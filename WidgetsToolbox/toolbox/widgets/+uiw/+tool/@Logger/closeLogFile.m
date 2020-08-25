@@ -2,7 +2,7 @@ function closeLogFile(obj)
 % closeLogFile - close the log file for writing
 % -------------------------------------------------------------------------
 
-%   Copyright 2018-2019 The MathWorks Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
 %
 % 
 %   

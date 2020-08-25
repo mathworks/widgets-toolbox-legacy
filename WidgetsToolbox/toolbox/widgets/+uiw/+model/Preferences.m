@@ -10,7 +10,7 @@ classdef Preferences < dynamicprops & matlab.mixin.SetGet & uiw.mixin.AssignPVPa
     %
     %
     
-%   Copyright 2018-2019 The MathWorks Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
     %
     % 
     %   

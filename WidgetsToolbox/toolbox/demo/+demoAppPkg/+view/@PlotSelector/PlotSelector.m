@@ -8,7 +8,7 @@ classdef PlotSelector < uiw.abstract.WidgetContainer
     %           obj = demoAppPkg.view.PlotSelector('Property','Value',...)
     %
     
-%   Copyright 2018-2019 The MathWorks Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
     %
     % 
     %   

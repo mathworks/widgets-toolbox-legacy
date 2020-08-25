@@ -18,7 +18,7 @@ function openDocumentationSection(filePath,sectionName)
 %     >> csg.utility.openDocumentationSection('myPage.html','someAnchor')
 %
 
-%   Copyright 2017-2019 The MathWorks, Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
 %
 % 
 %   

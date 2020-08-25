@@ -7,7 +7,7 @@ classdef Popup < uiw.abstract.WidgetContainer & uiw.mixin.HasCallback
     %           w = uiw.widget.Popup('Property','Value',...)
     %
     
-%   Copyright 2005-2019 The MathWorks Inc.
+%   Copyright 2005-2020 The MathWorks Inc.
     %
     % 
     %   

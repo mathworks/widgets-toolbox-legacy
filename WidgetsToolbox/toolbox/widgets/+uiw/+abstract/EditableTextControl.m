@@ -7,7 +7,7 @@ classdef (Abstract) EditableTextControl < uiw.abstract.WidgetContainer ...
     % subclass. It also has a label which may optionally be used. The label
     % will be shown once any Label* property has been set.
     
-%   Copyright 2008-2019 The MathWorks Inc.
+%   Copyright 2008-2020 The MathWorks Inc.
     %
     % 
     %   

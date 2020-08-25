@@ -20,7 +20,7 @@ classdef CheckboxTreeNode < uiw.widget.TreeNode
     %
     %
     
-%   Copyright 2012-2019 The MathWorks Inc.
+%   Copyright 2012-2020 The MathWorks Inc.
     %
     % 
     %   

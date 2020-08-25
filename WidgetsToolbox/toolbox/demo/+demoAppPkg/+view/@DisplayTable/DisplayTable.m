@@ -8,7 +8,7 @@ classdef DisplayTable < uiw.abstract.WidgetContainer
     %           obj = demoAppPkg.view.DisplayTable('Property','Value',...)
     %
     
-%   Copyright 2018-2019 The MathWorks Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
     %
     % 
     %   

@@ -8,7 +8,7 @@ classdef LogLevel < uint8
     %           obj = uiw.enum.LogLevel.<MEMBER>
     %
     
-%   Copyright 2018-2019 The MathWorks Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
     %
     % 
     %   

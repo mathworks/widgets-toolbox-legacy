@@ -7,7 +7,7 @@ function [fileName, cdata, srcFileName] = createThumbnail(srcFileName,thumbSize)
 % pixel size thumbSize.
 %
 
-%   Copyright 2005-2019 The MathWorks Inc.
+%   Copyright 2005-2020 The MathWorks Inc.
 %   
 %   
 

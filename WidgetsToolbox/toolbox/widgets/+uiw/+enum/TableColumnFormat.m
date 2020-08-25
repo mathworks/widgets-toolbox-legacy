@@ -40,7 +40,7 @@ classdef TableColumnFormat < handle
     %       t.ColumnFormatData = {'$ #,##0.00',[],{'apples','oranges'},{'fork','spoon','knife'} };
     %
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
     % 
     %   

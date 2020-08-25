@@ -8,7 +8,7 @@ classdef ListWithButtons < uiw.widget.List & uiw.mixin.HasListSortingButtons
     %           w = uiw.widget.ListWithButtons('Property','Value',...)
     %
     
-%   Copyright 2016-2019 The MathWorks Inc.
+%   Copyright 2016-2020 The MathWorks Inc.
     %
     % 
     %   

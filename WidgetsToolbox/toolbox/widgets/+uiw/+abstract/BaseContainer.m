@@ -5,7 +5,7 @@ classdef (Abstract) BaseContainer < uix.Container & uiw.mixin.HasContainer
     % widgets, dialogs, etc.
     %
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
     % 
     %   

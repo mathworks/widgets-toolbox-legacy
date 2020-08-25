@@ -8,7 +8,7 @@ classdef CheckboxTree < uiw.widget.Tree
     %           obj = uiw.widget.CheckboxTree('Property','Value',...)
     %
     
-    %   Copyright 2012-2019 The MathWorks, Inc.
+%   Copyright 2012-2020 The MathWorks Inc.
     %
     % 
     %   

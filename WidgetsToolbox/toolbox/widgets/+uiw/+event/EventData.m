@@ -8,7 +8,7 @@ classdef EventData < event.EventData & dynamicprops & uiw.mixin.AssignPVPairs
     %           obj = uiw.event.EventData('Property','Value',...)
     %
 
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
     % 
     %   
