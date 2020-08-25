@@ -332,7 +332,7 @@ classdef TableColumnFormat < handle
                 end %if
                 
                 % Check if we need to create a Java editor object
-                if isempty(obj(idx).Editor) || obj(idx).NeedsCustomEditor
+                %if isempty(obj(idx).Editor) || obj(idx).NeedsCustomEditor
                     if isempty(obj(idx).EditorClass)
                         jEditor = [];
                     elseif obj(idx).EditorNeedsFormatData
@@ -349,9 +349,9 @@ classdef TableColumnFormat < handle
                     if ~obj(idx).NeedsCustomEditor
                         obj(idx).Editor = jEditor;
                     end
-                else
-                    editors{idx} = obj(idx).Editor;
-                end %if
+                %else
+                %    editors{idx} = obj(idx).Editor;
+                %end %if
                 
             end %for idx=1:numel(obj)
             
