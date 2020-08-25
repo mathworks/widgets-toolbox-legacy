@@ -3,11 +3,11 @@ function tests = testImageSelectorWeb()
 
 % Copyright 2018-2020 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 326 $
-% $Date: 2019-04-23 08:46:02 -0400 (Tue, 23 Apr 2019) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file

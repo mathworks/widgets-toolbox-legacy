@@ -1331,7 +1331,7 @@ classdef Table < uiw.abstract.JavaControl
         % ColumnWidth
         function value = get.ColumnWidth(obj)
             if ~obj.IsConstructed
-                value = obj.ColumnWidth_;
+                value = obj.ColumnWidth;
             elseif obj.FigureIsJava
                 value = cell2mat( obj.evalOnColumns('getWidth') );
             else
@@ -1342,7 +1342,7 @@ classdef Table < uiw.abstract.JavaControl
             validateattributes(value,{'numeric'},...
                 {'nonnegative','integer','finite','nonnan','vector'});
             if ~obj.IsConstructed
-                obj.ColumnWidth_ = value;
+                obj.ColumnWidth = value;
             elseif obj.FigureIsJava
                 obj.ColumnResizePolicy = 'off'; %#ok<MCSUP>
                 obj.evalOnColumns('setWidth',num2cell(value));
@@ -1356,7 +1356,7 @@ classdef Table < uiw.abstract.JavaControl
         % ColumnPreferredWidth
         function value = get.ColumnPreferredWidth(obj)
             if ~obj.IsConstructed
-                value = obj.ColumnWidth_;
+                value = obj.ColumnWidth;
             elseif obj.FigureIsJava
                 value = cell2mat( obj.evalOnColumns('getPreferredWidth') );
             else
@@ -1367,7 +1367,7 @@ classdef Table < uiw.abstract.JavaControl
             validateattributes(value,{'numeric'},...
                 {'nonnegative','integer','finite','nonnan','vector'});
             if ~obj.IsConstructed
-                obj.ColumnWidth_ = value;
+                obj.ColumnWidth = value;
             elseif obj.FigureIsJava
                 obj.evalOnColumns('setPreferredWidth',num2cell(value));
                 obj.onStyleChanged();

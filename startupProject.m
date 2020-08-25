@@ -1,4 +1,5 @@
 function startupProject()
+%   Copyright 2020 The MathWorks Inc.
 
 % Disable warning
 warnState = warning('off','MATLAB:javaclasspath:jarAlreadySpecified');

@@ -1,4 +1,5 @@
 function shutdownProject()
+%   Copyright 2020 The MathWorks Inc.
 
 % Close all figures
 close all force

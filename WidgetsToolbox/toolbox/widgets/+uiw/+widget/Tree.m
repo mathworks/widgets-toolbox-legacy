@@ -9,10 +9,10 @@ classdef Tree < uiw.abstract.JavaControl
     
     %   Copyright 2012-2019 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 333 $  $Date: 2019-04-29 08:30:09 -0400 (Mon, 29 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     

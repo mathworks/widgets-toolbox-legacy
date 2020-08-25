@@ -3,11 +3,11 @@ function tests = testSliderWeb()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 108 $
-% $Date: 2018-05-03 15:54:22 -0400 (Thu, 03 May 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file

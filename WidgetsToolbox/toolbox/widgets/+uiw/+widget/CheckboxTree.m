@@ -10,10 +10,10 @@ classdef CheckboxTree < uiw.widget.Tree
     
     %   Copyright 2012-2019 The MathWorks, Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 305 $  $Date: 2019-01-15 14:54:29 -0500 (Tue, 15 Jan 2019) $
+    % 
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     

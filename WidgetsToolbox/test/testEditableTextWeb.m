@@ -3,11 +3,11 @@ function tests = testEditableTextWeb()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 207 $
-% $Date: 2018-07-24 09:09:48 -0400 (Tue, 24 Jul 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file

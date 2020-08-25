@@ -3,11 +3,11 @@ function tests = testToolbar()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 232 $
-% $Date: 2018-08-16 13:47:30 -0400 (Thu, 16 Aug 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file

@@ -8,8 +8,8 @@ function [fileName, cdata, srcFileName] = createThumbnail(srcFileName,thumbSize)
 %
 
 %   Copyright 2005-2019 The MathWorks Inc.
-%   $Revision: 324 $
-%   $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+%   
+%   
 
 % Verify inputs
 if nargin<2

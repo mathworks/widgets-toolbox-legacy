@@ -3,11 +3,11 @@ function tests = testLabelWeb()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 97 $
-% $Date: 2018-05-01 15:39:54 -0400 (Tue, 01 May 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file

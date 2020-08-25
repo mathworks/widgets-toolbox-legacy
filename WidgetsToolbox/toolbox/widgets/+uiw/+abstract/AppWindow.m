@@ -9,11 +9,11 @@ classdef (Abstract) AppWindow < uiw.abstract.BaseFigure & uiw.mixin.HasPreferenc
     
     %   Copyright 2008-2019 The MathWorks, Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 309 $
-    %   $Date: 2019-01-31 11:54:46 -0500 (Thu, 31 Jan 2019) $
+    % 
+    %   
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     

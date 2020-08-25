@@ -7,8 +7,8 @@ classdef SingleSessionAppHelper < uiw.abstract.SingleSessionApp
     
     % Copyright 2018 The MathWorks, Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting $Author: rjackey $ $Revision: 139 $  $Date: 2018-05-24 09:05:40 -0400 (Thu, 24 May 2018) $
+    % 
+    %   
     % ---------------------------------------------------------------------
 
     

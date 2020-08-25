@@ -3,11 +3,11 @@ function tests = testListWithButtonsWeb()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 68 $
-% $Date: 2018-03-08 11:37:51 -0500 (Thu, 08 Mar 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file

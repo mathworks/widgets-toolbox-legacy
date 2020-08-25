@@ -7,8 +7,8 @@ classdef testAppWindow < matlab.unittest.TestCase
     
     % Copyright 2018 The MathWorks, Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting $Author: rjackey $ $Revision: 109 $  $Date: 2018-05-04 11:18:12 -0400 (Fri, 04 May 2018) $
+    % 
+    %   
     % ---------------------------------------------------------------------
     
     %% Properties

@@ -4,11 +4,11 @@ function tests = testTextWeb()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 253 $
-% $Date: 2018-10-05 08:50:12 -0400 (Fri, 05 Oct 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file

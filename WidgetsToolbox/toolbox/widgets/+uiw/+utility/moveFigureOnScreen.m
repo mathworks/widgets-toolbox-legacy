@@ -19,10 +19,10 @@ function moveFigureOnScreen(fig)
 
 % Copyright 2018-2019 The MathWorks, Inc.
 %
-% Auth/Revision:
-%   MathWorks Consulting
-%   $Author: rjackey $
-%   $Revision: 445 $  $Date: 2019-03-26 10:56:10 -0400 (Tue, 26 Mar 2019) $
+% 
+%   
+%   
+%   
 % ---------------------------------------------------------------------
 
 

@@ -9,11 +9,11 @@ classdef ListSelector < uiw.abstract.BaseDialog
 
     % Copyright 2019 The MathWorks, Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 310 $
-    %   $Date: 2019-01-31 14:18:53 -0500 (Thu, 31 Jan 2019) $
+    % 
+    %   
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
 

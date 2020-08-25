@@ -33,11 +33,11 @@ classdef About < uiw.abstract.BaseDialog
 
 %   Copyright 2017-2019 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 324 $
-    %   $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
 
 
@@ -78,8 +78,8 @@ classdef About < uiw.abstract.BaseDialog
             
             % Defaults
             obj.ContactInfo = {
-                'MathWorks Consulting    ·    3 Apple Hill Drive    ·    Natick, MA 01760-2098'
-                'consulting@mathworks.com    ·    +1 (508) 647-7000'};
+                'MathWorks Consulting    Â·    3 Apple Hill Drive    Â·    Natick, MA 01760-2098'
+                'consulting@mathworks.com    Â·    +1 (508) 647-7000'};
             obj.LogoCData = uiw.utility.loadIcon(@()imread('mathworks_consulting_banner.png', 'BackgroundColor', [1 1 1]));
             
             % Populate public properties from P-V input pairs

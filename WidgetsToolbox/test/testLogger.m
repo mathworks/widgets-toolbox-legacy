@@ -3,11 +3,11 @@ function tests = testLogger()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 273 $
-% $Date: 2018-11-05 10:16:14 -0500 (Mon, 05 Nov 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file

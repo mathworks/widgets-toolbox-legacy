@@ -3,11 +3,11 @@ function tests = testFolderSelector()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 55 $
-% $Date: 2018-02-27 13:41:05 -0500 (Tue, 27 Feb 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file

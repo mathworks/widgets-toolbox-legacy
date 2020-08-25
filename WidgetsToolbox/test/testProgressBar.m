@@ -4,11 +4,11 @@ function tests = testProgressBar()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 172 $
-% $Date: 2018-06-19 17:53:20 -0400 (Tue, 19 Jun 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file

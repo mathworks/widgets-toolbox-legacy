@@ -7,8 +7,8 @@ classdef testSingleSessionAppWeb < matlab.unittest.TestCase
     
     % Copyright 2018 The MathWorks, Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting $Author: rjackey $ $Revision: 160 $  $Date: 2018-06-12 12:19:22 -0400 (Tue, 12 Jun 2018) $
+    % 
+    %   
     % ---------------------------------------------------------------------
     
     %% Properties
