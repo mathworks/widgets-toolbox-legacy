@@ -33,15 +33,9 @@ classdef Table < uiw.abstract.JavaControl
         CellSelectionCallback = '' %callback for change in selection
         ColumnEditable logical = false(0,1) %boolean array the same size as number of columns, indicating whether each column is editable or not
         ColumnFormatData cell = cell(0,1) %cell array the same size as ColumnFormat, and containing a cellstr list of choices for any column that has a popup list.
-        ColumnResizable = false(1,0) %whether each column is resizable (true/false)
         ColumnResizePolicy {ismember(ColumnResizePolicy,...
             {'off','next','subsequent','last','all'})} ...
             = 'subsequent' %automatic resize policy for columns. ('off','next',['subsequent'],'last','all')
-        ColumnWidth %width of each column (setting this changes ColumnResizePolicy to 'off')
-        ColumnMaxWidth %maximum width of each column for auto sizing
-        ColumnMinWidth %minimum width of each column for auto sizing
-        ColumnPreferredWidth %preferred width of each column for auto sizing
-        ColumnSortable %flag for whether each column may be sorted, when the table Sortable is true
         Editable logical = true %controls whether the table text is editable
         MouseClickedCallback = '' %callback when the mouse is clicked on the table
         MouseDraggedCallback = '' %callback while the mouse is being dragged over the table
@@ -56,6 +50,17 @@ classdef Table < uiw.abstract.JavaControl
     properties (Dependent)
         Data %data in the table. Must be entered as a cell array. (Also see property DataTable for an alternative.)
         DataTable %data array as a MATLAB table. Setting a table to DataTable will update Data and ColumnName properties
+        
+        ColumnResizable %whether each column is resizable (true/false)
+        ColumnWidth %width of each column
+        ColumnMaxWidth %maximum width of each column for auto sizing
+        ColumnMinWidth %minimum width of each column for auto sizing
+        ColumnSortable %flag for whether each column may be sorted, when the table Sortable is true
+    end
+    
+    properties (Dependent, Hidden)
+        ColumnPreferredWidth %preferred width of each column for auto sizing (deprecated
+        
     end
     
     properties (AbortSet,Dependent)
@@ -85,6 +90,13 @@ classdef Table < uiw.abstract.JavaControl
         ColumnName_ cell = cell.empty(1,0) %Cache of column name
         SelectedRows_ %Cache of row selection
         SelectedColumns_ %Cache of column selection
+        
+        
+        ColumnResizable_ = false(1,0) %whether each column is resizable (true/false)
+        ColumnWidth_ %width of each column (setting this changes ColumnResizePolicy to 'off')
+        ColumnMaxWidth_ %maximum width of each column for auto sizing
+        ColumnMinWidth_ %minimum width of each column for auto sizing
+        ColumnSortable_ %flag for whether each column may be sorted, when the table Sortable is true
     end
     
     properties (Dependent, GetAccess=protected, SetAccess=private)
@@ -206,7 +218,12 @@ classdef Table < uiw.abstract.JavaControl
                 'CellEditCallback',@(h,e)onTableModelChanged(obj,h,e),...
                 'CellSelectionCallback',@(h,e)onSelectionChanged(obj,h,e),...
                 'ColumnEditable',obj.ColumnEditable,...
-                'Units','pixels');      
+                'Units','pixels'); 
+            
+            % Column sizing?
+            if ~isempty(obj.ColumnWidth_)
+                obj.WebControl.ColumnWidth = obj.ColumnWidth_;
+            end     
             
         end %function
         
@@ -1020,26 +1037,51 @@ classdef Table < uiw.abstract.JavaControl
                 obj.CellEditor = editors;
                 
                 % Apply column sizes
-                isMatch = strcmp(obj.ColumnResizePolicy,obj.ValidResizeModes);
-                ModeIdx = find(isMatch, 1) - 1;
-                obj.JControl.setAutoResizeMode(ModeIdx);
-                obj.evalOnColumns('setResizable',num2cell(obj.ColumnResizable));
-                if strcmp(obj.ColumnResizePolicy, 'off')
-                    obj.evalOnColumns('setWidth',num2cell(obj.ColumnWidth));
+                
+                % Column sizing?
+                if ~isempty(obj.ColumnResizable_)
+                    obj.evalOnColumns('setResizable',num2cell(obj.ColumnResizable_));
                 end
                 
-                obj.evalOnColumns('setMinWidth',num2cell(obj.ColumnMinWidth));
-                obj.evalOnColumns('setMaxWidth',num2cell(obj.ColumnMaxWidth));
-                obj.evalOnColumns('setPreferredWidth',num2cell(obj.ColumnPreferredWidth));
+                % Is a hard width set?
+                if ~isempty(obj.ColumnWidth_)
+                    
+                    obj.JControl.setAutoResizeMode(0);
+                    obj.evalOnColumns('setPreferredWidth',num2cell(obj.ColumnWidth_));
+                    obj.ColumnWidth_ = [];
+                    
+                else
+                    % Resize policy
+                    isMatch = strcmp(obj.ColumnResizePolicy,obj.ValidResizeModes);
+                    ModeIdx = find(isMatch, 1) - 1;
+                    obj.JControl.setAutoResizeMode(ModeIdx);
+                    
+                    if ~isempty(obj.ColumnWidth_)
+                        obj.evalOnColumns('setPreferredWidth',num2cell(obj.ColumnWidth_));
+                        obj.ColumnWidth_ = [];
+                    end
+                    
+                    if ~isempty(obj.ColumnMinWidth_)
+                        obj.evalOnColumns('setMinWidth',num2cell(obj.ColumnMinWidth_));
+                        obj.ColumnMinWidth_ = [];
+                    end
+                    
+                    if ~isempty(obj.ColumnMaxWidth_)
+                        obj.evalOnColumns('setMaxWidth',num2cell(obj.ColumnMaxWidth_));
+                        obj.ColumnMaxWidth_ = [];
+                    end
+                    
+                end %if ~isempty(obj.ColumnWidth_)
+                
                 
                 % Apply sorting
                 obj.JControl.SortingEnabled = logical(obj.Sortable);
                 jNumCol = obj.JSortableTableModel.getColumnCount();
+                jNumCol = min(jNumCol, numel(obj.ColumnSortable_));
                 for idx=jNumCol:-1:1
                     %obj.JSortableTableModel.setColumnSortable(idx-1,obj.ColumnSortable(idx));
-                    javaMethodEDT('setColumnSortable',obj.JSortableTableModel,idx-1,obj.ColumnSortable(idx))
+                    javaMethodEDT('setColumnSortable',obj.JSortableTableModel,idx-1,obj.ColumnSortable_(idx))
                 end
-                
                 
                 % Redraw in case changes have been made
                 obj.redrawJava_private();
@@ -1060,15 +1102,13 @@ classdef Table < uiw.abstract.JavaControl
                 obj.WebControl.ColumnFormat = colFormat;
                 
                 % Column Widths
-                if ~isempty(obj.ColumnWidth)
-                    obj.WebControl.ColumnWidth = obj.ColumnWidth;
-                elseif ~isempty(obj.ColumnPreferredWidth)
-                    obj.WebControl.ColumnWidth = obj.ColumnPreferredWidth;
+                if ~isempty(obj.ColumnWidth_)
+                    obj.WebControl.ColumnWidth = obj.ColumnWidth_;
                 elseif ~strcmp(obj.ColumnResizePolicy,'off')
                     obj.WebControl.ColumnWidth = {'auto'};
                 end
                     
-                obj.WebControl.ColumnSortable = logical(obj.Sortable);
+                obj.WebControl.ColumnSortable = logical(obj.Sortable) & logical(obj.ColumnSortable_);
                 obj.WebControl.ColumnEditable = obj.ColumnEditable & obj.Editable;
                 
             end %if ~obj.IsConstructed
@@ -1331,9 +1371,9 @@ classdef Table < uiw.abstract.JavaControl
         % ColumnWidth
         function value = get.ColumnWidth(obj)
             if ~obj.IsConstructed
-                value = obj.ColumnWidth;
+                value = obj.ColumnWidth_;
             elseif obj.FigureIsJava
-                value = cell2mat( obj.evalOnColumns('getWidth') );
+                value = cell2mat( obj.evalOnColumns('getPreferredWidth') );
             else
                 value = obj.WebControl.ColumnWidth;
             end
@@ -1342,32 +1382,7 @@ classdef Table < uiw.abstract.JavaControl
             validateattributes(value,{'numeric'},...
                 {'nonnegative','integer','finite','nonnan','vector'});
             if ~obj.IsConstructed
-                obj.ColumnWidth = value;
-            elseif obj.FigureIsJava
-                obj.ColumnResizePolicy = 'off'; %#ok<MCSUP>
-                obj.evalOnColumns('setWidth',num2cell(value));
-                obj.onStyleChanged();
-            else
-                obj.WebControl.ColumnWidth = value;
-            end
-        end
-        
-        
-        % ColumnPreferredWidth
-        function value = get.ColumnPreferredWidth(obj)
-            if ~obj.IsConstructed
-                value = obj.ColumnWidth;
-            elseif obj.FigureIsJava
-                value = cell2mat( obj.evalOnColumns('getPreferredWidth') );
-            else
-                value = obj.WebControl.ColumnWidth;
-            end
-        end
-        function set.ColumnPreferredWidth(obj, value)
-            validateattributes(value,{'numeric'},...
-                {'nonnegative','integer','finite','nonnan','vector'});
-            if ~obj.IsConstructed
-                obj.ColumnWidth = value;
+                obj.ColumnWidth_ = value;
             elseif obj.FigureIsJava
                 obj.evalOnColumns('setPreferredWidth',num2cell(value));
                 obj.onStyleChanged();
@@ -1377,19 +1392,28 @@ classdef Table < uiw.abstract.JavaControl
         end
         
         
+        % ColumnPreferredWidth
+        function value = get.ColumnPreferredWidth(obj)
+            value = obj.ColumnWidth;
+        end
+        function set.ColumnPreferredWidth(obj, value)
+            obj.ColumnWidth = value;
+        end
+        
+                
         % ColumnMinWidth
         function value = get.ColumnMinWidth(obj)
             if obj.IsConstructed && obj.FigureIsJava
                 value = cell2mat( obj.evalOnColumns('getMinWidth') );
             else
-                value = obj.ColumnMinWidth;
+                value = obj.ColumnMinWidth_;
             end
         end
         function set.ColumnMinWidth(obj, value)
             validateattributes(value,{'numeric'},...
                 {'nonnegative','integer','finite','nonnan','vector'});
             if ~obj.IsConstructed
-                obj.ColumnMinWidth = value;
+                obj.ColumnMinWidth_ = value;
             elseif obj.FigureIsJava
                 obj.evalOnColumns('setMinWidth',num2cell(value));
                 obj.onStyleChanged();
@@ -1404,14 +1428,14 @@ classdef Table < uiw.abstract.JavaControl
             if obj.IsConstructed && obj.FigureIsJava
                 value = cell2mat( obj.evalOnColumns('getMaxWidth') );
             else
-                value = obj.ColumnMaxWidth;
+                value = obj.ColumnMaxWidth_;
             end
         end
         function set.ColumnMaxWidth(obj, value)
             validateattributes(value,{'numeric'},...
                 {'nonnegative','integer','finite','nonnan','vector'});
             if ~obj.IsConstructed
-                obj.ColumnMaxWidth = value;
+                obj.ColumnMaxWidth = value_;
             elseif obj.FigureIsJava
                 obj.evalOnColumns('setMaxWidth',num2cell(value));
                 obj.onStyleChanged();
@@ -1451,7 +1475,7 @@ classdef Table < uiw.abstract.JavaControl
         % ColumnSortable
         function value = get.ColumnSortable(obj)
             if ~obj.IsConstructed
-                value = obj.ColumnSortable;
+                value = obj.ColumnSortable_;
             elseif obj.FigureIsJava
                 jNumCol = obj.JSortableTableModel.getColumnCount();
                 for idx=jNumCol:-1:1
@@ -1465,14 +1489,14 @@ classdef Table < uiw.abstract.JavaControl
             end
         end
         function set.ColumnSortable(obj, value)
-            obj.ColumnSortable = logical(value);
+            obj.ColumnSortable_ = logical(value);
             obj.applyColumnFormats();
         end
         
         % ColumnResizable
         function value = get.ColumnResizable(obj)
             if ~obj.IsConstructed
-                value = obj.ColumnResizable;
+                value = obj.ColumnResizable_;
             elseif obj.FigureIsJava
                 value = cell2mat( obj.evalOnColumns('getResizable') );
             else
@@ -1481,7 +1505,7 @@ classdef Table < uiw.abstract.JavaControl
         end
         function set.ColumnResizable(obj, value)
             validateattributes(value,{'logical'},{'vector'});
-            obj.ColumnResizable = value;
+            obj.ColumnResizable_ = value;
             if obj.IsConstructed
                 if obj.FigureIsJava
                     obj.applyColumnFormats();
@@ -1597,7 +1621,7 @@ classdef Table < uiw.abstract.JavaControl
             if ~obj.IsConstructed
                 value = obj.Sortable;
             elseif obj.FigureIsJava
-            value = obj.JControl.SortingEnabled;
+                value = obj.JControl.SortingEnabled;
             else
                 value = obj.WebControl.ColumnSortable;
             end
