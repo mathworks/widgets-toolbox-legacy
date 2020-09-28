@@ -66,6 +66,9 @@ classdef (Abstract) BaseFigure < uiw.mixin.HasContainer
                     'UserData',obj,... %Store object to prevent deletion
                     remainArgs{:});
                 
+                %RAJ - unsure of this:
+                 %   'AutoResizeChildren','off',...
+                
             else
                 
                 % Use traditional Java figure
