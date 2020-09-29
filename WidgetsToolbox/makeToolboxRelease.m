@@ -1,7 +1,7 @@
 % makeToolboxRelease - Make a release of this toolbox
 %
 
-% Copyright 2018 The MathWorks, Inc.
+% Copyright 2018-2020 The MathWorks, Inc.
 % ---------------------------------------------------------------------
 
 %% Files the author should manually edit for each release:
@@ -17,7 +17,7 @@
 %       accessible in Add-On Manager  ** CONTAINS RELEASE NOTES! **
 
 verNum = '1.4'; % Major.Minor software revision number
-revNum = 1; %Revision number from source control system
+revNum = 0; %Revision number from source control system
 mlVer = 'R2020b'; % MATLAB version to display
 
 %% Files the author should manually edit initially:
@@ -57,7 +57,7 @@ toolboxPath = fullfile(toolboxRoot,'toolbox');
 % Output locations
 docOutputPath = fullfile(toolboxRoot,'toolbox','doc');
 demoDocOutputPath = fullfile(toolboxRoot,'toolbox','demo','html');
-outputFile = fullfile(toolboxRoot,'..','Release',sprintf('Widgets Toolbox %s.%d.mltbx',verNum,revNum));
+outputFile = fullfile(toolboxRoot,'release',sprintf('Widgets Toolbox %s.%d.mltbx',verNum,revNum));
 contentsPath = fullfile(toolboxRoot,'toolbox','widgets','Contents.m');
 
 % Toolbox Packager Project File - Don't forget to open this file manually
@@ -72,10 +72,10 @@ jarFile = fullfile(widgetsRoot,'resource','MathWorksConsultingWidgets.jar');
 javaaddpath(jarFile);
 
 %% Run unit tests
-testResult = runToolboxUnitTests;
-if ~all([testResult.Passed])
-    error('Unit tests failed.');
-end
+% testResult = runToolboxUnitTests;
+% if ~all([testResult.Passed])
+%     error('Unit tests failed.');
+% end
 
 %% Write contents file
 % This file registers the toolbox and the "ver" command will list it
@@ -122,8 +122,9 @@ for idx = 1:size(sectionList,1)
     thisFile = fullfile(docOutputPath,[sectionList{idx,1} '.html']);
     
     % Add copyright notice
-    if year(datetime)>2018
-        copyrightText = sprintf('Copyright 2018-%d The MathWorks, Inc.',year(now));
+    t = datetime;
+    if t.Year>2018
+        copyrightText = sprintf('Copyright 2018-%d The MathWorks, Inc.',t.Year);
     else
         copyrightText = 'Copyright 2018 The MathWorks, Inc.';
     end
