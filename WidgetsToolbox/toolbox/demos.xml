@@ -25,34 +25,10 @@ Planning a complex or business-critical app? MathWorks Consulting can advise you
    <demosection>
       <label>demo</label>
       <demoitem>
-         <label>demoAboutDialog</label>
-         <type>other</type>
-         <source>demoAboutDialog</source>
-         <file>demo/html/demoAboutDialog.html</file>
-      </demoitem>
-      <demoitem>
-         <label>demoApp</label>
-         <type>other</type>
-         <source>demoApp</source>
-         <file>demo/html/demoApp.html</file>
-      </demoitem>
-      <demoitem>
          <label>demoCheckboxTree</label>
          <type>other</type>
          <source>demoCheckboxTree</source>
          <file>demo/html/demoCheckboxTree.html</file>
-      </demoitem>
-      <demoitem>
-         <label>demoColorOrderSelector</label>
-         <type>other</type>
-         <source>demoColorOrderSelector</source>
-         <file>demo/html/demoColorOrderSelector.html</file>
-      </demoitem>
-      <demoitem>
-         <label>demoColorSelector</label>
-         <type>other</type>
-         <source>demoColorSelector</source>
-         <file>demo/html/demoColorSelector.html</file>
       </demoitem>
       <demoitem>
          <label>demoEditablePopup</label>
@@ -67,16 +43,88 @@ Planning a complex or business-critical app? MathWorks Consulting can advise you
          <file>demo/html/demoEditablePopupWithButton.html</file>
       </demoitem>
       <demoitem>
-         <label>demoEditableText</label>
-         <type>other</type>
-         <source>demoEditableText</source>
-         <file>demo/html/demoEditableText.html</file>
-      </demoitem>
-      <demoitem>
          <label>demoEditableTextWithHistory</label>
          <type>other</type>
          <source>demoEditableTextWithHistory</source>
          <file>demo/html/demoEditableTextWithHistory.html</file>
+      </demoitem>
+      <demoitem>
+         <label>demoImageSelector</label>
+         <type>other</type>
+         <source>demoImageSelector</source>
+         <file>demo/html/demoImageSelector.html</file>
+      </demoitem>
+      <demoitem>
+         <label>demoPassword</label>
+         <type>other</type>
+         <source>demoPassword</source>
+         <file>demo/html/demoPassword.html</file>
+      </demoitem>
+      <demoitem>
+         <label>demoProgressBar</label>
+         <type>other</type>
+         <source>demoProgressBar</source>
+         <file>demo/html/demoProgressBar.html</file>
+      </demoitem>
+      <demoitem>
+         <label>demoSlider</label>
+         <type>other</type>
+         <source>demoSlider</source>
+         <file>demo/html/demoSlider.html</file>
+      </demoitem>
+      <demoitem>
+         <label>demoTable</label>
+         <type>other</type>
+         <source>demoTable</source>
+         <file>demo/html/demoTable.html</file>
+      </demoitem>
+      <demoitem>
+         <label>demoToolbar</label>
+         <type>other</type>
+         <source>demoToolbar</source>
+         <file>demo/html/demoToolbar.html</file>
+      </demoitem>
+      <demoitem>
+         <label>demoToolbarDark</label>
+         <type>other</type>
+         <source>demoToolbarDark</source>
+         <file>demo/html/demoToolbarDark.html</file>
+      </demoitem>
+      <demoitem>
+         <label>demoTree</label>
+         <type>other</type>
+         <source>demoTree</source>
+         <file>demo/html/demoTree.html</file>
+      </demoitem>
+      <demoitem>
+         <label>demoAboutDialog</label>
+         <type>other</type>
+         <source>demoAboutDialog</source>
+         <file>demo/html/demoAboutDialog.html</file>
+      </demoitem>
+      <demoitem>
+         <label>demoApp</label>
+         <type>other</type>
+         <source>demoApp</source>
+         <file>demo/html/demoApp.html</file>
+      </demoitem>
+      <demoitem>
+         <label>demoColorOrderSelector</label>
+         <type>other</type>
+         <source>demoColorOrderSelector</source>
+         <file>demo/html/demoColorOrderSelector.html</file>
+      </demoitem>
+      <demoitem>
+         <label>demoColorSelector</label>
+         <type>other</type>
+         <source>demoColorSelector</source>
+         <file>demo/html/demoColorSelector.html</file>
+      </demoitem>
+      <demoitem>
+         <label>demoEditableText</label>
+         <type>other</type>
+         <source>demoEditableText</source>
+         <file>demo/html/demoEditableText.html</file>
       </demoitem>
       <demoitem>
          <label>demoFileSelector</label>
@@ -89,12 +137,6 @@ Planning a complex or business-critical app? MathWorks Consulting can advise you
          <type>other</type>
          <source>demoFolderSelector</source>
          <file>demo/html/demoFolderSelector.html</file>
-      </demoitem>
-      <demoitem>
-         <label>demoImageSelector</label>
-         <type>other</type>
-         <source>demoImageSelector</source>
-         <file>demo/html/demoImageSelector.html</file>
       </demoitem>
       <demoitem>
          <label>demoList</label>
@@ -121,40 +163,16 @@ Planning a complex or business-critical app? MathWorks Consulting can advise you
          <file>demo/html/demoLogger.html</file>
       </demoitem>
       <demoitem>
-         <label>demoPassword</label>
-         <type>other</type>
-         <source>demoPassword</source>
-         <file>demo/html/demoPassword.html</file>
-      </demoitem>
-      <demoitem>
          <label>demoPopup</label>
          <type>other</type>
          <source>demoPopup</source>
          <file>demo/html/demoPopup.html</file>
       </demoitem>
       <demoitem>
-         <label>demoProgressBar</label>
-         <type>other</type>
-         <source>demoProgressBar</source>
-         <file>demo/html/demoProgressBar.html</file>
-      </demoitem>
-      <demoitem>
          <label>demoSearchListDialog</label>
          <type>other</type>
          <source>demoSearchListDialog</source>
          <file>demo/html/demoSearchListDialog.html</file>
-      </demoitem>
-      <demoitem>
-         <label>demoSlider</label>
-         <type>other</type>
-         <source>demoSlider</source>
-         <file>demo/html/demoSlider.html</file>
-      </demoitem>
-      <demoitem>
-         <label>demoTable</label>
-         <type>other</type>
-         <source>demoTable</source>
-         <file>demo/html/demoTable.html</file>
       </demoitem>
       <demoitem>
          <label>demoTableSelectionDialog</label>
@@ -167,24 +185,6 @@ Planning a complex or business-critical app? MathWorks Consulting can advise you
          <type>other</type>
          <source>demoText</source>
          <file>demo/html/demoText.html</file>
-      </demoitem>
-      <demoitem>
-         <label>demoToolbar</label>
-         <type>other</type>
-         <source>demoToolbar</source>
-         <file>demo/html/demoToolbar.html</file>
-      </demoitem>
-      <demoitem>
-         <label>demoToolbarDark</label>
-         <type>other</type>
-         <source>demoToolbarDark</source>
-         <file>demo/html/demoToolbarDark.html</file>
-      </demoitem>
-      <demoitem>
-         <label>demoTree</label>
-         <type>other</type>
-         <source>demoTree</source>
-         <file>demo/html/demoTree.html</file>
       </demoitem>
    </demosection>
 </demos>
