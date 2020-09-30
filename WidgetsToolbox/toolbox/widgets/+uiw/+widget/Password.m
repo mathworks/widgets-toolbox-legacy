@@ -16,6 +16,21 @@ classdef Password < uiw.abstract.JavaEditableText
     %   
     % ---------------------------------------------------------------------
     
+        
+    
+    %% Constructor / Destructor
+    methods
+        
+        function obj = Password(varargin)
+            
+            % Call superclass constructor
+            obj@uiw.abstract.JavaEditableText(varargin{:});
+            
+        end % constructor
+        
+    end %methods - constructor/destructor
+    
+    
     
     %% Protected methods
     methods (Access=protected)
@@ -80,7 +95,7 @@ classdef Password < uiw.abstract.JavaEditableText
         function setValue(obj,value)
             % Set the text to Java control - subclass may override
             
-            if isStringScalar(value)
+            if isstring(value) && isscalar(value)
                 value = char(value);
             end
             validateattributes(value,{'char'},{})

@@ -13,14 +13,14 @@ classdef testSingleSessionAppWeb < matlab.unittest.TestCase
     
     %% Properties
   properties
-      App testHelper.SingleSessionAppHelper
+      App testHelperUIFigure.SingleSessionAppHelper
   end
  
   
   %% Setup and Teardown
     methods (TestClassSetup)
         function setupOnce(testCase)
-            testCase.App = testHelper.SingleSessionAppHelper();
+            testCase.App = testHelperUIFigure.SingleSessionAppHelper();
         end
     end
     
@@ -139,13 +139,13 @@ classdef testSingleSessionAppWeb < matlab.unittest.TestCase
         function testFigureDeletion(testCase)
             
             % Verify deleting the app deletes the uifigure
-            app = testHelper.SingleSessionAppHelper();
+            app = testHelperUIFigure.SingleSessionAppHelper();
             fig = app.Figure;
             delete(app);
             testCase.verifyFalse( isvalid(fig) );
             
             % Verify deleting the uifigure deletes the app
-            app = testHelper.SingleSessionAppHelper();
+            app = testHelperUIFigure.SingleSessionAppHelper();
             fig = app.Figure;
             delete(fig);
             testCase.verifyFalse( isvalid(app) );

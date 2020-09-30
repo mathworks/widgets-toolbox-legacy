@@ -195,7 +195,7 @@ classdef (Abstract) EditablePopupControl < uiw.abstract.JavaEditableText
         function setValue(obj,value)
             % Set the selection to Java control
             
-            if isStringScalar(value)
+            if isstring(value) && isscalar(value)
                 value = char(value);
             end
             validateattributes(value,{'char'},{})

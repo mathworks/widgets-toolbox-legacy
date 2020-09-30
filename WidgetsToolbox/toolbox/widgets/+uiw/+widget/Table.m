@@ -23,7 +23,7 @@ classdef Table < uiw.abstract.JavaControl
     %       - Filtering
     %
     
-%   Copyright 2013-2020 The MathWorks Inc.
+    %   Copyright 2013-2020 The MathWorks Inc.
     % ---------------------------------------------------------------------
     
     
@@ -135,6 +135,13 @@ classdef Table < uiw.abstract.JavaControl
     %% Constructor / Destructor
     methods
         
+        function obj = Table(varargin)
+            
+            % Call superclass constructor
+            obj@uiw.abstract.JavaControl(varargin{:});
+            
+        end % constructor
+        
         function delete(obj)
             
             % Explicitly delete handles to Java objects
@@ -166,7 +173,7 @@ classdef Table < uiw.abstract.JavaControl
             
         end %function
         
-            
+        
         function createJavaComponent(obj)
             % Create the graphics objects
             
@@ -218,12 +225,12 @@ classdef Table < uiw.abstract.JavaControl
                 'CellEditCallback',@(h,e)onTableModelChanged(obj,h,e),...
                 'CellSelectionCallback',@(h,e)onSelectionChanged(obj,h,e),...
                 'ColumnEditable',obj.ColumnEditable,...
-                'Units','pixels'); 
+                'Units','pixels');
             
             % Column sizing?
             if ~isempty(obj.ColumnWidth_)
                 obj.WebControl.ColumnWidth = obj.ColumnWidth_;
-            end     
+            end
             
         end %function
         
@@ -856,7 +863,7 @@ classdef Table < uiw.abstract.JavaControl
                 % Repaint to show everything correctly
                 %obj.JControl.repaint();
                 javaMethodEDT('repaint',obj.JControl);
-
+                
                 
             end %if obj.IsConstructed
             
@@ -878,7 +885,7 @@ classdef Table < uiw.abstract.JavaControl
             elseif NumCol < numNamedCols && FlagRemove
                 obj.ColumnName_(NumCol+1 : end) = [];
             end
-                
+            
             if obj.FigureIsJava
                 if obj.JavaObj.setColumnCount(NumCol,FlagRemove)
                     obj.ColumnFormatEnum(end+1:NumCol) = uiw.enum.TableColumnFormat.DEFAULT;
@@ -962,7 +969,7 @@ classdef Table < uiw.abstract.JavaControl
                 % Set the data in the table
                 [NumRows, NumCols] = size(data);
                 %if obj.JTableModel.getColumnCount() > NumCols
-                    updateNumberOfColumns(obj,NumCols,fromDataTable) %REDUCE COLUMNS IF NEEDED
+                updateNumberOfColumns(obj,NumCols,fromDataTable) %REDUCE COLUMNS IF NEEDED
                 %end
                 obj.JTableModel.setDataVector(jValue, obj.ColumnName_)
                 
@@ -1004,7 +1011,7 @@ classdef Table < uiw.abstract.JavaControl
                 wValue = obj.ColumnFormatEnum.toWebType(data);
                 if isstring(wValue)
                     wValue = cellstr(wValue);
-                end                
+                end
                 
                 % Set the data in the table
                 [~, NumCols] = size(wValue);
@@ -1107,7 +1114,7 @@ classdef Table < uiw.abstract.JavaControl
                 elseif ~strcmp(obj.ColumnResizePolicy,'off')
                     obj.WebControl.ColumnWidth = {'auto'};
                 end
-                    
+                
                 obj.WebControl.ColumnSortable = logical(obj.Sortable) & logical(obj.ColumnSortable_);
                 obj.WebControl.ColumnEditable = obj.ColumnEditable & obj.Editable;
                 
@@ -1256,10 +1263,10 @@ classdef Table < uiw.abstract.JavaControl
                     
                     case 'column'
                         obj.WebControl.Selection = obj.SelectedColumns_;
-                    
+                        
                     case 'row'
                         obj.WebControl.Selection = obj.SelectedRows_;
-                    
+                        
                     case 'cell'
                         colIdx = obj.SelectedColumns_;
                         rowIdx = obj.SelectedRows_;
@@ -1400,7 +1407,7 @@ classdef Table < uiw.abstract.JavaControl
             obj.ColumnWidth = value;
         end
         
-                
+        
         % ColumnMinWidth
         function value = get.ColumnMinWidth(obj)
             if obj.IsConstructed && obj.FigureIsJava

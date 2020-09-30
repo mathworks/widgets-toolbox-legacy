@@ -110,17 +110,36 @@ log = uiw.tool.Logger(logName);
 fcn = @()set(log,'BufferSize',-10);
 verifyError(testCase,fcn,'MATLAB:validators:mustBePositive')
 
-fcn = @()set(log,'BufferSize',[1 2 3]);
-verifyError(testCase,fcn,'MATLAB:validation:IncompatibleSize')
-
-fcn = @()set(log,'Callback',[1 2 3]);
-verifyError(testCase,fcn,'MATLAB:validation:UnableToConvert')
-
-fcn = @()set(log,'DisplayLevel','BadValue');
-verifyError(testCase,fcn,'MATLAB:validation:UnableToConvert')
-
-fcn = @()set(log,'FileLevel','BadValue');
-verifyError(testCase,fcn,'MATLAB:validation:UnableToConvert')
+if verLessThan('matlab','9.8')
+    
+    fcn = @()set(log,'BufferSize',[1 2 3]);
+    verifyError(testCase,fcn,'MATLAB:type:InvalidInputSize')
+    
+    fcn = @()set(log,'Callback',[1 2 3]);
+    verifyError(testCase,fcn,'MATLAB:UnableToConvert')
+    
+    fcn = @()set(log,'DisplayLevel','BadValue');
+    verifyError(testCase,fcn,'MATLAB:UnableToConvert')
+    
+    fcn = @()set(log,'FileLevel','BadValue');
+    verifyError(testCase,fcn,'MATLAB:UnableToConvert')
+    
+else
+    
+    
+    fcn = @()set(log,'BufferSize',[1 2 3]);
+    verifyError(testCase,fcn,'MATLAB:validation:IncompatibleSize')
+    
+    fcn = @()set(log,'Callback',[1 2 3]);
+    verifyError(testCase,fcn,'MATLAB:validation:UnableToConvert')
+    
+    fcn = @()set(log,'DisplayLevel','BadValue');
+    verifyError(testCase,fcn,'MATLAB:validation:UnableToConvert')
+    
+    fcn = @()set(log,'FileLevel','BadValue');
+    verifyError(testCase,fcn,'MATLAB:validation:UnableToConvert')
+    
+end
 
 end %function
 

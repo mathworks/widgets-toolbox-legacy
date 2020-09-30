@@ -19,6 +19,20 @@ classdef (Abstract) JavaEditableText < uiw.abstract.JavaControl & ...
     % ---------------------------------------------------------------------
 
     
+    %% Constructor / Destructor
+    methods
+        
+        function obj = JavaEditableText(varargin)
+            
+            % Call superclass constructor
+            obj@uiw.abstract.JavaControl(varargin{:});
+            
+        end % constructor
+        
+    end %methods - constructor/destructor
+    
+    
+    
     %% Protected Methods
     methods (Access=protected)
         
@@ -148,7 +162,7 @@ classdef (Abstract) JavaEditableText < uiw.abstract.JavaControl & ...
         function setValue(obj,value)
             % Set the text to Java control - subclass may override
             
-            if isStringScalar(value)
+            if isstring(value) && isscalar(value)
                 value = char(value);
             end
             validateattributes(value,{'char'},{})

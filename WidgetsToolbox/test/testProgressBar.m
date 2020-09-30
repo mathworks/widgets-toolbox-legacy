@@ -142,7 +142,11 @@ w = uiw.widget.ProgressBar(...
 
 %RAJ - the errors changed - may be different in earlier release?
 verifyError(testCase, @()setProgress(w, 2), 'MATLAB:validators:mustBeLessThanOrEqual');
-verifyError(testCase, @()setProgress(w, 0.5,{[1 2]}), 'MATLAB:validation:UnableToConvert');
+if verLessThan('matlab','9.8')
+    verifyError(testCase, @()setProgress(w, 0.5,{[1 2]}), 'MATLAB:UnableToConvert');
+else
+    verifyError(testCase, @()setProgress(w, 0.5,{[1 2]}), 'MATLAB:validation:UnableToConvert');
+end
 
 end %function
 

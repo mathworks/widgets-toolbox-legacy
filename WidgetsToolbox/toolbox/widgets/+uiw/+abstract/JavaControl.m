@@ -319,11 +319,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
             else
                 
                 % Is it a Java figure or web uifigure?
-                obj.FigureIsJava = ~matlab.ui.internal.isUIFigure(fig);
-                % warnState = warning('off','MATLAB:ui:javaframe:PropertyToBeRemoved');
-                % obj.FigureIsJava = isprop(obj,'JavaFrame') && ...
-                %     ~isempty(obj.JavaFrame); %#ok<JAVFM>
-                % warning(warnState);
+                obj.FigureIsJava = verLessThan('matlab','9.9') || ~matlab.ui.internal.isUIFigure(fig);
                 
                 if obj.FigureIsJava
                     

@@ -16,7 +16,11 @@ warning(warnState);
 % Leave off javacomponent warning
 warning('off','MATLAB:ui:javacomponent:FunctionToBeRemoved');
 
-% Turn on uicontrol redirect
-s = settings;
-s.matlab.ui.internal.uicontrol.UseRedirect.TemporaryValue = 1;
-s.matlab.ui.internal.uicontrol.UseRedirectInUifigure.TemporaryValue = 1;
+
+% Is Java path added?
+try
+    com.mathworks.consulting.widgets.table.TableModel;
+catch
+    jarPath = fullfile(widgetsRoot,'resource','MathWorksConsultingWidgets.jar');
+    javaaddpath(jarPath);
+end

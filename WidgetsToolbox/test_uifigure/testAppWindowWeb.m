@@ -13,14 +13,14 @@ classdef testAppWindowWeb < matlab.unittest.TestCase
     
     %% Properties
   properties
-      App testHelper.AppWindowHelper
+      App testHelperUIFigure.AppWindowHelper
   end
  
   
   %% Setup and Teardown
     methods (TestClassSetup)
         function setupOnce(testCase)
-            testCase.App = testHelper.AppWindowHelper();
+            testCase.App = testHelperUIFigure.AppWindowHelper();
         end
     end
     
@@ -70,13 +70,13 @@ classdef testAppWindowWeb < matlab.unittest.TestCase
         function testFigureDeletion(testCase)
             
             % Verify deleting the app deletes the uifigure
-            app = testHelper.AppWindowHelper();
+            app = testHelperUIFigure.AppWindowHelper();
             fig = app.Figure;
             delete(app);
             testCase.verifyFalse( isvalid(fig) );
             
             % Verify deleting the uifigure deletes the app
-            app = testHelper.AppWindowHelper();
+            app = testHelperUIFigure.AppWindowHelper();
             fig = app.Figure;
             delete(fig);
             testCase.verifyFalse( isvalid(app) );
