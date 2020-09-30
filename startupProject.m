@@ -24,3 +24,10 @@ catch
     jarPath = fullfile(widgetsRoot,'resource','MathWorksConsultingWidgets.jar');
     javaaddpath(jarPath);
 end
+
+% Turn on uicontrol redirect
+if ~verLessThan('matlab','9.9')
+    s = settings;
+    s.matlab.ui.internal.uicontrol.UseRedirect.TemporaryValue = 1;
+    s.matlab.ui.internal.uicontrol.UseRedirectInUifigure.TemporaryValue = 1;
+end
