@@ -72,10 +72,10 @@ jarFile = fullfile(widgetsRoot,'resource','MathWorksConsultingWidgets.jar');
 javaaddpath(jarFile);
 
 %% Run unit tests
-% testResult = runToolboxUnitTests;
-% if ~all([testResult.Passed])
-%     error('Unit tests failed.');
-% end
+testResult = runToolboxUnitTests;
+if ~all([testResult.Passed])
+    error('Unit tests failed.');
+end
 
 %% Write contents file
 % This file registers the toolbox and the "ver" command will list it
