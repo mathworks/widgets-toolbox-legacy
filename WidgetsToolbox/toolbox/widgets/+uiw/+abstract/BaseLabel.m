@@ -6,12 +6,12 @@ classdef (Abstract) BaseLabel < handle
     % positioning of the label.
     %
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 324 $  $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     
@@ -61,11 +61,18 @@ classdef (Abstract) BaseLabel < handle
     
     %% Constructor
     methods
-        function obj = BaseLabel()
+        function obj = BaseLabel(parent)
             % Construct the label
             
+%             if nargin < 1
+%                 parent = obj;
+%                 %parent = [];
+%             end
+            
             % Create a label
-            obj.hLabel = matlab.ui.control.UIControl(...
+            %obj.hLabel = matlab.ui.control.UIControl(...
+            obj.hLabel = uicontrol(...
+                'Parent',[],...
                 'HandleVisibility','off',...
                 'Style', 'text', ...
                 'HorizontalAlignment','left',...
@@ -74,7 +81,7 @@ classdef (Abstract) BaseLabel < handle
                 'Visible','off',...
                 'FontSize',10);
             
-            obj.onContainerResized();
+            %obj.onContainerResized();
             
         end %function
     end %constructor

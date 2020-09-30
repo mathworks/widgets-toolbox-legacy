@@ -20,12 +20,12 @@ classdef CheckboxTreeNode < uiw.widget.TreeNode
     %
     %
     
-%   Copyright 2012-2019 The MathWorks Inc.
+%   Copyright 2012-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 324 $  $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     
@@ -44,11 +44,11 @@ classdef CheckboxTreeNode < uiw.widget.TreeNode
     %% Constructor / Destructor
     methods
         
-        function nObj = CheckboxTreeNode(varargin)
+        function obj = CheckboxTreeNode(varargin)
             % Construct the node
             
             % Call superclass constructor
-            nObj = nObj@uiw.widget.TreeNode(varargin{:});
+            obj = obj@uiw.widget.TreeNode(varargin{:});
             
         end
         
@@ -100,7 +100,7 @@ classdef CheckboxTreeNode < uiw.widget.TreeNode
         function set.CheckboxEnabled(nObj,value)
             validateattributes(value,{'numeric','logical'},{'scalar'});
             nObj.JNode.CheckBoxEnabled = logical(value);
-            nodeChanged(nObj.Tree, nObj)
+            nodeChangedJava(nObj.Tree, nObj)
         end
         
         % CheckboxVisible
@@ -110,7 +110,7 @@ classdef CheckboxTreeNode < uiw.widget.TreeNode
         function set.CheckboxVisible(nObj,value)
             validateattributes(value,{'numeric','logical'},{'scalar'});
             nObj.JNode.CheckBoxVisible = logical(value);
-            nodeChanged(nObj.Tree, nObj)
+            nodeChangedJava(nObj.Tree, nObj)
         end
         
         % Checked

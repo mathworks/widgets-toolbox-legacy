@@ -5,18 +5,18 @@ function create(obj)
 % Notes: none
 %
 
-%   Copyright 2018-2019 The MathWorks Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
 %
-% Auth/Revision:
-%   MathWorks Consulting
-%   $Author: rjackey $
-%   $Revision: 324 $  $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+% 
+%   
+%   
+%   
 % ---------------------------------------------------------------------
 
 
 %% Create the layout
 
-obj.hLayout.MainBox = uix.BoxPanel(...
+obj.hLayout.MainBox = uix.Panel(...
     'Parent',obj.hBasePanel,...
     'FontSize',10,...
     'Title','Bar Chart');

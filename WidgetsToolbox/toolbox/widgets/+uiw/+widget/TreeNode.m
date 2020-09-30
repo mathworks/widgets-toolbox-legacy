@@ -8,35 +8,29 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
     %   obj = uiw.widget.TreeNode('Property','Value',...)
     %
     
-%   Copyright 2012-2019 The MathWorks Inc.
+%   Copyright 2012-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 324 $  $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     %#ok<*MCSUP>
     
     %% Properties
-    properties (Dependent)
+    properties (AbortSet)
         Name char %Name to display on the tree node
         TooltipString char %Tooltip text on mouse hover
-    end
-    
-    properties (AbortSet)
         Parent = uiw.widget.TreeNode.empty(0,1) %Parent tree node
-    end
-    
-    properties
         UIContextMenu %context menu to show when clicking on this node
         UserData %User data to store in the tree node
     end
     
-    properties (Hidden)
+    properties (Hidden, AbortSet)
         Value %User value to store in the tree node (deprecated)
     end
     
-    properties (SetAccess={?uiw.widget.Tree, ?uiw.widget.TreeNode})
+    properties (AbortSet, SetAccess={?uiw.widget.Tree, ?uiw.widget.TreeNode})
         Children = uiw.widget.TreeNode.empty(0,1) %Child tree nodes (read-only)
         Tree = uiw.widget.Tree.empty(0,1) %Tree on which this node is attached (read-only)
     end
@@ -44,44 +38,22 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
     
     %% Internal properties
     
-    properties (SetAccess=protected, GetAccess=protected)
-        IsBeingDeleted = false; %true when the destructor is active (internal)
-    end
-    
     % The node needs to be accessible by the tree and nodes
     properties (SetAccess={?uiw.widget.Tree, ?uiw.widget.TreeNode},...
             GetAccess={?uiw.widget.Tree, ?uiw.widget.TreeNode})
+        IsBeingDeleted = false; %true when the destructor is active (internal)
+        IsConstructed (1,1) logical = false;
         JNode %Java object for tree node
+        WNode %Web object for tree node
     end
-    
     
     
     %% Constructor / Destructor
     methods
         
         function obj = TreeNode(varargin)
-            % Construct the node
             
-            % Create a tree node for this element
-            % Pull out Name arg for faster creation
-            if nargin >= 2 && strcmpi(varargin{1},'Name')
-                name = varargin{2};
-                varargin(1:2) = [];
-            else
-                name = '';
-            end
-            
-            % Create a tree node for this element
-            obj.JNode = javaObjectEDT(...
-                'com.mathworks.consulting.widgets.tree.TreeNode', name);
-            
-            % Add a reference to this object. This is used in Java
-            % callbacks to MATLAB that need to know what node was touched.
-            obj.JNode = handle(obj.JNode);
-            schema.prop(obj.JNode,'TreeNode','MATLAB array');
-            obj.JNode.TreeNode = obj;
-            
-            % Assign PV pairs to properties
+            % Set properties from P-V pairs
             obj.assignPVPairs(varargin{:});
             
         end % constructor
@@ -100,6 +72,85 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
         
     end %methods - constructor/destructor
     
+    
+    
+    
+    %% Protected Methods
+    methods (Access={?uiw.widget.Tree, ?uiw.widget.TreeNode})
+        
+        function createComponent(obj)
+            % Create the internal node model
+            
+            if ~isempty(obj.Tree) && isvalid(obj.Tree) && obj.Tree.IsConstructed
+                
+                if obj.Tree.FigureIsJava && isempty(obj.JNode)
+                    
+                    warnState = warning('off','MATLAB:ui:javacomponent:FunctionToBeRemoved');
+                    obj.createJavaComponent()
+                    warning(warnState);
+                    
+                elseif ~obj.Tree.FigureIsJava && isempty(obj.WNode)
+                    
+                    obj.createWebControl();
+                    
+                end
+                
+                obj.IsConstructed = true;
+                
+            end %if
+            
+        end %function
+        
+        
+        function createJavaComponent(obj)
+            % Create the graphics objects
+            
+            % Create a tree node for this element
+            obj.JNode = javaObjectEDT(...
+                'com.mathworks.consulting.widgets.tree.TreeNode', obj.Name);
+            
+            % Add a reference to this object. This is used in Java
+            % callbacks to MATLAB that need to know what node was touched.
+            obj.JNode = handle(obj.JNode);
+            schema.prop(obj.JNode,'TreeNode','MATLAB array');
+            obj.JNode.TreeNode = obj;
+            
+        end %function
+        
+        
+        function createWebControl(obj)
+            % Create the graphics objects
+            
+            obj.WNode = uitreenode(...
+                'Parent',[],...
+                'Text',obj.Name,...
+                'ContextMenu',obj.UIContextMenu,...
+                'NodeData',obj);
+            
+        end %function
+        
+        
+        function throwDeprecatedWarning(obj,propName,value)
+            
+            warnId = 'widgets:Java:DeprecatedProperty';
+            if isprop(propName,obj)
+                type = 'Property';
+            else
+                type = 'Method';
+            end
+            if nargin >= 3
+                message = '%s "%s" set to "%s" of widget "%s" is deprecated and is not used in uifigure widgets. To disable this warning, use "warning(''off'',%s)".';
+                warning(warnId,message,type,propName,value,class(obj),warnId);
+            else
+                message = '%s "%s" of widget "%s" is deprecated and is not used in uifigure widgets. To disable this warning, use "warning(''off'',%s)".';
+                warning(warnId,message,type,propName,class(obj),warnId);
+            end
+            
+        end %function
+        
+    end %methods
+    
+            
     
     %% Public Methods
     methods
@@ -268,14 +319,26 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
             
             validateattributes(icon,{'char'},{})
             
-            % Create a java icon
-            IconData = javaObjectEDT('javax.swing.ImageIcon',icon);
-            
-            % Update the icon in the node
-            setIcon(obj.JNode, IconData);
-            
-            % Notify the model about the update
-            nodeChanged(obj.Tree, obj)
+            if ~obj.IsConstructed || isempty(obj.Tree)
+                
+                % Do nothing
+                
+            elseif obj.Tree.FigureIsJava
+                
+                % Create a java icon
+                IconData = javaObjectEDT('javax.swing.ImageIcon',icon);
+                
+                % Update the icon in the node
+                setIcon(obj.JNode, IconData);
+                
+                % Notify the model about the update
+                nodeChangedJava(obj.Tree, obj)
+                
+            else
+                
+                obj.WNode.Icon = icon;
+                
+            end
             
         end %function setIcon()
         
@@ -320,7 +383,10 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 if ~isempty(obj.Parent) && ~obj.Parent.IsBeingDeleted
                     ChildIdx = find(obj.Parent.Children == obj,1);
                     obj.Parent.Children(ChildIdx) = [];
-                    obj.Tree.removeNode(obj, obj.Parent);
+                    if ~isempty(obj.Tree) && isvalid(obj.Tree) ...
+                            && obj.Tree.FigureIsJava
+                        obj.Tree.removeNodeJava(obj, obj.Parent);
+                    end
                 end
                 
                 
@@ -334,7 +400,7 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 if ~isempty(obj.Parent)
                     ChildIdx = find(obj.Parent.Children == obj,1);
                     obj.Parent.Children(ChildIdx) = [];
-                    obj.Tree.removeNode(obj, obj.Parent);
+                    obj.Tree.removeNodeJava(obj, obj.Parent);
                     
                     % Update the reference to the tree in the hierarchy
                     updateTreeReference(obj, newParent)
@@ -342,8 +408,15 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 
             else % A new parent was provided
                 
-                % If new parent is a Tree, parent is the Root
+                % Get the tree for the parent
                 if isa(newParent,'uiw.widget.Tree')
+                    newTree = newParent;
+                else
+                    newTree = newParent.Tree;
+                end 
+                
+                % If new parent is a JTree, parent is the Root
+                if isa(newParent,'uiw.widget.Tree') && newParent.FigureIsJava
                     newParent = newParent.Root;
                 end
                 
@@ -351,17 +424,21 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 if ~isempty(obj.Parent)
                     ChildIdx = find(obj.Parent.Children == obj,1);
                     obj.Parent.Children(ChildIdx) = [];
-                    obj.Tree.removeNode(obj, obj.Parent);
+                    obj.Tree.removeNodeJava(obj, obj.Parent);
                 end
                 
                 % Update the reference to the tree in the hierarchy
-                if ~isequal(obj.Tree, newParent.Tree)
-                    updateTreeReference(obj,newParent.Tree)
+                if ~isequal(obj.Tree, newTree)
+                    updateTreeReference(obj, newTree)
                 end
                 
                 % Update the list of children in the parent
-                ChildIdx = numel(newParent.Children) + 1;
-                newParent.Children(ChildIdx) = obj;
+                if isa(newParent,'uiw.widget.Tree')
+                    ChildIdx = numel(newParent.ChildNodes) + 1;
+                else
+                    ChildIdx = numel(newParent.Children) + 1;
+                    newParent.Children(ChildIdx) = obj;
+                end
                 
                 % Add this node to the parent node
                 if ~isempty(obj.Tree) && isvalid(obj.Tree)
@@ -391,20 +468,24 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
     methods
         
         % Name
-        function value = get.Name(nObj)
-            value = nObj.JNode.getUserObject();
-        end
-        function set.Name(nObj,value)
-            nObj.JNode.setUserObject(value);
-            nodeChanged(nObj.Tree,nObj);
+        function set.Name(obj,value)
+            obj.Name = value;
+            if ~isempty(obj.WNode)
+                obj.WNode.Text = value;
+            elseif ~isempty(obj.JNode)
+                obj.JNode.setUserObject(value);
+                nodeChangedJava(obj.Tree,obj);
+            end
         end
         
         % TooltipString
-        function value = get.TooltipString(nObj)
-            value = char(nObj.JNode.getTooltipString());
-        end
-        function set.TooltipString(nObj,value)
-            nObj.JNode.setTooltipString(java.lang.String(value));
+        function set.TooltipString(obj,value)
+            obj.TooltipString = value;
+            if ~isempty(obj.WNode)
+                obj.throwDeprecatedWarning('TooltipString');
+            elseif ~isempty(obj.JNode)
+                obj.JNode.setTooltipString(java.lang.String(value));
+            end
         end
         
         % Parent
@@ -417,6 +498,20 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 % Set the parent value
                 obj.Parent = newParent;
             end
+        end
+        
+        % UIContextMenu
+        function set.UIContextMenu(obj,value)
+            obj.UIContextMenu = value;
+            if ~isempty(obj.WNode)
+                obj.WNode.ContextMenu = value;
+            end
+        end
+        
+        % Tree
+        function set.Tree(obj,value)
+            obj.Tree = value;
+            obj.createComponent();
         end
         
     end %get/set methods

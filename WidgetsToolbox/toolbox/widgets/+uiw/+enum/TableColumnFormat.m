@@ -40,12 +40,12 @@ classdef TableColumnFormat < handle
     %       t.ColumnFormatData = {'$ #,##0.00',[],{'apples','oranges'},{'fork','spoon','knife'} };
     %
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 324 $  $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     
@@ -71,6 +71,7 @@ classdef TableColumnFormat < handle
     properties (SetAccess=immutable)
         Name = '' %The user viewable/settable name for this column format
         DefaultFormat = '' %The default ColumnFormatData to use, if the table's ColumnFormatData is empty
+        WebFormat = '' %The format to use for web figure uitable
         RendererClass %The Java class to instantiate for the column renderer
         EditorClass %The Java class to instantiate for the column editor
         NeedsCustomRenderer = false %True if we can't reuse the same renderer on multiple columns, e.g. we need to instantiate a new editor for each column
@@ -79,6 +80,7 @@ classdef TableColumnFormat < handle
         EditorNeedsFormatData = false %True if the Java editor needs to use the table's ColumnFormatData
         ToJavaFcn %Function to convert a column cell array to Java format
         FromJavaFcn %Function to convert a single cell's data back to MATLAB format
+        ToWebFcn %Function to convert a column cell array to Web format
     end
     
     % These are instantiated on the first access, unless a custom renderer or
@@ -101,25 +103,30 @@ classdef TableColumnFormat < handle
                 case 'numeric'
                     obj.RendererClass = 'com.jidesoft.grid.NumberCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.DoubleCellEditor';
+                    obj.WebFormat = 'numeric';
                     
                 case 'integer'
                     obj.RendererClass = 'com.jidesoft.grid.NumberCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.IntegerCellEditor';
+                    obj.WebFormat = 'numeric';
                     
                     obj.ToJavaFcn = @(x)cellfun(@fix,x,'UniformOutput',false); %discard any decimal
                     
                 case 'logical'
                     obj.RendererClass = 'com.jidesoft.grid.BooleanCheckBoxCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.BooleanCheckBoxCellEditor';
+                    obj.WebFormat = 'logical';
                     
-                case 'char'
+                case ''
                     obj.RendererClass = 'javax.swing.table.DefaultTableCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.StringCellEditor';
+                    obj.WebFormat = 'char';
                     
                 case 'longchar'
                     %obj.RendererClass = 'javax.swing.table.DefaultTableCellRenderer';
                     obj.RendererClass = 'com.jidesoft.grid.MultilineStringCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.MultilineStringCellEditor';
+                    obj.WebFormat = 'char';
                     
                 case 'popup'
                     %obj.RendererClass = 'javax.swing.table.DefaultTableCellRenderer';
@@ -130,6 +137,7 @@ classdef TableColumnFormat < handle
                     else
                         obj.EditorClass = 'com.jidesoft.grid.ListComboBoxCellEditor';
                     end
+                    obj.WebFormat = 'popup';
                     
                     obj.NeedsCustomEditor = true;
                     obj.EditorNeedsFormatData = true;
@@ -143,6 +151,7 @@ classdef TableColumnFormat < handle
                     else
                         obj.EditorClass = 'com.jidesoft.grid.CheckBoxListComboBoxCellEditor';
                     end
+                    obj.WebFormat = 'popup';
                     
                     obj.NeedsCustomEditor = true;
                     obj.EditorNeedsFormatData = true;
@@ -150,9 +159,12 @@ classdef TableColumnFormat < handle
                     
                     obj.FromJavaFcn = @(x)uiw.utility.java2mat(x);
                     
+                    obj.ToWebFcn = @(x)cellfun(@(x)strjoin(cellstr(x),'; '),x,'UniformOutput',false);
+                    
                 case 'bank'
                     obj.RendererClass = 'com.mathworks.consulting.widgets.table.NumberCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.DoubleCellEditor';
+                    obj.WebFormat = 'bank';
                     
                     obj.NeedsCustomRenderer = true;
                     obj.RendererNeedsFormatData = true;
@@ -166,8 +178,8 @@ classdef TableColumnFormat < handle
                         obj.EditorClass = 'com.mathworks.consulting.widgets.table.LegacyDateCellEditor';
                     else
                         obj.EditorClass = 'com.mathworks.consulting.widgets.table.DateCellEditor';
-                        
                     end
+                    obj.WebFormat = '';
                     
                     obj.NeedsCustomEditor = true;
                     obj.EditorNeedsFormatData = true;
@@ -178,6 +190,8 @@ classdef TableColumnFormat < handle
                     obj.ToJavaFcn = @(x)uiw.utility.mat2java(x);
                     obj.FromJavaFcn = @(x)uiw.utility.java2mat(x);
                     
+                    obj.ToWebFcn = @(x)cellfun(@(x)char(x),x,'UniformOutput',false);
+                    
                 case 'color'
                     obj.RendererClass = 'com.jidesoft.grid.ColorCellRenderer';
                     if ismac
@@ -186,12 +200,16 @@ classdef TableColumnFormat < handle
                     else
                         obj.EditorClass = 'com.jidesoft.grid.ColorCellEditor';
                     end
+                    obj.WebFormat = '';
                     
                     obj.ToJavaFcn = @(x)uiw.utility.mat2java(x,'java.awt.Color');
                     obj.FromJavaFcn = @(x)uiw.utility.java2mat(x);
                     
+                    obj.ToWebFcn = @(x)cellfun(@(x)mat2str(x),x,'UniformOutput',false);
+                    
                 case 'imageicon'
                     obj.RendererClass = 'com.jidesoft.grid.IconCellRenderer';
+                    obj.WebFormat = '';
                     
                     obj.ToJavaFcn = @(x)uiw.utility.mat2java(x,'javax.swing.ImageIcon');
                     obj.FromJavaFcn = @(x)uiw.utility.java2mat(x);
@@ -199,6 +217,7 @@ classdef TableColumnFormat < handle
                 case 'custom'
                     obj.RendererClass = 'com.mathworks.consulting.widgets.table.NumberCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.DoubleCellEditor';
+                    obj.WebFormat = '';
                     
                     obj.NeedsCustomRenderer = true;
                     obj.RendererNeedsFormatData = true;
@@ -206,6 +225,7 @@ classdef TableColumnFormat < handle
                 otherwise
                     obj.RendererClass = 'javax.swing.table.DefaultTableCellRenderer';
                     obj.EditorClass = 'com.jidesoft.grid.StringCellEditor';
+                    obj.WebFormat = '';
                     
             end %switch
             
@@ -251,6 +271,27 @@ classdef TableColumnFormat < handle
         end %function
         
         
+        %% Conversion from MATLAB to WebControl by column format
+        function wValue = toWebType(obj,mValue)
+            % Convert a data column to the web data equivalent by column format
+            
+            % Copy the input over
+            wValue = mValue;
+            
+            % What columns need conversion?
+            needConvert = find( ~cellfun(@isempty, {obj.ToWebFcn}) );
+            numCol = size(mValue,2);
+            for idx = 1:numel(needConvert)
+                thisIdx = needConvert(idx);
+                if thisIdx<=numCol
+                    % Convert to java type
+                    wValue(:,thisIdx) = obj(thisIdx).ToWebFcn( mValue(:,thisIdx) );
+                end
+            end
+            
+        end %function
+        
+        
         
         %% Cell Renderers
         function [renderers, editors] = getColumnRenderersEditors(obj,formatData)
@@ -291,7 +332,7 @@ classdef TableColumnFormat < handle
                 end %if
                 
                 % Check if we need to create a Java editor object
-                if isempty(obj(idx).Editor) || obj(idx).NeedsCustomEditor
+                %if isempty(obj(idx).Editor) || obj(idx).NeedsCustomEditor
                     if isempty(obj(idx).EditorClass)
                         jEditor = [];
                     elseif obj(idx).EditorNeedsFormatData
@@ -308,9 +349,9 @@ classdef TableColumnFormat < handle
                     if ~obj(idx).NeedsCustomEditor
                         obj(idx).Editor = jEditor;
                     end
-                else
-                    editors{idx} = obj(idx).Editor;
-                end %if
+                %else
+                %    editors{idx} = obj(idx).Editor;
+                %end %if
                 
             end %for idx=1:numel(obj)
             

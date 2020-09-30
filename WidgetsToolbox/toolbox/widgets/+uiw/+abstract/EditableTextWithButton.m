@@ -6,13 +6,13 @@ classdef (Abstract) EditableTextWithButton < uiw.abstract.EditableTextControl
     % customized. It also has a label which may optionally be used. The
     % label will be shown once any Label* property has been set.
         
-%   Copyright 2008-2019 The MathWorks Inc.
+%   Copyright 2008-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 324 $
-    %   $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     %% Properties

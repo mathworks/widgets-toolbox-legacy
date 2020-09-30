@@ -14,13 +14,13 @@ classdef ListSelector < uiw.abstract.WidgetContainer & uiw.mixin.HasListSortingB
     %     w = uiw.widget.ListSelector('Parent',fig,'AllItems',AllItems,'AddedIndexR',AddedIndexR);
     %
     
-    % Copyright 2016-2019 The MathWorks, Inc.
+%   Copyright 2016-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 312 $
-    %   $Date: 2019-02-04 11:21:40 -0500 (Mon, 04 Feb 2019) $
+    % 
+    %   
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     %RAJ - TO DO:

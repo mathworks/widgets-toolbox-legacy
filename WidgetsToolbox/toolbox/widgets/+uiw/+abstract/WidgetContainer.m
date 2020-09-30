@@ -8,13 +8,13 @@ classdef WidgetContainer < uiw.abstract.BaseContainer & ...
     % shown once any Label* property has been set.
     %
     
-%   Copyright 2008-2019 The MathWorks Inc.
+%   Copyright 2008-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 324 $
-    %   $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     
@@ -50,6 +50,34 @@ classdef WidgetContainer < uiw.abstract.BaseContainer & ...
     
     %% Protected methods
     methods (Access=protected)
+        
+        %RAJ - web figure support?  Move this to constructor if needed.
+        function setup(obj)
+            % To support ComponentContainer
+            
+            if isempty(obj.hBasePanel)
+                %obj.hBasePanel = matlab.ui.container.Panel(...
+                obj.Units = 'normalized';
+                obj.Position = [0 0 1 1];
+                obj.hLabel = uicontrol(...
+                    'Parent',obj,...
+                    'HandleVisibility','off',...
+                    'Style', 'text', ...
+                    'HorizontalAlignment','left',...
+                    'Units','pixels',...
+                    'TooltipString','',...
+                    'Visible','off',...
+                    'FontSize',10);
+                obj.hBasePanel = uipanel(...
+                    'Parent',obj,...
+                    'HandleVisibility','off',...
+                    'BorderType','none',...
+                    'Units','pixels',...
+                    'FontSize', 10);
+            end
+            
+        end %function
+        
         
         function redraw(obj)
             % Handle state changes that may need UI redraw - subclass may override

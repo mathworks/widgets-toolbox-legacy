@@ -7,13 +7,13 @@ classdef ProgressBar < uiw.abstract.WidgetContainer & uiw.mixin.HasCallback
     %           w = uiw.widget.ProgressBar('Property','Value',...)
     %
     
-    %   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 335 $
-    %   $Date: 2019-05-06 09:37:15 -0400 (Mon, 06 May 2019) $
+    % 
+    %   
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     % Future features:

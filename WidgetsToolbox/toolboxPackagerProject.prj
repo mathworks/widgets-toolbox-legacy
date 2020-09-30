@@ -1,31 +1,30 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="979823513" file="C:\Work\Widgets\toolboxPackagerProject.prj" location="C:\Work\Widgets" name="toolboxPackagerProject" target="target.toolbox" target-name="Package Toolbox">
-    <param.appname>Widgets Toolbox</param.appname>
+  <configuration build-checksum="979823513" file="C:\Work\widgets-toolbox-legacy\WidgetsToolbox\toolboxPackagerProject.prj" location="C:\Work\widgets-toolbox-legacy\WidgetsToolbox" name="toolboxPackagerProject" target="target.toolbox" target-name="Package Toolbox">
+    <param.appname>Widgets Toolbox (Legacy)</param.appname>
     <param.authnamewatermark>Robyn Jackey</param.authnamewatermark>
-    <param.email>robyn.jackey@mathworks.com</param.email>
+    <param.email>rjackey@mathworks.com</param.email>
     <param.company>MathWorks</param.company>
-    <param.summary>Modular components and controls to efficiently develop advanced user interfaces in MATLAB.</param.summary>
-    <param.description>Widgets Toolbox helps you efficiently develop advanced user interfaces in MATLAB. The toolbox provides additional UI controls and higher-level modules that implement common building blocks needed in MATLAB apps. Widgets combine existing control functionalities together into a larger, reusable, common functionality to accelerate development of graphical user interfaces. Existing users of GUI Layout Toolbox will find Widgets Toolbox pairs nicely with GUI Layout Toolbox. 
+    <param.summary>(Legacy Support Only) Modular components and controls to efficiently develop advanced user interfaces in MATLAB.</param.summary>
+    <param.description>This version of Widgets Toolbox is intended for legacy support of existing MATLAB apps. For new app development using web figures (uifigure), please use the new Widgets Toolbox (Web Figures):
+&lt;New File Exchange URL&gt;
+https://github.com/mathworks/widgets-toolbox
 
-Example components are:
-- A file selection control, consisting of a label, edit field, and browse button
-- A listbox control combined with a label and a set of buttons for managing the list composition and ordering
-- A tree control providing advanced functionalities like drag and drop, and checkbox nodes
+Most existing apps that depend on Widgets Toolbox (uiw.* package) can now be migrated from traditional figure windows (Java-based) into modern UI Figures (uifigure). There are known limitations and incompatibilities associated with migrating existing Widgets Toolbox content into uifigure. For this, please see the release notes at the end of the Getting Started Guide and begin testing migration of your apps (or portions of it) into uifigure. 
 
-Widgets Toolbox also provides
-- Superclasses for a whole application, to provide and manage saving and loading session state to and from a MAT-file
-- Dialog windows for several typical kinds of user selection (and more to come in future development)
-- A logger, especially useful for complex or deployed apps, that will store application events/data (of a configurable severity level) to a log file and display them in the command window
-- Framework for efficiently building your own widgets
+If you are building new content and can use R2020b or later, please instead use the components in Widgets Toolbox (UI Figure Apps) listed above. The new components use the wt.* package to avoid confusion.
 
-Widgets Toolbox is most applicable to users who are writing hand code to develop complex, modular applications with hand code using object-oriented programming in MATLAB. This toolbox currently only supports traditional MATLAB figure windows (Java-based) and does not support web graphics used in uifigure containers or App Designer. Widgets may be added programmatically to a GUIDE-generated app, but they will not show up in the graphical GUIDE editor. 
+
+Widgets Toolbox helps you efficiently develop advanced user interfaces in MATLAB. The toolbox provides additional UI controls and higher-level modules that implement common building blocks needed in MATLAB apps. Widgets combine existing control functionalities together into a larger, reusable, common functionality to accelerate development of graphical user interfaces. Existing users of GUI Layout Toolbox will find Widgets Toolbox pairs nicely with GUI Layout Toolbox.
+
+Widgets Toolbox is most applicable to users who are writing hand code to develop complex, modular applications with hand code using object-oriented programming in MATLAB. 
 
 It is recommended you install this as a toolbox to automatically set up the proper MATLAB and Java paths. If you install this manually, please review the installation directions in the Getting Started guide.
 
-Planning a complex or business-critical app? MathWorks Consulting can advise you on design and architecture: https://www.mathworks.com/services/consulting/proven-solutions/software-development-with-matlab.html</param.description>
+
+Need help upgrading a business-critical app? MathWorks Consulting can help: https://www.mathworks.com/services/consulting/proven-solutions/software-upgrade-service.html</param.description>
     <param.screenshot>${PROJECT_ROOT}\toolboxLogo.png</param.screenshot>
-    <param.version>1.3.330</param.version>
-    <param.output>${PROJECT_ROOT}\Widgets Toolbox.mltbx</param.output>
+    <param.version>1.4.0</param.version>
+    <param.output>${PROJECT_ROOT}\Widgets Toolbox (Legacy).mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
     </param.products.name>
@@ -33,7 +32,7 @@ Planning a complex or business-critical app? MathWorks Consulting can advise you
       <item>1</item>
     </param.products.id>
     <param.products.version>
-      <item>9.6</item>
+      <item>9.9</item>
     </param.products.version>
     <param.platforms />
     <param.guid>b0bebf59-856a-4068-9d9c-0ed8968ac9e6</param.guid>
@@ -42,6 +41,66 @@ Planning a complex or business-critical app? MathWorks Consulting can advise you
     <param.examples>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;examples&gt;
    &lt;exampleCategory name="demo"&gt;
+      &lt;example name="demoCheckboxTree" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoCheckboxTree.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoCheckboxTree.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoEditablePopup" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoEditablePopup.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoEditablePopup.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoEditablePopupWithButton" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoEditablePopupWithButton.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoEditablePopupWithButton.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoEditableTextWithHistory" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoEditableTextWithHistory.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoEditableTextWithHistory.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoImageSelector" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoImageSelector.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoImageSelector.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoPassword" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoPassword.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoPassword.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoProgressBar" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoProgressBar.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoProgressBar.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoSlider" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoSlider.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoSlider.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoTable" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoTable.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoTable.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoToolbar" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoToolbar.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoToolbar.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoToolbarDark" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoToolbarDark.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoToolbarDark.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
+      &lt;example name="demoTree" type="html"&gt;
+         &lt;file type="source"&gt;/demo/html/demoTree.html&lt;/file&gt;
+         &lt;file type="main"&gt;/demo/demoTree.m&lt;/file&gt;
+         &lt;file type="thumbnail"/&gt;
+      &lt;/example&gt;
       &lt;example name="demoAboutDialog" type="html"&gt;
          &lt;file type="source"&gt;/demo/html/demoAboutDialog.html&lt;/file&gt;
          &lt;file type="main"&gt;/demo/demoAboutDialog.mlx&lt;/file&gt;
@@ -50,11 +109,6 @@ Planning a complex or business-critical app? MathWorks Consulting can advise you
       &lt;example name="demoApp" type="html"&gt;
          &lt;file type="source"&gt;/demo/html/demoApp.html&lt;/file&gt;
          &lt;file type="main"&gt;/demo/demoApp.mlx&lt;/file&gt;
-         &lt;file type="thumbnail"/&gt;
-      &lt;/example&gt;
-      &lt;example name="demoCheckboxTree" type="html"&gt;
-         &lt;file type="source"&gt;/demo/html/demoCheckboxTree.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo/demoCheckboxTree.mlx&lt;/file&gt;
          &lt;file type="thumbnail"/&gt;
       &lt;/example&gt;
       &lt;example name="demoColorOrderSelector" type="html"&gt;
@@ -67,24 +121,9 @@ Planning a complex or business-critical app? MathWorks Consulting can advise you
          &lt;file type="main"&gt;/demo/demoColorSelector.mlx&lt;/file&gt;
          &lt;file type="thumbnail"/&gt;
       &lt;/example&gt;
-      &lt;example name="demoEditablePopup" type="html"&gt;
-         &lt;file type="source"&gt;/demo/html/demoEditablePopup.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo/demoEditablePopup.mlx&lt;/file&gt;
-         &lt;file type="thumbnail"/&gt;
-      &lt;/example&gt;
-      &lt;example name="demoEditablePopupWithButton" type="html"&gt;
-         &lt;file type="source"&gt;/demo/html/demoEditablePopupWithButton.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo/demoEditablePopupWithButton.mlx&lt;/file&gt;
-         &lt;file type="thumbnail"/&gt;
-      &lt;/example&gt;
       &lt;example name="demoEditableText" type="html"&gt;
          &lt;file type="source"&gt;/demo/html/demoEditableText.html&lt;/file&gt;
          &lt;file type="main"&gt;/demo/demoEditableText.mlx&lt;/file&gt;
-         &lt;file type="thumbnail"/&gt;
-      &lt;/example&gt;
-      &lt;example name="demoEditableTextWithHistory" type="html"&gt;
-         &lt;file type="source"&gt;/demo/html/demoEditableTextWithHistory.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo/demoEditableTextWithHistory.mlx&lt;/file&gt;
          &lt;file type="thumbnail"/&gt;
       &lt;/example&gt;
       &lt;example name="demoFileSelector" type="html"&gt;
@@ -95,11 +134,6 @@ Planning a complex or business-critical app? MathWorks Consulting can advise you
       &lt;example name="demoFolderSelector" type="html"&gt;
          &lt;file type="source"&gt;/demo/html/demoFolderSelector.html&lt;/file&gt;
          &lt;file type="main"&gt;/demo/demoFolderSelector.mlx&lt;/file&gt;
-         &lt;file type="thumbnail"/&gt;
-      &lt;/example&gt;
-      &lt;example name="demoImageSelector" type="html"&gt;
-         &lt;file type="source"&gt;/demo/html/demoImageSelector.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo/demoImageSelector.mlx&lt;/file&gt;
          &lt;file type="thumbnail"/&gt;
       &lt;/example&gt;
       &lt;example name="demoList" type="html"&gt;
@@ -122,34 +156,14 @@ Planning a complex or business-critical app? MathWorks Consulting can advise you
          &lt;file type="main"&gt;/demo/demoLogger.mlx&lt;/file&gt;
          &lt;file type="thumbnail"/&gt;
       &lt;/example&gt;
-      &lt;example name="demoPassword" type="html"&gt;
-         &lt;file type="source"&gt;/demo/html/demoPassword.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo/demoPassword.mlx&lt;/file&gt;
-         &lt;file type="thumbnail"/&gt;
-      &lt;/example&gt;
       &lt;example name="demoPopup" type="html"&gt;
          &lt;file type="source"&gt;/demo/html/demoPopup.html&lt;/file&gt;
          &lt;file type="main"&gt;/demo/demoPopup.mlx&lt;/file&gt;
          &lt;file type="thumbnail"/&gt;
       &lt;/example&gt;
-      &lt;example name="demoProgressBar" type="html"&gt;
-         &lt;file type="source"&gt;/demo/html/demoProgressBar.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo/demoProgressBar.mlx&lt;/file&gt;
-         &lt;file type="thumbnail"/&gt;
-      &lt;/example&gt;
       &lt;example name="demoSearchListDialog" type="html"&gt;
          &lt;file type="source"&gt;/demo/html/demoSearchListDialog.html&lt;/file&gt;
          &lt;file type="main"&gt;/demo/demoSearchListDialog.mlx&lt;/file&gt;
-         &lt;file type="thumbnail"/&gt;
-      &lt;/example&gt;
-      &lt;example name="demoSlider" type="html"&gt;
-         &lt;file type="source"&gt;/demo/html/demoSlider.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo/demoSlider.mlx&lt;/file&gt;
-         &lt;file type="thumbnail"/&gt;
-      &lt;/example&gt;
-      &lt;example name="demoTable" type="html"&gt;
-         &lt;file type="source"&gt;/demo/html/demoTable.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo/demoTable.mlx&lt;/file&gt;
          &lt;file type="thumbnail"/&gt;
       &lt;/example&gt;
       &lt;example name="demoTableSelectionDialog" type="html"&gt;
@@ -160,21 +174,6 @@ Planning a complex or business-critical app? MathWorks Consulting can advise you
       &lt;example name="demoText" type="html"&gt;
          &lt;file type="source"&gt;/demo/html/demoText.html&lt;/file&gt;
          &lt;file type="main"&gt;/demo/demoText.mlx&lt;/file&gt;
-         &lt;file type="thumbnail"/&gt;
-      &lt;/example&gt;
-      &lt;example name="demoToolbar" type="html"&gt;
-         &lt;file type="source"&gt;/demo/html/demoToolbar.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo/demoToolbar.mlx&lt;/file&gt;
-         &lt;file type="thumbnail"/&gt;
-      &lt;/example&gt;
-      &lt;example name="demoToolbarDark" type="html"&gt;
-         &lt;file type="source"&gt;/demo/html/demoToolbarDark.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo/demoToolbarDark.mlx&lt;/file&gt;
-         &lt;file type="thumbnail"/&gt;
-      &lt;/example&gt;
-      &lt;example name="demoTree" type="html"&gt;
-         &lt;file type="source"&gt;/demo/html/demoTree.html&lt;/file&gt;
-         &lt;file type="main"&gt;/demo/demoTree.mlx&lt;/file&gt;
          &lt;file type="thumbnail"/&gt;
       &lt;/example&gt;
    &lt;/exampleCategory&gt;
@@ -250,44 +249,14 @@ Planning a complex or business-critical app? MathWorks Consulting can advise you
     </fileset.depfun.excluded>
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="Widgets Toolbox.mltbx" optional="false">C:\Work\Widgets\Widgets Toolbox.mltbx</file>
+      <file location="${PROJECT_ROOT}" name="Widgets Toolbox (Legacy).mltbx" optional="false">C:\Work\widgets-toolbox-legacy\WidgetsToolbox\Widgets Toolbox (Legacy).mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2019a</root>
+      <root>C:\Program Files\MATLAB\R2020b</root>
       <toolboxes>
-        <toolbox name="matlabcoder" />
-        <toolbox name="embeddedcoder" />
-        <toolbox name="gpucoder" />
-        <toolbox name="fixedpoint" />
-        <toolbox name="matlabhdlcoder" />
         <toolbox name="neuralnetwork" />
       </toolboxes>
-      <toolbox>
-        <matlabcoder>
-          <enabled>true</enabled>
-        </matlabcoder>
-      </toolbox>
-      <toolbox>
-        <embeddedcoder>
-          <enabled>true</enabled>
-        </embeddedcoder>
-      </toolbox>
-      <toolbox>
-        <gpucoder>
-          <enabled>true</enabled>
-        </gpucoder>
-      </toolbox>
-      <toolbox>
-        <fixedpoint>
-          <enabled>true</enabled>
-        </fixedpoint>
-      </toolbox>
-      <toolbox>
-        <matlabhdlcoder>
-          <enabled>true</enabled>
-        </matlabhdlcoder>
-      </toolbox>
       <toolbox>
         <neuralnetwork>
           <enabled>true</enabled>

@@ -7,17 +7,17 @@ classdef (Abstract) EditableTextControl < uiw.abstract.WidgetContainer ...
     % subclass. It also has a label which may optionally be used. The label
     % will be shown once any Label* property has been set.
     
-%   Copyright 2008-2019 The MathWorks Inc.
+%   Copyright 2008-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 324 $
-    %   $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     %% Properties
-    properties (GetAccess=protected, SetAccess=protected)
+    properties (Hidden, SetAccess=protected)
         hEditBox matlab.graphics.Graphics % The editable text control
     end
     

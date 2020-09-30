@@ -22,19 +22,25 @@ classdef (Abstract) BaseDialog <  uiw.abstract.BaseFigure & uiw.abstract.BasePan
     %   end %function
     %
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 324 $  $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     
     %% Properties
     properties (AbortSet, SetAccess=protected)
-        Output %Results / Output Data from the dialog
-        IsWaitingForOutput = false %True if dialog is waiting for output. Pressing a button (ok, cancel, or close) will toggle this false and cause the waitForOutput() method to complete.
+        
+        % Results / Output Data from the dialog
+        Output 
+        
+        % True if dialog is waiting for output. Pressing a button (ok,
+        % cancel, or close) will toggle this false and cause the
+        % waitForOutput() method to complete.
+        IsWaitingForOutput = false 
     end
     
     properties (AbortSet, Dependent)

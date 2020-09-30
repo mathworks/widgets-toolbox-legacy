@@ -6,12 +6,12 @@ classdef (Abstract) BasePanel < uiw.mixin.HasContainer
     % when font styles have been updated.
     %
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 324 $  $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     

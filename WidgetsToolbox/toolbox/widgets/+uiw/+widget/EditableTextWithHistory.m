@@ -8,17 +8,17 @@ classdef EditableTextWithHistory < uiw.abstract.EditablePopupControl ...
     %           w = uiw.widget.EditableTextWithHistory('Property','Value',...)
     %
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 324 $
-    %   $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     %% Properties
-    properties (AbortSet, Dependent)
+    properties (AbortSet)
         History (:,1) string %History items list [string]
     end
     
@@ -55,13 +55,28 @@ classdef EditableTextWithHistory < uiw.abstract.EditablePopupControl ...
     %% Protected methods
     methods (Access=protected)
         
+        
+        function createWebControl(obj)
+            
+            % Create
+            obj.WebControl = uidropdown(...
+                'Parent',obj.hBasePanel,...
+                'Editable',true,...
+                'Items',obj.History,...
+                'Value',obj.Value,...
+                'ValueChangedFcn', @(h,e)obj.onTextEdited(h,e) );
+            
+            obj.hTextFields(end+1) = obj.WebControl;
+            
+        end %function
+        
+        
         function setValue(obj,value)
             % Set the selection to Java control
             
             validateattributes(value,{'char'},{})
             
             % Add the history
-            %RAJ move to set.Value?
             obj.addHistory(obj.interpretValueAsString(value));
             
             % Call superclass method
@@ -73,15 +88,34 @@ classdef EditableTextWithHistory < uiw.abstract.EditablePopupControl ...
         function addHistory(obj,str)
             % Add the string to the top of history
             
-            if ~isempty(str)
+            isDupe = strcmp(str,obj.History);
+            
+            if isempty(str)
+                % Do nothing
+            elseif obj.FigureIsJava
                 obj.CallbacksEnabled = false;
-                isDupe = strcmp(str,obj.History);
                 if any(isDupe)
                     idxDupe = find(isDupe,1);
                     obj.JControl.removeItemAt(idxDupe - 1);
                 end
                 obj.JControl.insertItemAt(str,0);
                 obj.CallbacksEnabled = true;
+            elseif ~isempty(obj.WebControl)
+                items = obj.WebControl.Items';
+                if any(isDupe)
+                    idxDupe = find(isDupe,1);
+                    items(idxDupe) = [];
+                end
+                items = [{str}; items];
+                obj.WebControl.Items = items;
+            else
+                items = obj.History;
+                if any(isDupe)
+                    idxDupe = find(isDupe,1);
+                    items(idxDupe) = [];
+                end
+                items = [{str}; items];
+                obj.History = items;
             end
             
         end %function
@@ -94,22 +128,35 @@ classdef EditableTextWithHistory < uiw.abstract.EditablePopupControl ...
         
         % Items
         function value = get.History(obj)
-            value = string.empty(0,1);
-            if obj.IsConstructed
-                jModel = obj.JControl.getModel();
-                nItems = jModel.getSize();
-                for idx=1:nItems
-                    value{idx,1} = char(jModel.getElementAt(idx-1));
+            if obj.FigureIsJava
+                value = string.empty(0,1);
+                if obj.IsConstructed
+                    jModel = obj.JControl.getModel();
+                    nItems = jModel.getSize();
+                    for idx=1:nItems
+                        value{idx,1} = char(jModel.getElementAt(idx-1));
+                    end
                 end
+            elseif isempty(obj.WebControl)
+                value = obj.History;
+            else
+                value = string(obj.WebControl.Items(:));
             end
         end
         function set.History(obj,value)
-            currentValue = obj.Value;
-            jModel = javaObjectEDT('javax.swing.DefaultComboBoxModel',value);
-            obj.CallbacksEnabled = false;
-            obj.JControl.setModel(jModel);
-            javaMethod('setSelectedItem',obj.JControl,currentValue);
-            obj.CallbacksEnabled = true;
+            obj.History = value;
+            if obj.FigureIsJava
+                currentValue = obj.Value;
+                jModel = javaObjectEDT('javax.swing.DefaultComboBoxModel',value);
+                obj.CallbacksEnabled = false;
+                obj.JControl.setModel(jModel);
+                javaMethod('setSelectedItem',obj.JControl,currentValue);
+                obj.CallbacksEnabled = true;
+            elseif ~isempty(obj.WebControl)
+                obj.WebControl.Items = value;
+            else
+                obj.History = value;
+            end
         end
         
     end % Get/Set methods

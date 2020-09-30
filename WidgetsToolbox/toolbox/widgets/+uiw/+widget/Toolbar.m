@@ -17,13 +17,13 @@ classdef (AllowedSubclasses = ?uiw.widget.Toolstrip) Toolbar < ...
     % referencing Toolstrip should still function, but Toolbar should be
     % used for future applications.
     
-%   Copyright 2017-2019 The MathWorks Inc.
+%   Copyright 2017-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 324 $
-    %   $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     
@@ -55,6 +55,9 @@ classdef (AllowedSubclasses = ?uiw.widget.Toolstrip) Toolbar < ...
         
         function obj = Toolbar(varargin)
             % Construct the control
+            
+            % Call superclass constructors
+            obj@uiw.abstract.WidgetContainer();
             
             % Standards that may be overridden by inputs
             obj.Padding = 6;
@@ -89,7 +92,7 @@ classdef (AllowedSubclasses = ?uiw.widget.Toolstrip) Toolbar < ...
         function hPanel = addSection(obj,title,varargin)
             % Adds a new section for buttons and/or toggle buttons
             
-            hPanel = createSection(obj,title,'Panel',varargin{:});
+            hPanel = createSection(obj,title,@uipanel,varargin{:});
             
         end %function
         
@@ -97,7 +100,7 @@ classdef (AllowedSubclasses = ?uiw.widget.Toolstrip) Toolbar < ...
         function hPanel = addToggleSection(obj,title,varargin)
             % Adds a section for toggle buttons
             
-            hPanel = createSection(obj,title,'ButtonGroup',varargin{:});
+            hPanel = createSection(obj,title,@uibuttongroup,varargin{:});
             
         end %function
         
@@ -138,6 +141,7 @@ classdef (AllowedSubclasses = ?uiw.widget.Toolstrip) Toolbar < ...
                 
                 % Get widget dimensions
                 [w,~] = obj.getInnerPixelSize;
+                
                 
                 % Panel sizes
                 posP = {obj.hGroupPanel.Position};
@@ -272,7 +276,11 @@ classdef (AllowedSubclasses = ?uiw.widget.Toolstrip) Toolbar < ...
                     'FontSize',obj.FontSize);
                 
                 % Group borders are the same as the label foreground
-                set(obj.hGroupPanel,'HighlightColor',obj.LabelForegroundColor)
+                % This won't work in uifigure
+                try %#ok<TRYNC>
+                    set(obj.hGroupPanel,'HighlightColor',obj.LabelForegroundColor)
+                end
+                    
                 
                 % Label foreground is as set
                 % Label background is slightly off from other background,
@@ -313,7 +321,7 @@ classdef (AllowedSubclasses = ?uiw.widget.Toolstrip) Toolbar < ...
     %% Private methods
     methods (Access=private)
         
-        function [hPanel,hLabel] = createSection(obj,title,type,priority)
+        function [hPanel,hLabel] = createSection(obj,title,typeFcn,priority)
             
             % Sizing info
             pad = obj.Padding;
@@ -325,12 +333,11 @@ classdef (AllowedSubclasses = ?uiw.widget.Toolstrip) Toolbar < ...
             hP = obj.NewPanelHeight + 2;
             
             % Create the empty panel
-            hPanel = matlab.ui.container.(type)(...
+            hPanel = typeFcn(...
                 'Parent', obj.hBasePanel,...
                 'HandleVisibility','on',... %must be on for figure CurrentObject
                 'Units', 'pixels',...
                 'Position',[0 0 pad hP],...
-                'BorderWidth',1,...
                 'BorderType','line');
             %'Position',[1 1 pad hP],...
             

@@ -7,13 +7,13 @@ classdef (Abstract, AllowedSubclasses = {?uiw.abstract.SingleSessionApp,?uiw.abs
     % MultiSessionApp for implementations.
     %
     
-    %   Copyright 2018-2019 The MathWorks, Inc.
+%   Copyright 2018-2020 The MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 319 $
-    %   $Date: 2019-04-01 14:23:02 -0400 (Mon, 01 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     

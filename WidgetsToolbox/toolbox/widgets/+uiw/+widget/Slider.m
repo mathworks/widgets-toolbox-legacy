@@ -8,35 +8,42 @@ classdef Slider < uiw.abstract.JavaControl & ...
     %           w = uiw.widget.Slider('Property','Value',...)
     %
     
-%   Copyright 2017-2019 The MathWorks Inc.
+    %   Copyright 2017-2020 sThe MathWorks Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting
-    %   $Author: rjackey $
-    %   $Revision: 324 $
-    %   $Date: 2019-04-23 08:05:17 -0400 (Tue, 23 Apr 2019) $
+    % 
+    %   
+    %   
+    %   
+    %   
     % ---------------------------------------------------------------------
     
     %% Properties
-    properties (AbortSet)
+    properties (Dependent)
         Min (1,1) double {mustBeFinite} = 0 % Minimum value allowed
         Max (1,1) double {mustBeFinite} = 100 % Maximum value allowed
-        MinTickStep (1,1) double {mustBeNonnegative, mustBeFinite} = 0 % Minimum tick step size
-        SnapToTicks (1,1) logical = false % Slider snaps to tick marks [true|(false)]
-        EnforceRange (1,1) logical = true % Require edit field to also be in range?
+    end
+    
+    properties (AbortSet)
+        Limits (1,2) double {mustBeFinite} = [0 100] % Range allowed
         Orientation char {mustBeMember(Orientation,{'horizontal','vertical'})} = 'horizontal' % Slider orientation [horizontal|vertical]
         FlipText (1,1) logical = false % Put text on opposite side [true|(false)]
         TextHeight (1,1) double {mustBePositive, mustBeFinite} = 30 % Pixel height of edit text (applies to top|bottom location)
         TextWidth (1,1) double {mustBePositive, mustBeFinite} = 35 % Pixel width of edit text (applies to left|right location)
         ShowTicks (1,1) logical = true % Whether to show ticks [(true)|false]
         ShowLabels (1,1) logical = true % Whether to show tick labels [(true)|false]
-        Focusable (1,1) logical = true % Allow slider to have focus border, and keyboard control [(true)|false]
     end
-
+    
+    
+    %% Deprecated Properties
+    
     properties (AbortSet, Hidden)
+        MinTickStep (1,1) double {mustBeNonnegative, mustBeFinite} = 0 % Minimum tick step size
+        SnapToTicks (1,1) logical = false % Slider snaps to tick marks [true|(false)]
+        EnforceRange (1,1) logical = true % Require edit field to also be in range?
+        Focusable (1,1) logical = true % Allow slider to have focus border, and keyboard control [(true)|false]
         NotifyOnMotion (1,1) logical = false %Undocumented and may change
         LabelMode char {mustBeMember(LabelMode,{'auto','manual'})} = 'auto' %Undocumented and may change
-        CustomLabels containers.Map = containers.Map %Undocumented and may change
+        CustomLabels containers.Map %Undocumented and may change
     end
     
     properties (Access=protected)
@@ -53,6 +60,25 @@ classdef Slider < uiw.abstract.JavaControl & ...
         function obj = Slider(varargin)
             % Construct the control
             
+            % Set initial values
+            obj.Value = 1;
+            obj.CustomLabels = containers.Map;
+            obj.PendingValue = obj.Value;
+            
+            % Set properties from P-V pairs
+            obj.assignPVPairs(varargin{:});
+            
+        end % constructor
+        
+    end %methods - constructor/destructor
+    
+    
+    
+    %% Protected methods
+    methods (Access=protected)
+        
+        function createComponent(obj,e)
+            
             % Create the edit control
             obj.TextHorizontalAlignment = 'center';
             obj.hEditBox = uicontrol(...
@@ -63,39 +89,35 @@ classdef Slider < uiw.abstract.JavaControl & ...
                 'Callback', @(h,e)obj.onTextEdited() );
             obj.hTextFields = obj.hEditBox;
             
-            % Create the slider
+            % Call superclass method
+            obj.createComponent@uiw.abstract.JavaControl(e);
+            
+        end %function
+        
+        
+        function createJavaComponent(obj)
+            
+            % Create
             obj.createJControl('javax.swing.JSlider');
             obj.JControl.StateChangedCallback = @(h,e)onSliderMotion(obj,e);
             obj.JControl.MouseReleasedCallback = @(h,e)onSliderChanged(obj,e);
             obj.HGJContainer.Units = 'pixels';
             obj.JControl.setOpaque(false);
             
-            % Use the default value
-            obj.Value = obj.JControl.getValue();
-            
-            % Set properties from P-V pairs
-            obj.assignPVPairs(varargin{:});
-            
-            % No new value is pending
-            obj.PendingValue = obj.Value;
-            
-            % Assign the construction flag
-            obj.IsConstructed = true;
-            
-            % Redraw the widget
-            obj.onResized();
-            obj.onEnableChanged();
-            obj.onStyleChanged();
-            obj.redraw();
-            
-        end % constructor
+        end %function
         
-    end %methods - constructor/destructor
-    
-    
-    
-    %% Protected methods
-    methods (Access=protected)
+        
+        function createWebControl(obj)
+            
+            % Create
+            obj.WebControl = uislider(...
+                'Parent',obj.hBasePanel,...
+                'ValueChangingFcn', @(h,e)onSliderMotion(obj,e),...
+                'ValueChangedFcn', @(h,e)onSliderChanged(obj,e) );
+            
+            
+        end %function
+        
         
         function onValueChanged(obj,~)
             % Handle updates to value changes
@@ -118,8 +140,13 @@ classdef Slider < uiw.abstract.JavaControl & ...
                 obj.hEditBox.String = obj.interpretValueAsString(obj.Value);
                 
                 % Update slider value
-                jValue = obj.Value * obj.Multiplier;
-                javaMethodEDT('setValue',obj.JControl,jValue);
+                if obj.FigureIsJava
+                    jValue = obj.Value * obj.Multiplier;
+                    javaMethodEDT('setValue',obj.JControl,jValue);
+                else
+                    obj.WebControl.Limits = [obj.Min obj.Max];
+                    obj.WebControl.Value = obj.Value;
+                end
                 
                 % Are we enforcing the range? If not, we need to recheck
                 % coloring.
@@ -147,43 +174,67 @@ classdef Slider < uiw.abstract.JavaControl & ...
                 
                 % Calculate new positions
                 if strcmpi(obj.Orientation,'horizontal')
-                    javaMethodEDT('setOrientation',obj.JControl,false);
                     wT = min(wT, w/2);
                     pad = floor( min(pad, wT/8) );
                     if obj.FlipText
                         div = wT+pad;
                         tPos = [1 (h-hT)/2 wT hT];
-                        jPos = [1+(div+pad) 1 (w-div-pad) h];
+                        sldrPos = [1+(div+pad) 1 (w-div-pad) h];
                     else
                         div = w-wT-pad;
-                        jPos = [1 1 (div-pad) h];
+                        sldrPos = [1 1 (div-pad) h];
                         tPos = [1+(div+pad) (h-hT)/2 wT hT];
                     end
                 else %vertical
-                    javaMethodEDT('setOrientation',obj.JControl,true);
                     hT = min(hT, h/2);
                     pad = floor( min(spc/2, hT/8) );
                     if obj.FlipText
                         div = h-hT-pad;
-                        jPos = [1 1 w (div-pad)];
+                        sldrPos = [1 1 w (div-pad)];
                         tPos = [1 1+(div+pad) w hT];
                     else
                         div = hT+pad;
                         tPos = [1 1 w hT];
-                        jPos = [1 1+(div+pad) w (h-div-pad)];
+                        sldrPos = [1 1+(div+pad) w (h-div-pad)];
                     end
                 end
                 
-                % Set positions
-                obj.HGJContainer.Position = jPos;
+                % Edit box position
                 obj.hEditBox.Position = tPos;
+                
+                % Slider position & orientation
+                isVertical = strcmpi(obj.Orientation,'vertical');
+                if obj.FigureIsJava
+                    javaMethodEDT('setOrientation',obj.JControl,isVertical);
+                    obj.JControl.setFocusable(obj.Focusable);
+                    obj.HGJContainer.Position = sldrPos;
+                elseif isVertical
+                    obj.WebControl.Orientation = 'vertical';
+                    sldrPos(1) = 10;
+                    sldrPos(2) = sldrPos(2) + 15;
+                    sldrPos(4) = max(sldrPos(4) - 30, 15);
+                    obj.WebControl.Position([1 2 4]) = sldrPos([1 2 4]);
+                else
+                    obj.WebControl.Orientation = 'horizontal';
+                    sldrPos(1) = sldrPos(1) + 15;
+                    sldrPos(2) = 10 + 12*obj.ShowLabels + 10*obj.ShowTicks;
+                    if obj.FontSize > 10
+                       sldrPos(2) = sldrPos(2) + obj.FontSize - 10; 
+                    end
+                    sldrPos(3) = max(sldrPos(3) - 30, 15);
+                    obj.WebControl.Position([1 2 3]) = sldrPos([1 2 3]);
+                end
                 
                 % Redraw ticks
                 obj.redrawTicks();
                 
                 % Update slider value
-                jValue = obj.Value * obj.Multiplier;
-                javaMethodEDT('setValue',obj.JControl,jValue);
+                if obj.FigureIsJava
+                    jValue = obj.Value * obj.Multiplier;
+                    javaMethodEDT('setValue',obj.JControl,jValue);
+                else
+                    obj.WebControl.Value = obj.Value;
+                end
                 
             end %if obj.IsConstructed
             
@@ -198,7 +249,7 @@ classdef Slider < uiw.abstract.JavaControl & ...
                 
                 % Call superclass methods
                 onEnableChanged@uiw.abstract.JavaControl(obj);
-                onEnableChanged@uiw.mixin.HasEditableText (obj);
+                onEnableChanged@uiw.mixin.HasEditableText(obj);
                 
             end %if obj.IsConstructed
             
@@ -212,8 +263,8 @@ classdef Slider < uiw.abstract.JavaControl & ...
             if obj.IsConstructed
                 
                 % Override edit text colors
-%                 obj.TextForegroundColor = obj.ForegroundColor;
-%                 obj.TextBackgroundColor = obj.BackgroundColor;
+                % obj.TextForegroundColor = obj.ForegroundColor;
+                % obj.TextBackgroundColor = obj.BackgroundColor;
                 
                 % Call superclass methods
                 onStyleChanged@uiw.abstract.JavaControl(obj);
@@ -255,32 +306,48 @@ classdef Slider < uiw.abstract.JavaControl & ...
         end %function
         
         
-        function onSliderMotion(obj,~)
-            if obj.IsConstructed 
-                obj.PendingValue = obj.JControl.getValue() / obj.Multiplier;
+        function onSliderMotion(obj,e)
+            % Handle interaction while slider is moving
+            if obj.IsConstructed
+                
+                if obj.FigureIsJava
+                    obj.PendingValue = obj.JControl.getValue() / obj.Multiplier;
+                else
+                    obj.PendingValue = e.Value;
+                end
+                
                 if obj.PendingValue ~= obj.Value
+                    obj.onValueChanging(obj.PendingValue);
                     if obj.NotifyOnMotion %Undocumented - may be removed
                         obj.onSliderChanged();
-                    else
-                        obj.onValueChanging(obj.PendingValue);
                     end
                 end
-            end
-        end
+                
+            end %if obj.IsConstructed
+        end %function
         
         
         function onSliderChanged(obj,~)
             % Handle interaction with slider
-            newValue = obj.JControl.getValue() / obj.Multiplier;
-            if ~isequal(newValue,obj.Value)
-                evt = struct('Source', obj, ...
-                    'Interaction', 'Slider Changed', ...
-                    'OldValue', obj.Value, ...
-                    'NewValue', newValue);
-                obj.Value = newValue;
-                obj.redraw();
-                obj.callCallback(evt);
-            end
+            if obj.IsConstructed
+                
+                if obj.FigureIsJava
+                    newValue = obj.JControl.getValue() / obj.Multiplier;
+                else
+                    newValue = obj.WebControl.Value;
+                end
+                
+                if ~isequal(newValue,obj.Value)
+                    evt = struct('Source', obj, ...
+                        'Interaction', 'Slider Changed', ...
+                        'OldValue', obj.Value, ...
+                        'NewValue', newValue);
+                    obj.Value = newValue;
+                    obj.redraw();
+                    obj.callCallback(evt);
+                end
+                
+            end %if obj.IsConstructed
         end %function
         
         
@@ -312,13 +379,18 @@ classdef Slider < uiw.abstract.JavaControl & ...
             
         end %function
         
+        
         function redrawTicks(obj)
             
             % We want to have up to 10 major ticks and five minor ticks in
             % between. We try to get major ticks on powers of ten.
             
             % Ensure the construction is complete
-            if obj.IsConstructed
+            if ~obj.IsConstructed
+                
+                return
+                
+            elseif obj.FigureIsJava
                 
                 % Get the widget width and use it to determine the maximum
                 % number of tick marks. We allow a minimum of 25 pixels between
@@ -384,7 +456,7 @@ classdef Slider < uiw.abstract.JavaControl & ...
                     fgCol = obj.ForegroundColor;
                     
                     if strcmpi(obj.LabelMode,'auto') || isempty(obj.CustomLabels.values)
-                         
+                        
                         % Make the ticks fall on even multiples of major tick
                         % spacing. This only works if tick marks are off,
                         % as they do not have a way to offset them.
@@ -429,7 +501,27 @@ classdef Slider < uiw.abstract.JavaControl & ...
                     
                 end %if obj.ShowTicks
                 
+            else %Web figure
+                
+                % Boundaries
+                obj.WebControl.Limits = [obj.Min obj.Max];
+                
+                % Ticks
+                if ~obj.ShowTicks
+                    obj.WebControl.MajorTicks = [];
+                    obj.WebControl.MinorTicks = [];
+                else
+                    obj.WebControl.MajorTicksMode = 'auto';
+                    obj.WebControl.MinorTicksMode = 'auto';
+                    if obj.ShowLabels
+                        obj.WebControl.MajorTickLabelsMode = 'auto';
+                    else
+                        obj.WebControl.MajorTickLabels = {};
+                    end
+                end
+                
             end %if obj.IsConstructed
+            
         end %function
         
     end % Protected methods
@@ -439,48 +531,66 @@ classdef Slider < uiw.abstract.JavaControl & ...
     %% Get/Set methods
     methods
         
-        function set.Min(obj,value)
-            obj.Min = value;
-            if obj.Max < obj.Min %#ok<MCSUP>
-                obj.Max = value+1;%#ok<MCSUP>
-            end
-            if obj.EnforceRange && obj.Value < obj.Min %#ok<MCSUP>
-                obj.Value = obj.Min;
+        function set.Limits(obj,value)
+            validateattributes(value,{'numeric'},{'increasing'});
+            obj.Limits = value;
+            if obj.EnforceRange %#ok<MCSUP>
+                obj.Value = min(max(obj.Value,value(1)), value(2));
             end
             obj.onResized();
             obj.redraw();
         end
         
+        function value = get.Min(obj)
+            value = obj.Limits(1);
+        end
+        function set.Min(obj,value)
+            limits = obj.Limits;
+            limits(1) = value;
+            if limits(1) >= limits(2)
+                limits(2) = limits(1) + 1;
+            end
+            obj.Limits = limits;
+        end
+        
+        function value = get.Max(obj)
+            value = obj.Limits(2);
+        end
         function set.Max(obj,value)
-            obj.Max = value;
-            if obj.Min > obj.Max %#ok<MCSUP>
-                obj.Min = value-1;%#ok<MCSUP>
+            limits = obj.Limits;
+            limits(2) = value;
+            if limits(1) >= limits(2)
+                limits(1) = limits(2) - 1;
             end
-            if obj.EnforceRange && obj.Value > obj.Max %#ok<MCSUP>
-                obj.Value = obj.Max;
-            end
-            obj.onResized();
-            obj.redraw();
+            obj.Limits = limits;
         end
         
         function set.ShowTicks(obj,value)
             obj.ShowTicks = value;
-            obj.redrawTicks();
+            obj.onResized();
         end
         
         function set.ShowLabels(obj,value)
             obj.ShowLabels = value;
-            obj.redrawTicks();
+            obj.onResized();
         end
         
         function set.SnapToTicks(obj,value)
             obj.SnapToTicks = value;
-            obj.redrawTicks();
+            if obj.IsConstructed && obj.FigureIsJava
+                obj.redrawTicks();
+            else
+                obj.throwDeprecatedWarning('SnapToTicks');
+            end
         end
         
         function set.MinTickStep(obj,value)
             obj.MinTickStep = value;
-            obj.redrawTicks();
+            if obj.IsConstructed && obj.FigureIsJava
+                obj.redrawTicks();
+            else
+                obj.throwDeprecatedWarning('MinTickStep');
+            end
         end
         
         function set.Orientation(obj,value)
@@ -503,19 +613,38 @@ classdef Slider < uiw.abstract.JavaControl & ...
             obj.onResized();
         end
         
+        function set.EnforceRange(obj, value)
+            obj.EnforceRange = value;
+            if ~obj.FigureIsJava
+                obj.throwDeprecatedWarning('EnforceRange');
+            end
+        end
+        
         function set.Focusable(obj, value)
-            obj.JControl.setFocusable(value);
             obj.Focusable = value;
+            if obj.IsConstructed && obj.FigureIsJava
+                obj.onResized();
+            else
+                obj.throwDeprecatedWarning('Focusable');
+            end
         end
         
         function set.LabelMode(obj, value)
             obj.LabelMode = value;
-            obj.redrawTicks();
+            if obj.IsConstructed && obj.FigureIsJava
+                obj.redrawTicks();
+            else
+                obj.throwDeprecatedWarning('LabelMode');
+            end
         end
         
         function set.CustomLabels(obj, value)
             obj.CustomLabels = value;
-            obj.redrawTicks();
+            if obj.IsConstructed && obj.FigureIsJava
+                obj.redrawTicks();
+            else
+                obj.throwDeprecatedWarning('CustomLabels');
+            end
         end
     end % Data access methods
     
