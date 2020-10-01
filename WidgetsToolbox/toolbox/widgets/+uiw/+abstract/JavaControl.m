@@ -6,7 +6,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     % Java control. It also has a label which may optionally be used. The
     % label will be shown once any Label* property has been set.
     %
-    % For web figures compatibility, the component is not created until
+    % For UI figures compatibility, the component is not created until
     % it's placed into a figure. If the component is placed in a
     % traditional figure, the createWebControl method is called. If
     % placed in a uifigure, the createJavaComponent is called. Detection of
@@ -15,18 +15,12 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     % figure for the component.
     %
     
-%   Copyright 2009-2020 The MathWorks Inc.
-    %
-    % 
-    %   
-    %   
-    %   
-    %   
-    % ---------------------------------------------------------------------
+    %   Copyright 2009-2020 The MathWorks Inc.
+    
     
     %% Properties
     properties (Hidden, SetAccess=protected)
-        WebControl % The web control (if web figures used)
+        WebControl % The web control (if UI figures used)
         JControl % The main Java control (if traditional figures used)
         JavaObj % The raw Java control object without MATLAB callbacks
         JScrollPane % The Java scrollpane (applies to some controls)
@@ -37,7 +31,6 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
         FigureIsJava (1,1) logical = false
         JavaFrameListener
         ControllerListener
-        %FigureType char {mustBeMember(FigureType,{'','java','web'})} = ''
     end
     
     properties (AbortSet, Hidden, SetAccess=protected)
