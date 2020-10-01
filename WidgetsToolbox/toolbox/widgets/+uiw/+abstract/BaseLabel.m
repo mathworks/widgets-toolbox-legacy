@@ -17,19 +17,41 @@ classdef (Abstract) BaseLabel < handle
     
     %% Properties
     properties (AbortSet, Dependent)
-        Label char %The label (char). If set, LabelVisible changes to 'on'.
-        LabelFontAngle char %Font angle of the label [(normal)|italic]
-        LabelFontName char %Font name of the label
-        LabelFontSize double %Font size of the label
-        LabelFontUnits char %Font units of the label [inches|centimeters|characters|normalized|(points)|pixels]
-        LabelFontWeight char %Font weight of the label [(normal)|bold]
-        LabelForegroundColor %Font color of the label
-        LabelHorizontalAlignment char %Alignment of the label
-        LabelVisible char %Toggles the label visibility [on|(off)]
-        LabelTooltipString char %Tooltip of the label
+        
+        %The label (char). If set, LabelVisible changes to 'on'.
+        Label char 
+        
+        %Font angle of the label [(normal)|italic]
+        LabelFontAngle char 
+        
+        %Font name of the label
+        LabelFontName char 
+        
+        %Font size of the label
+        LabelFontSize double 
+        
+        %Font units of the label [inches|centimeters|characters|normalized|(points)|pixels]
+        LabelFontUnits char 
+        
+        %Font weight of the label [(normal)|bold]
+        LabelFontWeight char 
+        
+        %Font color of the label
+        LabelForegroundColor 
+        
+        %Alignment of the label
+        LabelHorizontalAlignment char
+        
+        %Toggles the label visibility [on|(off)]
+        LabelVisible char 
+        
+        %Tooltip of the label
+        LabelTooltipString char 
+        
     end %properties
     
     properties (AbortSet)
+        
         %Placement of the label [(left)|right|top|bottom]
         LabelLocation char {mustBeMember(LabelLocation,{'left','right','top','bottom'})} = 'left' 
         
@@ -41,14 +63,21 @@ classdef (Abstract) BaseLabel < handle
         
          %Pixel spacing between label and widget
         LabelSpacing (1,1) double {mustBeNonnegative} = 4
+        
     end %properties
 
     properties (Access=protected)
-       LabelVisible_ (1,1) logical = false; %Cache of LabelVisible
+        
+        %Cache of LabelVisible
+       LabelVisible_ (1,1) logical = false; 
+       
     end
     
     properties (SetAccess=immutable, GetAccess=protected)
-        hLabel %The label control
+        
+        %The label control
+        hLabel 
+        
     end %properties
     
     
@@ -61,16 +90,19 @@ classdef (Abstract) BaseLabel < handle
     
     %% Constructor
     methods
-        function obj = BaseLabel(parent)
+        function obj = BaseLabel(~)
             % Construct the label
             
-%             if nargin < 1
-%                 parent = obj;
-%                 %parent = [];
-%             end
+            % Launch compatibility
+            persistent compatibilityEnabled
+            if isempty(compatibilityEnabled)
+                if ~verLessThan('matlab','9.9')
+                    uiw.utility.enableCompatibilityModes();
+                end
+                compatibilityEnabled = true;
+            end
             
             % Create a label
-            %obj.hLabel = matlab.ui.control.UIControl(...
             obj.hLabel = uicontrol(...
                 'Parent',[],...
                 'HandleVisibility','off',...
@@ -80,8 +112,6 @@ classdef (Abstract) BaseLabel < handle
                 'TooltipString','',...
                 'Visible','off',...
                 'FontSize',10);
-            
-            %obj.onContainerResized();
             
         end %function
     end %constructor
