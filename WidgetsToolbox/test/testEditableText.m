@@ -3,11 +3,11 @@ function tests = testEditableText()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 207 $
-% $Date: 2018-07-24 09:09:48 -0400 (Tue, 24 Jul 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file
@@ -172,7 +172,7 @@ w = uiw.widget.EditableText(...
     'Position', [10 10 400 25]);
 
 % Get the internal edit box
-hEdit = findall(w,'Type','UIControl','Style','edit');
+hEdit = w.hEditBox;
 
 % Ensure we found it
 assumeNumElements(testCase, hEdit, 1)

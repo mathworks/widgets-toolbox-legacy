@@ -4,11 +4,11 @@ function tests = testSearchListDialog()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 154 $
-% $Date: 2018-05-30 14:34:04 -0400 (Wed, 30 May 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file

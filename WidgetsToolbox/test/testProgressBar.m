@@ -4,11 +4,11 @@ function tests = testProgressBar()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 172 $
-% $Date: 2018-06-19 17:53:20 -0400 (Tue, 19 Jun 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file
@@ -109,25 +109,25 @@ w = uiw.widget.ProgressBar(...
     'Units','normalized',...
     'Position',[0 0 1 1]);
 
-verifyEqual(testCase, w.h.CancelButton.Visible, 'off')
+verifyMatches(testCase, char(w.h.CancelButton.Visible), 'off')
 
 verifyWarningFree(testCase, @()set(w,'AllowCancel',true) )
 
-verifyEqual(testCase, w.h.CancelButton.Visible, 'off')
+verifyMatches(testCase, char(w.h.CancelButton.Visible), 'off')
 
 verifyWarningFree(testCase, @()startProgress(w,'Starting...') )
 
-verifyEqual(testCase, w.h.CancelButton.Visible, 'on')
-verifyEqual(testCase, w.h.CancelButton.Enable, 'on')
+verifyMatches(testCase, char(w.h.CancelButton.Visible), 'on')
+verifyMatches(testCase, char(w.h.CancelButton.Enable), 'on')
 
 verifyWarningFree(testCase, @()set(w,'FlagCancel',true) )
 
-verifyEqual(testCase, w.h.CancelButton.Visible, 'on')
-verifyEqual(testCase, w.h.CancelButton.Enable, 'off')
+verifyMatches(testCase, char(w.h.CancelButton.Visible), 'on')
+verifyMatches(testCase, char(w.h.CancelButton.Enable), 'off')
 
 verifyWarningFree(testCase, @()finishProgress(w,'DONE!') )
 
-verifyEqual(testCase, w.h.CancelButton.Visible, 'off')
+verifyMatches(testCase, char(w.h.CancelButton.Visible), 'off')
 
 end %function
 
@@ -140,8 +140,13 @@ w = uiw.widget.ProgressBar(...
     'Units','normalized',...
     'Position',[0 0 1 1]);
 
+%RAJ - the errors changed - may be different in earlier release?
 verifyError(testCase, @()setProgress(w, 2), 'MATLAB:validators:mustBeLessThanOrEqual');
-verifyError(testCase, @()setProgress(w, 0.5,{[1 2]}), 'MATLAB:UnableToConvert');
+if verLessThan('matlab','9.8')
+    verifyError(testCase, @()setProgress(w, 0.5,{[1 2]}), 'MATLAB:UnableToConvert');
+else
+    verifyError(testCase, @()setProgress(w, 0.5,{[1 2]}), 'MATLAB:validation:UnableToConvert');
+end
 
 end %function
 

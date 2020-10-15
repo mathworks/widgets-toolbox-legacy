@@ -3,11 +3,11 @@ function tests = testListSelector()
 
 % Copyright 2018 The MathWorks, Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 310 $
-% $Date: 2019-01-31 14:18:53 -0500 (Thu, 31 Jan 2019) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file
@@ -76,10 +76,26 @@ fcn = @()uiw.widget.ListSelector(...
     'AllowPlot', true, ... %Requires callback implementation
     'AllowReverse', true, ... %Requires callback implementation
     'AllowRun', true, ... %Requires callback implementation
-    'AllowSearch',true, ...
     'Visible','on');
 
 verifyWarningFree(testCase,fcn)
+
+end %function
+
+
+%% Test search functionality using editable popup
+function testSearch(testCase)
+
+w = uiw.widget.ListSelector(...
+    'Parent',testCase.TestData.Figure,...
+    'AllItems',testCase.TestData.Items);
+
+
+testCase.verifyWarningFree( @()set(w,'AllowSearch',true) )
+testCase.verifyTrue(w.AllowSearch)
+
+testCase.verifyWarningFree( @()set(w,'AllowSearch',false) )
+testCase.verifyFalse(w.AllowSearch)
 
 end %function
 

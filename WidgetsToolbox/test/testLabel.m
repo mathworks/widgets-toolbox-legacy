@@ -3,11 +3,11 @@ function tests = testLabel()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 97 $
-% $Date: 2018-05-01 15:39:54 -0400 (Tue, 01 May 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file
@@ -68,9 +68,9 @@ function testLabelVisibility(testCase)
 
 w = uiw.widget.EditableText();
 
-verifyEqual(testCase, w.LabelVisible, 'off')
+verifyEqual(testCase, char(w.LabelVisible), 'off')
 w.Label = 'test label';
-verifyEqual(testCase, w.LabelVisible, 'on')
+verifyEqual(testCase, char(w.LabelVisible), 'on')
 
 end %function
 
@@ -164,7 +164,7 @@ verifyEqual(testCase, w.LabelLocation, testCase.TestData.LabelLocation)
 verifyEqual(testCase, w.LabelHeight, testCase.TestData.LabelHeight)
 verifyEqual(testCase, w.LabelWidth, testCase.TestData.LabelWidth)
 verifyEqual(testCase, w.LabelSpacing, testCase.TestData.LabelSpacing)
-verifyEqual(testCase, w.LabelVisible, testCase.TestData.LabelVisible)
+verifyEqual(testCase, char(w.LabelVisible), testCase.TestData.LabelVisible)
 
 verifyEqual(testCase, w.FontAngle, 'normal')
 verifyEqual(testCase, w.FontName, 'Arial')

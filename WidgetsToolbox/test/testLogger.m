@@ -3,11 +3,11 @@ function tests = testLogger()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 273 $
-% $Date: 2018-11-05 10:16:14 -0500 (Mon, 05 Nov 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file
@@ -110,17 +110,36 @@ log = uiw.tool.Logger(logName);
 fcn = @()set(log,'BufferSize',-10);
 verifyError(testCase,fcn,'MATLAB:validators:mustBePositive')
 
-fcn = @()set(log,'BufferSize',[1 2 3]);
-verifyError(testCase,fcn,'MATLAB:type:InvalidInputSize')
-
-fcn = @()set(log,'Callback',[1 2 3]);
-verifyError(testCase,fcn,'MATLAB:UnableToConvert')
-
-fcn = @()set(log,'DisplayLevel','BadValue');
-verifyError(testCase,fcn,'MATLAB:UnableToConvert')
-
-fcn = @()set(log,'FileLevel','BadValue');
-verifyError(testCase,fcn,'MATLAB:UnableToConvert')
+if verLessThan('matlab','9.8')
+    
+    fcn = @()set(log,'BufferSize',[1 2 3]);
+    verifyError(testCase,fcn,'MATLAB:type:InvalidInputSize')
+    
+    fcn = @()set(log,'Callback',[1 2 3]);
+    verifyError(testCase,fcn,'MATLAB:UnableToConvert')
+    
+    fcn = @()set(log,'DisplayLevel','BadValue');
+    verifyError(testCase,fcn,'MATLAB:UnableToConvert')
+    
+    fcn = @()set(log,'FileLevel','BadValue');
+    verifyError(testCase,fcn,'MATLAB:UnableToConvert')
+    
+else
+    
+    
+    fcn = @()set(log,'BufferSize',[1 2 3]);
+    verifyError(testCase,fcn,'MATLAB:validation:IncompatibleSize')
+    
+    fcn = @()set(log,'Callback',[1 2 3]);
+    verifyError(testCase,fcn,'MATLAB:validation:UnableToConvert')
+    
+    fcn = @()set(log,'DisplayLevel','BadValue');
+    verifyError(testCase,fcn,'MATLAB:validation:UnableToConvert')
+    
+    fcn = @()set(log,'FileLevel','BadValue');
+    verifyError(testCase,fcn,'MATLAB:validation:UnableToConvert')
+    
+end
 
 end %function
 

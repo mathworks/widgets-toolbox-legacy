@@ -7,8 +7,8 @@ classdef SingleSessionAppHelper < uiw.abstract.SingleSessionApp
     
     % Copyright 2018 The MathWorks, Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting $Author: rjackey $ $Revision: 139 $  $Date: 2018-05-24 09:05:40 -0400 (Thu, 24 May 2018) $
+    % 
+    %   
     % ---------------------------------------------------------------------
 
     
@@ -73,7 +73,7 @@ classdef SingleSessionAppHelper < uiw.abstract.SingleSessionApp
             % Redraw the entire view
             obj.redraw();
             
-            % Now, make the figure visible
+            % Now, make the uifigure visible
             obj.Visible = 'on';
             
         end %function
@@ -109,7 +109,7 @@ classdef SingleSessionAppHelper < uiw.abstract.SingleSessionApp
         
         function create(obj)
             
-            % Put something on the figure
+            % Put something on the uifigure
             obj.h.TestControl = uicontrol(...
                 'Parent',obj.Figure,...
                 'Style','text',...

@@ -7,8 +7,8 @@ classdef testAppWindow < matlab.unittest.TestCase
     
     % Copyright 2018 The MathWorks, Inc.
     %
-    % Auth/Revision:
-    %   MathWorks Consulting $Author: rjackey $ $Revision: 109 $  $Date: 2018-05-04 11:18:12 -0400 (Fri, 04 May 2018) $
+    % 
+    %   
     % ---------------------------------------------------------------------
     
     %% Properties
@@ -69,13 +69,13 @@ classdef testAppWindow < matlab.unittest.TestCase
         
         function testFigureDeletion(testCase)
             
-            % Verify deleting the app deletes the figure
+            % Verify deleting the app deletes the uifigure
             app = testHelper.AppWindowHelper();
             fig = app.Figure;
             delete(app);
             testCase.verifyFalse( isvalid(fig) );
             
-            % Verify deleting the figure deletes the app
+            % Verify deleting the uifigure deletes the app
             app = testHelper.AppWindowHelper();
             fig = app.Figure;
             delete(fig);

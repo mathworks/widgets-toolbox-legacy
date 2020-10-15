@@ -4,11 +4,11 @@ function tests = testText()
 
 % Copyright 2018 The MathWorks,Inc.
 %
-% Auth/Revision:
-% MathWorks Consulting
-% $Author: rjackey $
-% $Revision: 253 $
-% $Date: 2018-10-05 08:50:12 -0400 (Fri, 05 Oct 2018) $
+% 
+% 
+% 
+% 
+% 
 % ---------------------------------------------------------------------
 
 % Indicate to test the local functions in this file
@@ -116,7 +116,7 @@ w = uiw.widget.Text(...
     'Position', [10 10 400 25]);
 
 % Get the internal text box
-hText = findall(w,'Type','UIControl','Style','text','String','abcdef');
+hText = w.hText;
 
 % Ensure we found it
 assumeNumElements(testCase, hText, 1)
