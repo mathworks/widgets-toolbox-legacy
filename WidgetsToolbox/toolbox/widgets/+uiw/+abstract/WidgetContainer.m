@@ -10,12 +10,24 @@ classdef WidgetContainer < uiw.abstract.BaseContainer & ...
     
     %   Copyright 2008-2020 The MathWorks Inc.
     
+    properties (Constant, Hidden)
+        WARNMSG = ['The add-on "Widgets Toolbox (Legacy)" is intended to ' ...
+            'support forward compatibility of **existing** apps only. '...
+            'If you are building **new** apps in MATLAB R2020b or later, '...
+            'please instead find the add-on "Widgets Toolbox (UI Figures).". '...
+            'Your existing apps should continue to work in future '...
+            'releases. They should be migrated to uifigure windows '...
+            'and may require some code updates. Please see the getting '...
+            'started guide (GettingStarted.mlx) for details. '...
+            '(This warning will only appear once.)'];
+    end
     
     
     %% Properties
     properties (Access=private)
         InnerSize_ double = [1 1] % Cache of the inner pixel size of the widget (will not report below a minimum size)
     end
+    
     
     
     %% Constructor
@@ -29,10 +41,13 @@ classdef WidgetContainer < uiw.abstract.BaseContainer & ...
             obj@uiw.abstract.BaseContainer();
             obj@uiw.abstract.BaseLabel();
             
-            
             % Throw legacy warning
             if ~verLessThan('matlab','9.9')
-                
+                showWarning = getpref('WidgetsToolbox','ShowLegacyWarning',true);
+                if showWarning
+                    warning("WidgetsToolbox:LegacyWarning", obj.WARNMSG)
+                end
+                setpref('WidgetsToolbox','ShowLegacyWarning',false);
             end
             
             
