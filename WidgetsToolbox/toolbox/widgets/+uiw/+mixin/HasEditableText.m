@@ -46,9 +46,9 @@ classdef HasEditableText < handle & matlab.mixin.CustomDisplay...
             if ~isempty(obj.hTextFields)
                 
                 % Handle 'inactive' state too
-                if strcmpi(obj.Enable,'on') && strcmpi(obj.TextEditable, 'off')
+                if strcmpi(obj.Enable,'off')
                     set(obj.hTextFields,'Enable','off');
-                elseif strcmpi(obj.Enable,'on') && strcmpi(obj.TextEditable, 'inactive')
+                elseif strcmpi(obj.Enable,'on') && strcmpi(obj.TextEditable, 'off')
                     set(obj.hTextFields,'Enable','inactive');
                 else
                     set(obj.hTextFields,'Enable',obj.Enable);
