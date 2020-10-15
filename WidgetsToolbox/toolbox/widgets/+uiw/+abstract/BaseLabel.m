@@ -93,7 +93,9 @@ classdef (Abstract) BaseLabel < handle
         function obj = BaseLabel(~)
             % Construct the label
             
-            % Launch compatibility
+            % Enable compatibility modes needed for legacy uicontols in
+            % uifigure. This behavior may change and is not intended for
+            % usage outside of Widgets Toolbox.
             persistent compatibilityEnabled
             if isempty(compatibilityEnabled)
                 if ~verLessThan('matlab','9.9')

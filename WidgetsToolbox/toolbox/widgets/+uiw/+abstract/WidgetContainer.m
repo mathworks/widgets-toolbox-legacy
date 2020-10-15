@@ -29,6 +29,13 @@ classdef WidgetContainer < uiw.abstract.BaseContainer & ...
             obj@uiw.abstract.BaseContainer();
             obj@uiw.abstract.BaseLabel();
             
+            
+            % Throw legacy warning
+            if ~verLessThan('matlab','9.9')
+                
+            end
+            
+            
             % Assign parents
             obj.hLabel.Parent = obj;
             obj.hBasePanel.Parent = obj;
