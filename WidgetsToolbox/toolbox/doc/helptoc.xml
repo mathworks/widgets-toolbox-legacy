@@ -3,11 +3,11 @@
 <toc version="2.0">
     <!-- First tocitem specifies top level in Help browser Contents pane -->
     <!-- This can be a roadmap page, as shown below, or a content page -->
-    <tocitem target="MainPage.html">Widgets Toolbox (
+    <tocitem target="MainPage.html">Widgets Toolbox - Compatibility Support
         
         <!-- Getting Started Guide -->
         <tocitem target="GettingStartedDoc.html" image="HelpIcon.GETTING_STARTED">
-            Getting Started with the Widgets Toolbox
+            Getting Started with the Widgets Toolbox - Compatibility Support
         </tocitem>
         
         <!-- User Guide -->

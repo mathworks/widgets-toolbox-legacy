@@ -1,4 +1,4 @@
-% Widgets Toolbox (Legacy Support)
+% Widgets Toolbox - Compatibility Support
 % Version 1.4.0 (R2020b) 12-Nov-2020
 %
 % Copyright 2018-2020 The MathWorks Inc.
