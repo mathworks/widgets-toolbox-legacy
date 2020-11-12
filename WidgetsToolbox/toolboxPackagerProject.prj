@@ -1,11 +1,11 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
   <configuration build-checksum="979823513" file="C:\Work\widgets-toolbox-legacy\WidgetsToolbox\toolboxPackagerProject.prj" location="C:\Work\widgets-toolbox-legacy\WidgetsToolbox" name="toolboxPackagerProject" target="target.toolbox" target-name="Package Toolbox">
-    <param.appname>Widgets Toolbox (Legacy)</param.appname>
+    <param.appname>Widgets Toolbox (Compatibility Support)</param.appname>
     <param.authnamewatermark>Robyn Jackey</param.authnamewatermark>
     <param.email>rjackey@mathworks.com</param.email>
     <param.company>MathWorks</param.company>
-    <param.summary>For Legacy Support Only - Forward Compatibility for existing Widgets Toolbox apps</param.summary>
-    <param.description>WARNING - This version of Widgets Toolbox is intended to support forward compatibility of *existing* apps only.   If you are building new apps in MATLAB R2020b or later, please instead use the new Widgets Toolbox (UI Figures):
+    <param.summary>Compatibility Support for Widgets Toolbox content built before to R2020b</param.summary>
+    <param.description>WARNING - This version of Widgets Toolbox is intended to support forward compatibility of *existing* apps only.   If you are building new apps in MATLAB R2020b or later, please instead use the new "Widgets Toolbox - MATLAB App Building Components":
 
 &lt;New File Exchange URL&gt;
 https://github.com/mathworks/widgets-toolbox-uifigures
@@ -17,7 +17,7 @@ It is recommended you install this as a toolbox to automatically set up the prop
 Need help upgrading a business-critical app? MathWorks Consulting can help: https://www.mathworks.com/services/consulting/proven-solutions/software-upgrade-service.html</param.description>
     <param.screenshot>${PROJECT_ROOT}\toolboxLogo.png</param.screenshot>
     <param.version>1.4.0</param.version>
-    <param.output>${PROJECT_ROOT}\Widgets Toolbox (Legacy).mltbx</param.output>
+    <param.output>${PROJECT_ROOT}\Widgets Toolbox (Compatibility Support).mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
     </param.products.name>
@@ -242,7 +242,7 @@ Need help upgrading a business-critical app? MathWorks Consulting can help: http
     </fileset.depfun.excluded>
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="Widgets Toolbox (Legacy).mltbx" optional="false">C:\Work\widgets-toolbox-legacy\WidgetsToolbox\Widgets Toolbox (Legacy).mltbx</file>
+      <file location="${PROJECT_ROOT}" name="Widgets Toolbox (Compatibility Support).mltbx" optional="false">C:\Work\widgets-toolbox-legacy\WidgetsToolbox\Widgets Toolbox (Compatibility Support).mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
