@@ -1,5 +1,7 @@
 # Widgets Toolbox - Compatibility Support
 
+[![View Widgets Toolbox on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/66235-widgets-toolbox)
+
 WARNING - This version of Widgets Toolbox is intended to support forward compatibility of *existing* apps only.   If you are building new apps in MATLAB R2020b or later, please instead use the new "Widgets Toolbox - MATLAB App Building Components":
 
 https://www.mathworks.com/matlabcentral/fileexchange/83328-widgets-toolbox-matlab-app-building-components
