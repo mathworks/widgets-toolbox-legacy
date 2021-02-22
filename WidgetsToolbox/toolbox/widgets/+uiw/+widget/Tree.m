@@ -215,7 +215,8 @@ classdef Tree < uiw.abstract.JavaControl
             if isempty(obj.JControl)
                 % Attach root
                 obj.Root.createJavaComponent();
-                obj.Root.Tree = obj;
+                obj.Root.Tree = obj; 
+                obj.Root.IsConstructed = true; 
                 obj.createScrollPaneJControl('javax.swing.JTree',obj.Root.JNode);
             end
             

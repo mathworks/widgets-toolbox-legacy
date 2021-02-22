@@ -864,7 +864,6 @@ classdef Table < uiw.abstract.JavaControl
                 %obj.JControl.repaint();
                 javaMethodEDT('repaint',obj.JControl);
                 
-                
             end %if obj.IsConstructed
             
         end %function redrawJava_private
@@ -972,6 +971,10 @@ classdef Table < uiw.abstract.JavaControl
                 updateNumberOfColumns(obj,NumCols,fromDataTable) %REDUCE COLUMNS IF NEEDED
                 %end
                 obj.JTableModel.setDataVector(jValue, obj.ColumnName_)
+                
+                % Explicitly update columns here, since it doesn't seem to
+                % work if the column names were already provided
+                obj.evalOnColumns('setHeaderValue',obj.ColumnName_);
                 
                 % Retain the selection if possible
                 NewSelRows = SelRows(SelRows <= NumRows);
