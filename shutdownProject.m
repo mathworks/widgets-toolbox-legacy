@@ -12,3 +12,4 @@ end
 
 % Restore javacomponent warning
 warning('on','MATLAB:ui:javacomponent:FunctionToBeRemoved');
+setpref('WidgetsToolbox','ShowLegacyWarning',true);
