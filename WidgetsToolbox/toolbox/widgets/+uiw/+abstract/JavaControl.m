@@ -194,50 +194,41 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
         function evt = getMouseEventData(obj,jEvent)
             % Interpret a Java mouse event and return MATLAB data
             
+            % Prepare eventdata
+            evt = uiw.event.MouseEvent();
+            evt.HitObject = obj;
+
             % Get info on the click location and type
-            pos = [jEvent.getX() jEvent.getY()];
-            ctrlOn = jEvent.isControlDown();
-            shiftOn = jEvent.isShiftDown();
-            altOn = jEvent.isAltDown();
-            metaOn = jEvent.isMetaDown();
-            buttonId = jEvent.getButton();
-            numClicks = jEvent.getClickCount();
-            if (metaOn || ctrlOn) && ~shiftOn
-                type = "alt";
-            elseif  (shiftOn && ~metaOn)
-                type = "extend";
-            elseif numClicks>1
-                type = "open";
+            evt.Position = [jEvent.getX() jEvent.getY()];
+            evt.ControlOn = jEvent.isControlDown();
+            evt.ShiftOn = jEvent.isShiftDown();
+            evt.AltOn = jEvent.isAltDown();
+            evt.MetaOn = jEvent.isMetaDown();
+            evt.Button = jEvent.getButton();
+            evt.NumClicks = jEvent.getClickCount();
+
+            if (evt.MetaOn || evt.ControlOn) && ~evt.ShiftOn
+                evt.SelectionType = "alt";
+            elseif  (evt.ShiftOn && ~evt.MetaOn)
+                evt.SelectionType = "extend";
+            elseif evt.NumClicks > 1
+                evt.SelectionType = "open";
             else
-                type = "normal";
+                evt.SelectionType = "normal";
             end
             
             switch jEvent.getID()
                 case 500
-                    interaction = "ButtonClicked";
+                    evt.Interaction = "ButtonClicked";
                 case 501
-                    interaction = "ButtonDown";
+                    evt.Interaction = "ButtonDown";
                 case 502
-                    interaction = "ButtonUp";
+                    evt.Interaction = "ButtonUp";
                 case 503
-                    interaction = "ButtonMotion";
+                    evt.Interaction = "ButtonMotion";
                 case 506
-                    interaction = "ButtonDrag";
+                    evt.Interaction = "ButtonDrag";
             end %switch jEvent.getID()
-            
-            % Prepare eventdata
-            evt = uiw.event.MouseEvent(...
-                'HitObject',obj,...
-                'MouseSelection',gobjects(0),...
-                'Interaction',interaction,...
-                'Position',pos,...
-                'SelectionType',type,...
-                'Button',buttonId,...
-                'NumClicks',numClicks,...
-                'MetaOn',metaOn,...
-                'ControlOn',ctrlOn,...
-                'ShiftOn',shiftOn,...
-                'AltOn',altOn);
             
         end %function
         

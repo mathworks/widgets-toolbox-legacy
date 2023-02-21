@@ -27,6 +27,13 @@ classdef MouseEvent < uiw.event.EventData
         Figure matlab.ui.Figure
         FigurePoint double
         ScreenPoint double
+        Position double
+        Button double
+        NumClicks double
+        MetaOn logical
+        ControlOn logical
+        ShiftOn logical
+        AltOn logical
     end %properties
   
     

@@ -659,27 +659,27 @@ classdef Tree < uiw.abstract.JavaControl
         end %function onCollapse
         
         
-        function onMouseEvent(obj,evt)
+        function onMouseEvent(obj,jEvent)
             % Triggered when the mouse is clicked within the pane
             
             if obj.isvalid() && obj.CallbacksEnabled
-                
-                % Get mouse event data
-                mEvent = obj.getMouseEventData(evt);
-                
-                % Add Tree-specific mouse event data
-                addprop(mEvent,'Nodes');
-                mEvent.Nodes = getNodeFromMouseEvent(obj,evt);
-                
+
                 % Trigger the appropriate callback and notify
-                switch mEvent.Interaction
-                    case 'ButtonClicked'
-                        
+                switch jEvent.getID()
+
+                    case 500 %ButtonClicked
+
+                        % Get mouse event data
+                        mEvent = obj.getMouseEventData(jEvent);
+                        addprop(mEvent,'Nodes');
+                        mEvent.Nodes = getNodeFromMouseEvent(obj,jEvent);
+
+                        % Callback
                         hgfeval(obj.MouseClickedCallback,obj,mEvent)
-                        
+
                         % Launch context menu in certain cases
                         if mEvent.SelectionType == "alt" && ~(mEvent.ControlOn && mEvent.Button==1)
-                            
+
                             % If the node was not previously selected, do it
                             if ~isempty(mEvent.Nodes) && ...
                                     ~any(obj.SelectedNodes == mEvent.Nodes)
@@ -691,61 +691,91 @@ classdef Tree < uiw.abstract.JavaControl
                                     obj.JControl.setSelectionPath(mEvent.Nodes.JNode.getTreePath());
                                 end
                             end
-                            
+
                             % Default to the standard context menu
                             cMenu = obj.UIContextMenu;
-                            
+
                             % Is there a node-specific context menu?
                             if ~isempty(mEvent.Nodes)
-                                
+
                                 % Get the custom context menus for selected nodes
                                 NodeCMenus = [obj.SelectedNodes.UIContextMenu];
-                                
+
                                 % See if there is a common context menu
                                 ThisCMenu = unique(NodeCMenus);
-                                
+
                                 % Is there a common context menu across all
                                 % selected nodes?
                                 if ~isempty(NodeCMenus) &&...
                                         numel(NodeCMenus) == numel(obj.SelectedNodes) &&...
                                         all(NodeCMenus(1) == NodeCMenus)
-                                    
+
                                     % Use the custom context menu
                                     cMenu = ThisCMenu;
                                 end
-                                
+
                             end %if ~isempty(evt.Nodes)
-                            
+
                             % Launch the context menu
                             obj.showContextMenu(cMenu)
-                            
+
                             %elseif isempty(mEvent.Nodes) && ~mEvent.ControlOn && ~mEvent.ShiftOn
                             % Click in white space - deselect everything
-                            
+
                             %    obj.JControl.setSelectionPath([]);
-                            
+
                         end %if mEvent.SelectionType == "alt" && ~mEvent.ControlOn
-                        
-                    case 'ButtonDown'
-                        
-                        obj.notify('ButtonDown',mEvent);
-                        
-                    case 'ButtonUp'
+
+                    case 501 %ButtonDown
+
+                        if event.hasListener(obj, "ButtonDown")
+
+                            % Get mouse event data
+                            mEvent = obj.getMouseEventData(jEvent);
+                            addprop(mEvent,'Nodes');
+                            mEvent.Nodes = getNodeFromMouseEvent(obj,jEvent);
+
+                            % Notify listeners
+                            obj.notify('ButtonDown',mEvent);
+
+                        end %if
+
+                    case 502 %ButtonUp
                         % Do nothing - no callback defined
-                        
-                    case 'ButtonMotion'
-                        
-                        obj.notify('MouseMotion',mEvent);
-                        
-                    case 'ButtonDrag'
-                        %RAJ - currently not called as we have a separate
-                        %method onNodeDND
-                        obj.notify('MouseDrag',mEvent);
-                        
+
+                    case 503 %ButtonMotion
+
+                        if event.hasListener(obj, "MouseMotion")
+
+                            % Get mouse event data
+                            mEvent = obj.getMouseEventData(jEvent);
+                            addprop(mEvent,'Nodes');
+                            mEvent.Nodes = getNodeFromMouseEvent(obj,jEvent);
+
+                            % Notify listeners
+                            obj.notify('MouseMotion',mEvent);
+
+                        end %if
+
+                    case 506 %ButtonDrag
+
+                        % Currently not called as we have a separate method onNodeDND
+                        if event.hasListener(obj, "MouseDrag")
+
+                            % Get mouse event data
+                            mEvent = obj.getMouseEventData(jEvent);
+                            addprop(mEvent,'Nodes');
+                            mEvent.Nodes = getNodeFromMouseEvent(obj,jEvent);
+
+                            % Notify listeners
+                            obj.notify('MouseDrag',mEvent);
+
+                        end %if
+
                 end %switch evt.Interaction
-                
+
             end %if obj.isvalid() && obj.CallbacksEnabled
-            
+
         end %function onMouseEvent
         
         
@@ -1014,10 +1044,10 @@ classdef Tree < uiw.abstract.JavaControl
             end
             validateattributes(value,{'numeric','logical'},{'scalar'});
             obj.DndEnabled = logical(value);
-            if ~obj.IsConstructed 
+            if ~obj.IsConstructed
                 % Do nothing
             elseif obj.FigureIsJava
-                obj.JControl.setDragEnabled(obj.DndEnabled);
+                obj.JControl.setDragEnabled(value);
             else
                 obj.throwDeprecatedWarning('DndEnabled');
             end
