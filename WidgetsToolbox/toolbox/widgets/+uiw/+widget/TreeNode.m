@@ -112,6 +112,10 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
             obj.JNode = handle(obj.JNode);
             schema.prop(obj.JNode,'TreeNode','MATLAB array');
             obj.JNode.TreeNode = obj;
+
+            if ~isempty(obj.TooltipString)
+                obj.JNode.setTooltipString(java.lang.String(obj.TooltipString));
+            end
             
             obj.IsConstructed = true;
             
@@ -487,6 +491,9 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 obj.throwDeprecatedWarning('TooltipString');
             elseif ~isempty(obj.JNode)
                 obj.JNode.setTooltipString(java.lang.String(value));
+                if ~isempty(obj.Tree)
+                    obj.Tree.reload(obj)
+                end
             end
         end
         
