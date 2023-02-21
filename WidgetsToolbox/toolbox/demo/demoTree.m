@@ -1,7 +1,7 @@
 %% Tree
 %%
 % 
-%   Copyright 2012-2020 The MathWorks Inc.
+%   Copyright 2012-2023 The MathWorks Inc.
 %
 %% Create the widget
 
