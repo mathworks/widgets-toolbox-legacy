@@ -1445,7 +1445,7 @@ classdef Table < uiw.abstract.JavaControl
             validateattributes(value,{'numeric'},...
                 {'nonnegative','integer','finite','nonnan','vector'});
             if ~obj.IsConstructed
-                obj.ColumnMaxWidth = value_;
+                obj.ColumnMaxWidth_ = value;
             elseif obj.FigureIsJava
                 obj.evalOnColumns('setMaxWidth',num2cell(value));
                 obj.onStyleChanged();
