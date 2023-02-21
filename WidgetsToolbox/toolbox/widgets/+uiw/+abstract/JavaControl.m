@@ -61,7 +61,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
             obj@uiw.abstract.WidgetContainer()
             
             obj.FigurePlacementListener = event.listener(obj,...
-                'LocationChanged',@(h,e)createComponent(obj,e));
+                'LocationChanged',@(h,e)onLocationChanged(obj,e));
             
             % Apply parent last
             [parentArgs,remArgs] = obj.splitArgs({'Parent'},varargin{:});
@@ -554,6 +554,18 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
             
         end %function
         
+    end %methods
+
+
+    %% Private Methods
+    methods (Access = private)
+        
+        function onLocationChanged(obj,evt)
+            if ~obj.IsConstructed && ~isempty(ancestor(obj,'figure'))
+                obj.createComponent(evt);
+            end
+        end
+
     end %methods
     
     
