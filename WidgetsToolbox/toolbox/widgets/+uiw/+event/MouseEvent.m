@@ -8,7 +8,7 @@ classdef MouseEvent < uiw.event.EventData
     %           obj = uiw.event.MouseEvent('Property','Value',...)
     %
     
-%   Copyright 2017-2020 The MathWorks Inc.
+    %   Copyright 2017-2023 The MathWorks Inc.
     %
     % 
     %   

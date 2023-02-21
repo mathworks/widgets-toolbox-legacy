@@ -7,7 +7,7 @@ classdef Tree < uiw.abstract.JavaControl
     %   nObj = uiw.widget.Tree('Property','Value',...)
     %
     
-%   Copyright 2012-2020 The MathWorks Inc.
+    %   Copyright 2012-2023 The MathWorks Inc.
     %
     % 
     %   

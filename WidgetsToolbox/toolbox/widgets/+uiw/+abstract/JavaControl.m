@@ -15,7 +15,7 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
     % figure for the component.
     %
     
-    %   Copyright 2009-2020 The MathWorks Inc.
+    %   Copyright 2009-2023 The MathWorks Inc.
     
     
     %% Properties

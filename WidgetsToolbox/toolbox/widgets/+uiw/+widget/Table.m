@@ -23,7 +23,7 @@ classdef Table < uiw.abstract.JavaControl
     %       - Filtering
     %
     
-    %   Copyright 2013-2020 The MathWorks Inc.
+    %   Copyright 2013-2023 The MathWorks Inc.
     % ---------------------------------------------------------------------
     
     
