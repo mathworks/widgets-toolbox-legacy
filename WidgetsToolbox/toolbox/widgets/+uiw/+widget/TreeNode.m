@@ -95,8 +95,6 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                     
                 end
                 
-                obj.IsConstructed = true;
-                
             end %if
             
         end %function
@@ -115,6 +113,8 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
             schema.prop(obj.JNode,'TreeNode','MATLAB array');
             obj.JNode.TreeNode = obj;
             
+            obj.IsConstructed = true;
+            
         end %function
         
         
@@ -126,6 +126,8 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 'Text',obj.Name,...
                 'ContextMenu',obj.UIContextMenu,...
                 'NodeData',obj);
+            
+            obj.IsConstructed = true;
             
         end %function
         

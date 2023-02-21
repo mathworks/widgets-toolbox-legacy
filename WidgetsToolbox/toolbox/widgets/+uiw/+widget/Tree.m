@@ -1065,8 +1065,8 @@ classdef Tree < uiw.abstract.JavaControl
             if ~obj.IsConstructed
                 % Do nothing
             elseif obj.FigureIsJava
-                obj.JControl.setRootVisible(obj.RootVisible); %show/hide root
-                obj.JControl.setShowsRootHandles(~obj.RootVisible); %hide/show top level handles
+                obj.JControl.setRootVisible(value); %show/hide root
+                obj.JControl.setShowsRootHandles(~value); %hide/show top level handles
             else
                 obj.throwDeprecatedWarning('RootVisible');
             end
