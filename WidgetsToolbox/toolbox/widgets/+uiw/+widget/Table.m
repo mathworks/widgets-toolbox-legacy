@@ -23,7 +23,7 @@ classdef Table < uiw.abstract.JavaControl
     %       - Filtering
     %
     
-    %   Copyright 2013-2020 The MathWorks Inc.
+    %   Copyright 2013-2023 The MathWorks Inc.
     % ---------------------------------------------------------------------
     
     
@@ -167,6 +167,7 @@ classdef Table < uiw.abstract.JavaControl
             % After IsConstructed, we need to apply data, formats,
             % selections
             obj.applyData();
+            obj.evalOnColumns('setHeaderValue',obj.ColumnName_);
             obj.applySelectionModel();
             obj.applySelection();
             obj.applyColumnFormats();
