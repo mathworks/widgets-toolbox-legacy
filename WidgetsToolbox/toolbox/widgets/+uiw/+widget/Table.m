@@ -167,7 +167,9 @@ classdef Table < uiw.abstract.JavaControl
             % After IsConstructed, we need to apply data, formats,
             % selections
             obj.applyData();
-            obj.evalOnColumns('setHeaderValue',obj.ColumnName_);
+            if obj.FigureIsJava
+                obj.evalOnColumns('setHeaderValue',obj.ColumnName_);
+            end
             obj.applySelectionModel();
             obj.applySelection();
             obj.applyColumnFormats();
