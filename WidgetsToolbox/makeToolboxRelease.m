@@ -102,40 +102,40 @@ end
 
 %% Publish class reference doc
 
-sectionList = {
-    'uiw'           'Class Reference for Widgets Toolbox uiw Package'
-    'uiw.abstract'  'Abstract Classes (Application and Widget Superclasses)'
-    'uiw.dialog'    'Dialogs'
-    'uiw.enum'      'Enumeration Classes (Enumerations used internally by certain widgets)'
-    'uiw.event'     'Event Classes (Events used internally by certain widgets)'
-    'uiw.mixin'     'Mixin Classes (Mixins that may be added to apps, widgets, etc.)'
-    'uiw.model'     'Model Classes (Data models: Preferences, etc.)'
-    'uiw.tool'      'Tool Classes (Related tools: Logger, LogMessage, etc.)'
-    'uiw.utility'   'Utilities (Various utilities for conversions, validation, etc.)'
-    'uiw.widget'    'Widgets'
-    };
-
-for idx = 1:size(sectionList,1)
-    
-    % Generate the help doc
-    html = help2html(sectionList{idx,:},'-doc');
-    thisFile = fullfile(docOutputPath,[sectionList{idx,1} '.html']);
-    
-    % Add copyright notice
-    t = datetime;
-    if t.Year>2018
-        copyrightText = sprintf('Copyright 2018-%d The MathWorks, Inc.',t.Year);
-    else
-        copyrightText = 'Copyright 2018 The MathWorks, Inc.';
-    end
-    html = strrep(html,'</html>',[copyrightText newline '</html>']);
-    
-    % Write the HTML file
-    fid = fopen(thisFile,'w');
-    fprintf(fid,'%s',html);
-    fclose(fid);
-    
-end
+% sectionList = {
+%     'uiw'           'Class Reference for Widgets Toolbox uiw Package'
+%     'uiw.abstract'  'Abstract Classes (Application and Widget Superclasses)'
+%     'uiw.dialog'    'Dialogs'
+%     'uiw.enum'      'Enumeration Classes (Enumerations used internally by certain widgets)'
+%     'uiw.event'     'Event Classes (Events used internally by certain widgets)'
+%     'uiw.mixin'     'Mixin Classes (Mixins that may be added to apps, widgets, etc.)'
+%     'uiw.model'     'Model Classes (Data models: Preferences, etc.)'
+%     'uiw.tool'      'Tool Classes (Related tools: Logger, LogMessage, etc.)'
+%     'uiw.utility'   'Utilities (Various utilities for conversions, validation, etc.)'
+%     'uiw.widget'    'Widgets'
+%     };
+% 
+% for idx = 1:size(sectionList,1)
+%     
+%     % Generate the help doc
+%     html = help2html(sectionList{idx,:},'-doc');
+%     thisFile = fullfile(docOutputPath,[sectionList{idx,1} '.html']);
+%     
+%     % Add copyright notice
+%     t = datetime;
+%     if t.Year>2018
+%         copyrightText = sprintf('Copyright 2018-%d The MathWorks, Inc.',t.Year);
+%     else
+%         copyrightText = 'Copyright 2018 The MathWorks, Inc.';
+%     end
+%     html = strrep(html,'</html>',[copyrightText newline '</html>']);
+%     
+%     % Write the HTML file
+%     fid = fopen(thisFile,'w');
+%     fprintf(fid,'%s',html);
+%     fclose(fid);
+%     
+% end
 
 %% Build search database
 builddocsearchdb(docOutputPath)
