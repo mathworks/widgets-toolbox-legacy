@@ -1,7 +1,7 @@
 % makeToolboxRelease - Make a release of this toolbox
 %
 
-% Copyright 2018-2020 The MathWorks, Inc.
+% Copyright 2018-2023 The MathWorks, Inc.
 % ---------------------------------------------------------------------
 
 %% Files the author should manually edit for each release:
@@ -16,9 +16,9 @@
 %   \doc\GettingStarted.mlx: Live editor version of Getting Started Guide -
 %       accessible in Add-On Manager  ** CONTAINS RELEASE NOTES! **
 
-verNum = '1.4'; % Major.Minor software revision number
-revNum = 1; %Revision number from source control system
-mlVer = 'R2020b'; % MATLAB version to display
+verNum = '1.5'; % Major.Minor software revision number
+revNum = 0; %Revision number from source control system
+mlVer = 'R2022b'; % MATLAB version to display
 
 %% Files the author should manually edit initially:
 %
