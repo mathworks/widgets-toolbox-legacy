@@ -604,7 +604,27 @@ classdef Tree < uiw.abstract.JavaControl
         
     end %special access methods
     
+        
     
+    %% Sealed Protected methods
+    methods (Sealed, Access=protected)
+        
+        
+        function evt = getMouseEventData(obj,jEvent)
+            % Interpret a Java mouse event and return MATLAB data
+            
+            % Prepare eventdata
+            evt = obj.getMouseEventData@uiw.abstract.JavaControl(jEvent);
+
+            % Add tree-specific things
+            addprop(evt,'Nodes');
+            evt.Nodes = getNodeFromMouseEvent(obj,jEvent);
+
+        end %function
+    
+    end %methods
+
+
     
     %% Private Methods
     methods (Access=private)
@@ -671,8 +691,6 @@ classdef Tree < uiw.abstract.JavaControl
 
                         % Get mouse event data
                         mEvent = obj.getMouseEventData(jEvent);
-                        addprop(mEvent,'Nodes');
-                        mEvent.Nodes = getNodeFromMouseEvent(obj,jEvent);
 
                         % Callback
                         hgfeval(obj.MouseClickedCallback,obj,mEvent)
@@ -732,8 +750,6 @@ classdef Tree < uiw.abstract.JavaControl
 
                             % Get mouse event data
                             mEvent = obj.getMouseEventData(jEvent);
-                            addprop(mEvent,'Nodes');
-                            mEvent.Nodes = getNodeFromMouseEvent(obj,jEvent);
 
                             % Notify listeners
                             obj.notify('ButtonDown',mEvent);
@@ -749,8 +765,6 @@ classdef Tree < uiw.abstract.JavaControl
 
                             % Get mouse event data
                             mEvent = obj.getMouseEventData(jEvent);
-                            addprop(mEvent,'Nodes');
-                            mEvent.Nodes = getNodeFromMouseEvent(obj,jEvent);
 
                             % Notify listeners
                             obj.notify('MouseMotion',mEvent);
@@ -764,15 +778,13 @@ classdef Tree < uiw.abstract.JavaControl
 
                             % Get mouse event data
                             mEvent = obj.getMouseEventData(jEvent);
-                            addprop(mEvent,'Nodes');
-                            mEvent.Nodes = getNodeFromMouseEvent(obj,jEvent);
 
                             % Notify listeners
                             obj.notify('MouseDrag',mEvent);
 
                         end %if
 
-                end %switch evt.Interaction
+                end %switch jEvent.getID()
 
             end %if obj.isvalid() && obj.CallbacksEnabled
 

@@ -191,48 +191,6 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
         end %function
         
         
-        function evt = getMouseEventData(obj,jEvent)
-            % Interpret a Java mouse event and return MATLAB data
-            
-            % Prepare eventdata
-            evt = uiw.event.MouseEvent();
-            evt.HitObject = obj;
-
-            % Get info on the click location and type
-            evt.Position = [jEvent.getX() jEvent.getY()];
-            evt.ControlOn = jEvent.isControlDown();
-            evt.ShiftOn = jEvent.isShiftDown();
-            evt.AltOn = jEvent.isAltDown();
-            evt.MetaOn = jEvent.isMetaDown();
-            evt.Button = jEvent.getButton();
-            evt.NumClicks = jEvent.getClickCount();
-
-            if (evt.MetaOn || evt.ControlOn) && ~evt.ShiftOn
-                evt.SelectionType = "alt";
-            elseif  (evt.ShiftOn && ~evt.MetaOn)
-                evt.SelectionType = "extend";
-            elseif evt.NumClicks > 1
-                evt.SelectionType = "open";
-            else
-                evt.SelectionType = "normal";
-            end
-            
-            switch jEvent.getID()
-                case 500
-                    evt.Interaction = "ButtonClicked";
-                case 501
-                    evt.Interaction = "ButtonDown";
-                case 502
-                    evt.Interaction = "ButtonUp";
-                case 503
-                    evt.Interaction = "ButtonMotion";
-                case 506
-                    evt.Interaction = "ButtonDrag";
-            end %switch jEvent.getID()
-            
-        end %function
-        
-        
         function evt = getKeyboardEventData(~,jEvent)
             % Interpret a Java keyboard event and return MATLAB data
             
@@ -495,6 +453,48 @@ classdef (Abstract) JavaControl < uiw.abstract.WidgetContainer & uiw.mixin.HasKe
                 message = '%s "%s" of widget "%s" is deprecated and is not used in uifigure widgets. To disable this warning, use "warning(''off'',%s)".';
                 warning(warnId,message,type,propName,class(obj),warnId);
             end
+            
+        end %function
+        
+        
+        function evt = getMouseEventData(obj,jEvent)
+            % Interpret a Java mouse event and return MATLAB data
+            
+            % Prepare eventdata
+            evt = uiw.event.MouseEvent();
+            evt.HitObject = obj;
+
+            % Get info on the click location and type
+            evt.Position = [jEvent.getX() jEvent.getY()];
+            evt.ControlOn = jEvent.isControlDown();
+            evt.ShiftOn = jEvent.isShiftDown();
+            evt.AltOn = jEvent.isAltDown();
+            evt.MetaOn = jEvent.isMetaDown();
+            evt.Button = jEvent.getButton();
+            evt.NumClicks = jEvent.getClickCount();
+
+            if (evt.MetaOn || evt.ControlOn) && ~evt.ShiftOn
+                evt.SelectionType = "alt";
+            elseif  (evt.ShiftOn && ~evt.MetaOn)
+                evt.SelectionType = "extend";
+            elseif evt.NumClicks > 1
+                evt.SelectionType = "open";
+            else
+                evt.SelectionType = "normal";
+            end
+            
+            switch jEvent.getID()
+                case 500
+                    evt.Interaction = "ButtonClicked";
+                case 501
+                    evt.Interaction = "ButtonDown";
+                case 502
+                    evt.Interaction = "ButtonUp";
+                case 503
+                    evt.Interaction = "ButtonMotion";
+                case 506
+                    evt.Interaction = "ButtonDrag";
+            end %switch jEvent.getID()
             
         end %function
         
