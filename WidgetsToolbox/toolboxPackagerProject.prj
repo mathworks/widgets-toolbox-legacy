@@ -1,8 +1,8 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="979823513" file="C:\Work\widgets-toolbox-legacy\WidgetsToolbox\toolboxPackagerProject.prj" location="C:\Work\widgets-toolbox-legacy\WidgetsToolbox" name="toolboxPackagerProject" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="979823513" file="C:\Work - Archived\widgets-toolbox-legacy\WidgetsToolbox\toolboxPackagerProject.prj" location="C:\Work - Archived\widgets-toolbox-legacy\WidgetsToolbox" name="toolboxPackagerProject" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>Widgets Toolbox - Compatibility Support</param.appname>
     <param.authnamewatermark>Robyn Jackey</param.authnamewatermark>
-    <param.email>rjackey@mathworks.com</param.email>
+    <param.email />
     <param.company>MathWorks</param.company>
     <param.summary>Compatibility Support for Widgets Toolbox content built before to R2020b</param.summary>
     <param.description>WARNING - This version of Widgets Toolbox is intended to support forward compatibility of *existing* apps only.   If you are building new apps in MATLAB R2020b or later, please instead use the new "Widgets Toolbox - MATLAB App Building Components":
@@ -16,7 +16,7 @@ It is recommended you install this as a toolbox to automatically set up the prop
 
 Need help upgrading a business-critical app? MathWorks Consulting can help: https://www.mathworks.com/services/consulting/proven-solutions/software-upgrade-service.html</param.description>
     <param.screenshot>${PROJECT_ROOT}\toolboxLogo.png</param.screenshot>
-    <param.version>1.4.0</param.version>
+    <param.version>1.5.0</param.version>
     <param.output>${PROJECT_ROOT}\Widgets Toolbox - Compatibility Support.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -25,7 +25,7 @@ Need help upgrading a business-critical app? MathWorks Consulting can help: http
       <item>1</item>
     </param.products.id>
     <param.products.version>
-      <item>9.9</item>
+      <item>9.13</item>
     </param.products.version>
     <param.platforms />
     <param.guid>b0bebf59-856a-4068-9d9c-0ed8968ac9e6</param.guid>
@@ -203,9 +203,7 @@ Need help upgrading a business-critical app? MathWorks Consulting can help: http
     <param.additional.sw.mac.url />
     <param.additional.sw.linux.url />
     <unset>
-      <param.authnamewatermark />
       <param.email />
-      <param.company />
       <param.output />
       <param.platforms />
       <param.exclude.filters />
@@ -245,18 +243,24 @@ Need help upgrading a business-critical app? MathWorks Consulting can help: http
     </fileset.depfun.excluded>
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="Widgets Toolbox - Compatibility Support.mltbx" optional="false">C:\Work\widgets-toolbox-legacy\WidgetsToolbox\Widgets Toolbox - Compatibility Support.mltbx</file>
+      <file location="${PROJECT_ROOT}" name="Widgets Toolbox - Compatibility Support.mltbx" optional="false">C:\Work - Archived\widgets-toolbox-legacy\WidgetsToolbox\Widgets Toolbox - Compatibility Support.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2020b</root>
+      <root>C:\Program Files\MATLAB\R2022b</root>
       <toolboxes>
-        <toolbox name="neuralnetwork" />
+        <toolbox name="matlabcoder" />
+        <toolbox name="embeddedcoder" />
       </toolboxes>
       <toolbox>
-        <neuralnetwork>
+        <matlabcoder>
           <enabled>true</enabled>
-        </neuralnetwork>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
       </toolbox>
     </matlab>
     <platform>

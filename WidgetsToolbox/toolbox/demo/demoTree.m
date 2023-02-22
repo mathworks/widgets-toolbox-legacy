@@ -1,7 +1,7 @@
 %% Tree
 %%
 % 
-%   Copyright 2012-2020 The MathWorks Inc.
+%   Copyright 2012-2023 The MathWorks Inc.
 %
 %% Create the widget
 
@@ -21,7 +21,7 @@ w = uiw.widget.Tree(...
     'LabelHeight',18,...
     'Units', 'normalized', ...
     'Position', [0 0 1 1]);
-
+w.RootVisible = true;
 topNode =  uiw.widget.TreeNode('Name','TopNode','Parent',w.Root);
 branchA = uiw.widget.TreeNode('Name','BranchA','Parent',w.Root);
 branchB = uiw.widget.TreeNode('Name','BranchB','Parent',w.Root);

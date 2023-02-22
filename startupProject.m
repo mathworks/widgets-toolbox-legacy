@@ -1,9 +1,10 @@
 function startupProject()
-%   Copyright 2020 The MathWorks Inc.
+%   Copyright 2020-2023 The MathWorks Inc.
 
-% Disable warning
+% Disable warnings
 warnState = warning('off','MATLAB:javaclasspath:jarAlreadySpecified');
 warning('off','MATLAB:GENERAL:JAVARMPATH:NotFoundInPath');
+setpref('WidgetsToolbox','ShowLegacyWarning',false);
 
 % Disable installed Widgets Toolbox
 try %#ok<TRYNC>
