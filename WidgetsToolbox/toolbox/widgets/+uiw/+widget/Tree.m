@@ -590,7 +590,8 @@ classdef Tree < uiw.abstract.JavaControl
         function removeNodeJava(obj,nObj,~)
             % Remove the specified node
             
-            if isvalid(obj) && ~isempty([obj.JModel]) && ishandle(nObj.JNode)
+            if ~isempty(obj) && isvalid(obj) && ...
+                    ~isempty([obj.JModel]) && ishandle(nObj.JNode)
                 obj.CallbacksEnabled = false;
                 obj.JModel.removeNodeFromParent(nObj.JNode);
                 % If all children were removed, reload the node

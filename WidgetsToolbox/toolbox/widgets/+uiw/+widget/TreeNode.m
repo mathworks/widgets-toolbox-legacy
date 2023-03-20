@@ -406,8 +406,10 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 if ~isempty(obj.Parent)
                     ChildIdx = find(obj.Parent.Children == obj,1);
                     obj.Parent.Children(ChildIdx) = [];
-                    obj.Tree.removeNodeJava(obj, obj.Parent);
-                    
+                    if ~isempty(obj.Tree)
+                        obj.Tree.removeNodeJava(obj, obj.Parent);
+                    end
+
                     % Update the reference to the tree in the hierarchy
                     updateTreeReference(obj, newParent)
                 end
@@ -430,7 +432,9 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 if ~isempty(obj.Parent)
                     ChildIdx = find(obj.Parent.Children == obj,1);
                     obj.Parent.Children(ChildIdx) = [];
-                    obj.Tree.removeNodeJava(obj, obj.Parent);
+                    if ~isempty(obj.Tree)
+                        obj.Tree.removeNodeJava(obj, obj.Parent);
+                    end
                 end
                 
                 % Update the reference to the tree in the hierarchy
@@ -480,7 +484,9 @@ classdef TreeNode < uiw.mixin.AssignPVPairs & matlab.mixin.Heterogeneous
                 obj.WNode.Text = value;
             elseif ~isempty(obj.JNode)
                 obj.JNode.setUserObject(value);
-                nodeChangedJava(obj.Tree,obj);
+                if ~isempty(obj.Tree)
+                    nodeChangedJava(obj.Tree,obj);
+                end
             end
         end
         

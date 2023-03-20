@@ -17,7 +17,7 @@
 %       accessible in Add-On Manager  ** CONTAINS RELEASE NOTES! **
 
 verNum = '1.5'; % Major.Minor software revision number
-revNum = 0; %Revision number from source control system
+revNum = 1; %Revision number from source control system
 mlVer = 'R2022b'; % MATLAB version to display
 
 %% Files the author should manually edit initially:

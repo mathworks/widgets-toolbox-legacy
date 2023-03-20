@@ -16,7 +16,7 @@ It is recommended you install this as a toolbox to automatically set up the prop
 
 Need help upgrading a business-critical app? MathWorks Consulting can help: https://www.mathworks.com/services/consulting/proven-solutions/software-upgrade-service.html</param.description>
     <param.screenshot>${PROJECT_ROOT}\toolboxLogo.png</param.screenshot>
-    <param.version>1.5.0</param.version>
+    <param.version>1.5.1</param.version>
     <param.output>${PROJECT_ROOT}\Widgets Toolbox - Compatibility Support.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -25,7 +25,7 @@ Need help upgrading a business-critical app? MathWorks Consulting can help: http
       <item>1</item>
     </param.products.id>
     <param.products.version>
-      <item>9.13</item>
+      <item>9.14</item>
     </param.products.version>
     <param.platforms />
     <param.guid>b0bebf59-856a-4068-9d9c-0ed8968ac9e6</param.guid>
@@ -247,7 +247,7 @@ Need help upgrading a business-critical app? MathWorks Consulting can help: http
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2022b</root>
+      <root>C:\Program Files\MATLAB\R2023a</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
         <toolbox name="embeddedcoder" />
