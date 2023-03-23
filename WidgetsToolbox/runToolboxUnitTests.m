@@ -3,7 +3,7 @@ function testResult = runToolboxUnitTests()
 %% Run traditional figure tests
 % Find test location
 toolboxRoot = fileparts(mfilename('fullpath'));
-unitTestPath = fullfile(toolboxRoot,'test');
+unitTestPath = fullfile(toolboxRoot,'test','figure');
 
 % Run tests
 testResult = runtests(unitTestPath);
@@ -18,7 +18,7 @@ assignin('base','wtTestResult',testResult);
 if ~verLessThan('matlab','9.9')
     
     % Find test location
-    unitTestPath = fullfile(toolboxRoot,'test_uifigure');
+    unitTestPath = fullfile(toolboxRoot,'test','uifigure');
     
     % Run tests
     testResult2 = runtests(unitTestPath);
