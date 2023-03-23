@@ -18,7 +18,7 @@
 
 verNum = '1.5'; % Major.Minor software revision number
 revNum = 1; %Revision number from source control system
-mlVer = 'R2022b'; % MATLAB version to display
+mlVer = 'R2023a'; % MATLAB version to display
 
 %% Files the author should manually edit initially:
 %
